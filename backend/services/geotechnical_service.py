@@ -48,3 +48,21 @@ def get_system_status():
         "excavatedMeters": 4260,
         "totalMeters": 9800
     }
+
+def get_map_route():
+    return load_json_file('map_route.json')
+
+def get_map_landslides():
+    return load_json_file('map_landslides.json')
+
+def get_map_faults():
+    return load_json_file('map_faults.json')
+
+def get_map_boreholes():
+    return load_json_file('map_boreholes.json')
+
+def get_map_groundwater():
+    return load_json_file('map_groundwater.json')
+
+def get_map_predictions():
+    return load_json_file('map_predictions.json')

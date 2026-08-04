@@ -8,30 +8,32 @@ All visual designs, spacing, typography, colors, animations, and interactive beh
 
 ## Architecture Overview
 
-The system is separated into a presentation-agnostic Flask backend service and a modular React frontend.
+The system is separated into a presentation-agnostic Flask backend service and a modular React frontend. It features an interactive Leaflet map under the "Plan / GIS" viewport tab.
 
 ```mermaid
 graph TD
-    subgraph Frontend["React + Vite"]
-        Vite["Vite Dev Server :5173"] --> App["App.jsx"]
-        App --> TopBar["TopBar.jsx"]
-        App --> LayerToolbar["LayerToolbar.jsx"]
-        App --> Viewport["Viewport.jsx"]
-        App --> RightPanel["RightPanel.jsx"]
-        App --> Ribbon["Ribbon.jsx"]
-        App --> WelcomeModal["WelcomeModal.jsx"]
-        App --> GlossaryPanel["GlossaryPanel.jsx"]
-        App --> Tooltip["Tooltip.jsx"]
-        App -.-> APIClient["api.js Client"]
+    subgraph Frontend (React + Vite)
+        Vite[Vite Dev Server :5173] --> App[App.jsx]
+        App --> TopBar[TopBar.jsx]
+        App --> LayerToolbar[LayerToolbar.jsx]
+        App --> Viewport[Viewport.jsx]
+        Viewport --> MapViewport[MapViewport.jsx]
+        App --> RightPanel[RightPanel.jsx]
+        App --> Ribbon[Ribbon.jsx]
+        App --> WelcomeModal[WelcomeModal.jsx]
+        App --> GlossaryPanel[GlossaryPanel.jsx]
+        App --> Tooltip[Tooltip.jsx]
+        App -.-> APIClient[api.js Client]
+        App -.-> GISClient[gisService.js Client]
     end
 
-    subgraph Backend["Flask"]
-        APIClient --> FlaskServer["Flask REST Server :5000"]
-        FlaskServer --> GeoService["geotechnical_service.py"]
-        GeoService --> Data["backend/data/"]
+    subgraph Backend (Flask)
+        APIClient --> FlaskServer[Flask REST Server :5000]
+        GISClient --> FlaskServer
+        FlaskServer --> GeoService[geotechnical_service.py]
+        GeoService --> Data[backend/data/]
         Data --> segs["segments.json"]
-        Data --> matrix["supportMatrix.json"]
-        Data --> cats["recommendationCategories.json"]
+        Data --> kml_geojson["map_*.json GeoJSON layers"]
     end
 ```
 
@@ -47,16 +49,18 @@ strata/
 ├── .env                           # Frontend environment variables
 ├── README.md                      # Project documentation (this file)
 ├── src/
-│   ├── main.jsx                   # React DOM render entry point
-│   ├── App.jsx                    # Primary app coordinator & state lifter
-│   ├── config.js                  # Central frontend configuration & feature flags
+│   ├── main.jsx                   # React DOM render entry point (imports leaflet.css)
+│   ├── App.jsx                    # Primary app coordinator, state lifter, and parallel loader
+│   ├── config.js                  # Central frontend configurations & basemap provider definitions
 │   ├── index.css                  # Clean, consolidated application-wide stylesheet
 │   ├── services/
-│   │   └── api.js                 # Unified HTTP request handler (only module that knows HTTP exists)
+│   │   ├── api.js                 # Unified HTTP application data fetch client
+│   │   └── gisService.js          # Unified HTTP GIS layers fetch client
 │   └── components/
 │       ├── TopBar.jsx             # Logo headers, project selector, and excavation statistics
 │       ├── LayerToolbar.jsx       # Interactive layer/overlay toggling toolbar chips
-│       ├── Viewport.jsx           # SVG Geological Profile visualizer & ChNav player controls
+│       ├── Viewport.jsx           # Tab selection and SVG profile / Leaflet map toggle containers
+│       ├── MapViewport.jsx        # Presentation-only Leaflet Map & GeoJSON layer rendering
 │       ├── RightPanel.jsx         # Project Overview dashboard / ordered geotechnical metrics panel
 │       ├── Ribbon.jsx             # Chainage Risk Ribbon slider with mouse drag/click controls
 │       ├── WelcomeModal.jsx       # Onboarding user overlay dialog
@@ -69,7 +73,9 @@ strata/
     ├── data/                      # Extracted static JSON datasets
     │   ├── segments.json          # Chainage-wise predictions & metrics database
     │   ├── supportMatrix.json     # NATM engineering support metrics specs
-    │   └── recommendationCategories.json # Accordion formatting specifications
+    │   ├── recommendationCategories.json # Accordion formatting specifications
+    │   ├── landslide_lineament.kml # Extracted raw KML data
+    │   └── map_*.json             # Parsed GeoJSON layers (route, faults, landslides)
     └── services/
         └── geotechnical_service.py # Decoupled data fetching and parsing service layer
 ```
@@ -136,7 +142,10 @@ Once compiled, you can access the production-ready site directly at the Flask se
 
 1. **State Lifting**: Primary states governing active sections (`currentSegIdx`), active geological layers (`layerState`), autoplay status (`isPlaying`), and project configurations are managed within `App.jsx` and distributed down to components as props.
 2. **Selectors & Derived Values**: Aggregate metrics (excavation completion percentage, hazard distributions, dominant ground type metrics) are computed dynamically using `useMemo` blocks inside `RightPanel.jsx` instead of duplicating states. This avoids state synchronization bugs.
-3. **Decoupled API Operations**: Components do not call `fetch()` directly. All HTTP requests are structured inside `src/services/api.js`.
-4. **Native SVG Declarations**: The geological profile and ribbon elements render natively as JSX elements (`<polygon>`, `<rect>`, `<line>`, `<text>`) mapping coordinate math dynamically, avoiding string concatenations and browser-level `innerHTML` overrides.
-5. **Tooltip Capsule**: `Tooltip.jsx` mounts the body-level `#appTooltip` tag and registers event delegation listeners for hover (`mouseover`/`mouseout`) on mounting, keeping components clean of custom hover parameters.
-6. **Accordion State**: Accordion cards manage their expanded toggle states (`expandedAccordions`) using native React state variables, interacting directly with underlying CSS height classes.
+3. **Decoupled API Operations**: Components do not call `fetch()` directly. All HTTP requests are structured inside `src/services/api.js` (for application data) and `src/services/gisService.js` (for GIS layers).
+4. **Preserved Map Viewport**: Using CSS `display: none` / `display: block` swaps the Geological Profile and Leaflet map containers inside `Viewport.jsx`. Since both containers remain mounted in the React DOM, the Leaflet map instance, panning coordinates, zoom levels, and loaded layers are preserved exactly when switching back and forth.
+5. **Centralized Layer Registry**: Leaflet layers are rendered dynamically from a registry configuration matching visibility criteria to toolbar state toggles (e.g. mapping `layerState.faults` to faults lines and `layerState.hazard` to landslide polygons), rendering GeoJSON directly.
+6. **Configurable Basemaps**: Tile provider options are declared abstractly in `src/config.js` (`MAP_CONFIG`), making it plug-and-play to swap in satellite tiles or other provider raster tiles.
+7. **Native SVG Declarations**: The geological profile and ribbon elements render natively as JSX elements (`<polygon>`, `<rect>`, `<line>`, `<text>`) mapping coordinate math dynamically, avoiding string concatenations and browser-level `innerHTML` overrides.
+8. **Tooltip Capsule**: `Tooltip.jsx` mounts the body-level `#appTooltip` tag and registers event delegation listeners for hover (`mouseover`/`mouseout`) on mounting, keeping components clean of custom hover parameters.
+9. **Accordion State**: Accordion cards manage their expanded toggle states (`expandedAccordions`) using native React state variables, interacting directly with underlying CSS height classes.

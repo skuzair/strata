@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
+import MapViewport from './MapViewport';
 
 const groundColors = {
   'Hard Quartzite':'#C98B4A','Jointed Quartzite':'#B98C5C','Weathered Gneiss':'#A87A56',
@@ -16,7 +17,8 @@ export default function Viewport({
   onSelectSegment,
   onTogglePlay,
   onPrevSegment,
-  onNextSegment
+  onNextSegment,
+  mapData
 }) {
   const w = 1400;
   const h = 560;
@@ -25,6 +27,7 @@ export default function Viewport({
   const tunnelY = 300;
   const tunnelH = 60;
   const mountainBottom = 460;
+  const [activeTab, setActiveTab] = useState('profile');
 
   // Utility to format chainage string
   const formatCh = (m) => {
@@ -126,9 +129,24 @@ export default function Viewport({
     <div className="viewport">
       {/* View Tabs */}
       <div className="view-tabs">
-        <div className="view-tab active" data-view="profile">Geological Profile</div>
-        <div className="view-tab" data-view="plan">Plan / GIS</div>
-        <div className="view-tab" data-view="3d">3D Block Model</div>
+        <div 
+          className={`view-tab ${activeTab === 'profile' ? 'active' : ''}`} 
+          onClick={() => setActiveTab('profile')}
+        >
+          Geological Profile
+        </div>
+        <div 
+          className={`view-tab ${activeTab === 'plan' ? 'active' : ''}`} 
+          onClick={() => setActiveTab('plan')}
+        >
+          Plan / GIS
+        </div>
+        <div 
+          className={`view-tab ${activeTab === '3d' ? 'active' : ''}`} 
+          onClick={() => setActiveTab('3d')}
+        >
+          3D Block Model
+        </div>
       </div>
       
       {/* View Toolset */}
@@ -139,160 +157,193 @@ export default function Viewport({
         <div className="tool-btn" title="Export view">⇩</div>
       </div>
 
-      {/* Viewport SVG Holder */}
-      <div id="viewportSvgHolder">
-        <svg 
-          width="100%" 
-          height="100%" 
-          viewBox={`0 0 ${w} ${h}`} 
-          style={{ cursor: 'pointer', display: 'block' }}
-          onClick={handleSvgClick}
-        >
-          <defs>
-            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1A2027" />
-              <stop offset="100%" stopColor="#11151A" />
-            </linearGradient>
-            <linearGradient id="rockGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#23282F" />
-              <stop offset="100%" stopColor="#161A1F" />
-            </linearGradient>
-            <pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-              <line x1="0" y1="0" x2="0" y2="6" stroke="#4FA6A0" strokeWidth="2" />
-            </pattern>
-          </defs>
+      {/* SVG geological profile container (kept mounted to preserve selection states) */}
+      <div 
+        id="viewportSvgContainer"
+        style={{ display: activeTab === 'profile' ? 'block' : 'none', height: '100%', position: 'relative' }}
+      >
+        {/* Viewport SVG Holder */}
+        <div id="viewportSvgHolder">
+          <svg 
+            width="100%" 
+            height="100%" 
+            viewBox={`0 0 ${w} ${h}`} 
+            style={{ cursor: 'pointer', display: 'block' }}
+            onClick={handleSvgClick}
+          >
+            <defs>
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#1A2027" />
+                <stop offset="100%" stopColor="#11151A" />
+              </linearGradient>
+              <linearGradient id="rockGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#23282F" />
+                <stop offset="100%" stopColor="#161A1F" />
+              </linearGradient>
+              <pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="#4FA6A0" strokeWidth="2" />
+              </pattern>
+            </defs>
 
-          {/* Sky background */}
-          <rect x="0" y="0" width={w} height={h} fill="url(#skyGrad)" />
+            {/* Sky background */}
+            <rect x="0" y="0" width={w} height={h} fill="url(#skyGrad)" />
 
-          {/* Mountain Silhouette */}
-          <polygon points={mountainPoints} fill="url(#rockGrad)" opacity="0.9" />
-          <path d={ridgePath} fill="none" stroke="#333B45" strokeWidth="1.5" opacity="0.8" />
-          <text x={(x0 + x1) / 2} y={36} textAnchor="middle" fill="#5C6573" fontFamily="IBM Plex Mono" fontSize="10" letterSpacing="1">
-            MOUNTAIN CROSS-SECTION — click ridge to inspect chainage
-          </text>
+            {/* Mountain Silhouette */}
+            <polygon points={mountainPoints} fill="url(#rockGrad)" opacity="0.9" />
+            <path d={ridgePath} fill="none" stroke="#333B45" strokeWidth="1.5" opacity="0.8" />
+            <text x={(x0 + x1) / 2} y={36} textAnchor="middle" fill="#5C6573" fontFamily="IBM Plex Mono" fontSize="10" letterSpacing="1">
+              MOUNTAIN CROSS-SECTION — click ridge to inspect chainage
+            </text>
 
-          {/* Borehole Toggles */}
-          {layerState.boreholes && [300, 900, 1600, 2700, 3400, 4100].map(bh => {
-            const bx = x0 + (bh / TOTAL) * (x1 - x0);
-            return (
-              <g key={bh}>
-                <line x1={bx} y1={60} x2={bx} y2={tunnelY - 8} stroke="#D9B23C" strokeWidth="1.5" strokeDasharray="4,3" opacity="0.55" />
-                <circle cx={bx} cy={60} r="3.5" fill="#D9B23C" />
-              </g>
-            );
-          })}
+            {/* Borehole Toggles */}
+            {layerState.boreholes && [300, 900, 1600, 2700, 3400, 4100].map(bh => {
+              const bx = x0 + (bh / TOTAL) * (x1 - x0);
+              return (
+                <g key={bh}>
+                  <line x1={bx} y1={60} x2={bx} y2={tunnelY - 8} stroke="#D9B23C" strokeWidth="1.5" strokeDasharray="4,3" opacity="0.55" />
+                  <circle cx={bx} cy={60} r="3.5" fill="#D9B23C" />
+                </g>
+              );
+            })}
 
-          {/* Geology Thin strip */}
-          {layerState.geology && segments && segments.map((s, idx) => {
-            const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
-            const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
-            return (
-              <rect 
-                key={`geo-${idx}`} 
-                x={sx0} 
-                y={tunnelY - 9} 
-                width={sx1 - sx0} 
-                height="6" 
-                fill={groundColors[s.ground]} 
-                opacity="0.85" 
-              />
-            );
-          })}
+            {/* Geology Thin strip */}
+            {layerState.geology && segments && segments.map((s, idx) => {
+              const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
+              const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
+              return (
+                <rect 
+                  key={`geo-${idx}`} 
+                  x={sx0} 
+                  y={tunnelY - 9} 
+                  width={sx1 - sx0} 
+                  height="6" 
+                  fill={groundColors[s.ground]} 
+                  opacity="0.85" 
+                />
+              );
+            })}
 
-          {/* Tunnel Alignment Bore Base */}
-          <rect x={x0} y={tunnelY} width={x1 - x0} height={tunnelH} fill="#05070A" stroke="#3A4452" strokeWidth="1.5" rx="2" />
+            {/* Tunnel Alignment Bore Base */}
+            <rect x={x0} y={tunnelY} width={x1 - x0} height={tunnelH} fill="#05070A" stroke="#3A4452" strokeWidth="1.5" rx="2" />
 
-          {/* Segment parameters overlay rendering */}
-          {segments && segments.map((s, idx) => {
-            const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
-            const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
-            const isAhead = s.start >= FACE_CH;
+            {/* Segment parameters overlay rendering */}
+            {segments && segments.map((s, idx) => {
+              const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
+              const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
+              const isAhead = s.start >= FACE_CH;
 
-            const fillCol = layerState.hazard ? hazardColors[s.hazard] : "#20262E";
-            const fillOp = layerState.hazard ? (isAhead ? 0.28 : 0.65) : (isAhead ? 0.5 : 1);
+              const fillCol = layerState.hazard ? hazardColors[s.hazard] : "#20262E";
+              const fillOp = layerState.hazard ? (isAhead ? 0.28 : 0.65) : (isAhead ? 0.5 : 1);
 
-            return (
-              <g key={`tunnel-seg-${idx}`}>
-                {/* Hazard Color / Default Color */}
-                <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill={fillCol} opacity={fillOp} />
-                
-                {/* Ahead Border Dash */}
-                {isAhead && (
-                  <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill="none" stroke="#5C6573" strokeWidth="1" strokeDasharray="5,4" />
-                )}
+              return (
+                <g key={`tunnel-seg-${idx}`}>
+                  {/* Hazard Color / Default Color */}
+                  <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill={fillCol} opacity={fillOp} />
+                  
+                  {/* Ahead Border Dash */}
+                  {isAhead && (
+                    <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill="none" stroke="#5C6573" strokeWidth="1" strokeDasharray="5,4" />
+                  )}
 
-                {/* Confidence Hatch Overlay */}
-                {layerState.confidence && isAhead && (
-                  <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill="url(#hatch)" opacity={s.confidence < 70 ? 0.5 : 0.15} />
-                )}
+                  {/* Confidence Hatch Overlay */}
+                  {layerState.confidence && isAhead && (
+                    <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill="url(#hatch)" opacity={s.confidence < 70 ? 0.5 : 0.15} />
+                  )}
 
-                {/* Fault overlay inside bore */}
-                {layerState.faults && s.fault > 60 && (
-                  <line 
-                    x1={(sx0 + sx1) / 2} 
-                    y1={tunnelY + 4} 
-                    x2={(sx0 + sx1) / 2} 
-                    y2={tunnelY + tunnelH - 4} 
-                    stroke="#D6543F" 
-                    strokeWidth="2.5" 
-                    opacity={isAhead ? 0.55 : 0.95} 
-                  />
-                )}
-
-                {/* Water overlay inside bore */}
-                {layerState.hydrology && s.water > 55 && [0, 1, 2].map(i => {
-                  const wx = sx0 + (i + 1) * (sx1 - sx0) / 4;
-                  return (
-                    <circle 
-                      key={`water-${idx}-${i}`} 
-                      cx={wx} 
-                      cy={tunnelY + tunnelH - 10} 
-                      r="2.2" 
-                      fill="#4F8FA6" 
-                      opacity={isAhead ? 0.5 : 0.85} 
+                  {/* Fault overlay inside bore */}
+                  {layerState.faults && s.fault > 60 && (
+                    <line 
+                      x1={(sx0 + sx1) / 2} 
+                      y1={tunnelY + 4} 
+                      x2={(sx0 + sx1) / 2} 
+                      y2={tunnelY + tunnelH - 4} 
+                      stroke="#D6543F" 
+                      strokeWidth="2.5" 
+                      opacity={isAhead ? 0.55 : 0.95} 
                     />
-                  );
-                })}
-              </g>
-            );
-          })}
+                  )}
 
-          {/* Tunnel Borders & Center line */}
-          <rect x={x0} y={tunnelY} width={x1 - x0} height={tunnelH} fill="none" stroke="#3A4452" strokeWidth="1.5" rx="2" />
-          <line x1={x0} y1={tunnelY + tunnelH / 2} x2={x1} y2={tunnelY + tunnelH / 2} stroke="#0B0D10" strokeWidth="1" opacity="0.4" />
+                  {/* Water overlay inside bore */}
+                  {layerState.hydrology && s.water > 55 && [0, 1, 2].map(i => {
+                    const wx = sx0 + (i + 1) * (sx1 - sx0) / 4;
+                    return (
+                      <circle 
+                        key={`water-${idx}-${i}`} 
+                        cx={wx} 
+                        cy={tunnelY + tunnelH - 10} 
+                        r="2.2" 
+                        fill="#4F8FA6" 
+                        opacity={isAhead ? 0.5 : 0.85} 
+                      />
+                    );
+                  })}
+                </g>
+              );
+            })}
 
-          {/* Face boundary marker */}
-          <line x1={faceX} y1={tunnelY - 14} x2={faceX} y2={tunnelY + tunnelH + 14} stroke="#E7EAEE" strokeWidth="2" />
-          <polygon points={`${faceX},${tunnelY - 14} ${faceX - 7},${tunnelY - 26} ${faceX + 7},${tunnelY - 26}`} fill="#E7EAEE" />
-          <text x={faceX} y={tunnelY - 32} textAnchor="middle" fill="#E7EAEE" fontFamily="IBM Plex Mono" fontSize="11" fontWeight="600">
-            FACE — CH {formatCh(FACE_CH)}
-          </text>
+            {/* Tunnel Borders & Center line */}
+            <rect x={x0} y={tunnelY} width={x1 - x0} height={tunnelH} fill="none" stroke="#3A4452" strokeWidth="1.5" rx="2" />
+            <line x1={x0} y1={tunnelY + tunnelH / 2} x2={x1} y2={tunnelY + tunnelH / 2} stroke="#0B0D10" strokeWidth="1" opacity="0.4" />
 
-          {/* Ticks */}
-          {ticks}
+            {/* Face boundary marker */}
+            <line x1={faceX} y1={tunnelY - 14} x2={faceX} y2={tunnelY + tunnelH + 14} stroke="#E7EAEE" strokeWidth="2" />
+            <polygon points={`${faceX},${tunnelY - 14} ${faceX - 7},${tunnelY - 26} ${faceX + 7},${tunnelY - 26}`} fill="#E7EAEE" />
+            <text x={faceX} y={tunnelY - 32} textAnchor="middle" fill="#E7EAEE" fontFamily="IBM Plex Mono" fontSize="11" fontWeight="600">
+              FACE — CH {formatCh(FACE_CH)}
+            </text>
 
-          {/* Current selected highlight boundary */}
-          {selectedRects}
-        </svg>
+            {/* Ticks */}
+            {ticks}
+
+            {/* Current selected highlight boundary */}
+            {selectedRects}
+          </svg>
+        </div>
+
+        {/* Geotechnical Legend Panel */}
+        <div className="legend">
+          <div className="legend-title">Ground Type</div>
+          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#C98B4A' }}></div>Hard / Jointed Rock</div>
+          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#A87A56' }}></div>Weathered Rock</div>
+          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#8B6F8F' }}></div>Sheared Phyllite</div>
+          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#6E5A4A' }}></div>Fault Gouge</div>
+          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#D6543F', height: '3px', borderRadius: '0', alignSelf: 'center' }}></div>Inferred Fault</div>
+        </div>
+
+        {/* Scalebar */}
+        <div className="scalebar">
+          <div className="bar"></div>
+          200 m
+        </div>
       </div>
 
-      {/* Geotechnical Legend Panel */}
-      <div className="legend">
-        <div className="legend-title">Ground Type</div>
-        <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#C98B4A' }}></div>Hard / Jointed Rock</div>
-        <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#A87A56' }}></div>Weathered Rock</div>
-        <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#8B6F8F' }}></div>Sheared Phyllite</div>
-        <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#6E5A4A' }}></div>Fault Gouge</div>
-        <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#D6543F', height: '3px', borderRadius: '0', alignSelf: 'center' }}></div>Inferred Fault</div>
+      {/* Map viewport container (kept mounted to preserve Leaflet instance state) */}
+      <div 
+        id="viewportMapContainer"
+        style={{ 
+          display: activeTab === 'plan' ? 'block' : 'none', 
+          height: '100%',
+          position: 'relative'
+        }}
+      >
+        <MapViewport mapData={mapData} layerState={layerState} activeTab={activeTab} />
       </div>
 
-      {/* Scalebar */}
-      <div className="scalebar">
-        <div className="bar"></div>
-        200 m
+      {/* 3D block model container */}
+      <div 
+        id="viewport3dContainer"
+        style={{ 
+          display: activeTab === '3d' ? 'flex' : 'none', 
+          height: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'var(--text-dim)',
+          fontFamily: 'var(--mono)',
+          fontSize: '12px'
+        }}
+      >
+        3D BLOCK MODEL VIEWPORT (PLACEHOLDER)
       </div>
-
       {/* Chainage navigation dashboard */}
       <div className="chnav">
         <div 

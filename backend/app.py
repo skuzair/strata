@@ -51,6 +51,48 @@ def get_categories():
         return jsonify({"error": "Categories not found"}), 404
     return jsonify(categories)
 
+@app.route('/api/map/route', methods=['GET'])
+def get_map_route():
+    geojson = geotechnical_service.get_map_route()
+    if geojson is None:
+        return jsonify({"error": "Route GeoJSON not found"}), 404
+    return jsonify(geojson)
+
+@app.route('/api/map/landslides', methods=['GET'])
+def get_map_landslides():
+    geojson = geotechnical_service.get_map_landslides()
+    if geojson is None:
+        return jsonify({"error": "Landslides GeoJSON not found"}), 404
+    return jsonify(geojson)
+
+@app.route('/api/map/faults', methods=['GET'])
+def get_map_faults():
+    geojson = geotechnical_service.get_map_faults()
+    if geojson is None:
+        return jsonify({"error": "Faults GeoJSON not found"}), 404
+    return jsonify(geojson)
+
+@app.route('/api/map/boreholes', methods=['GET'])
+def get_map_boreholes():
+    geojson = geotechnical_service.get_map_boreholes()
+    if geojson is None:
+        return jsonify({"error": "Boreholes GeoJSON not found"}), 404
+    return jsonify(geojson)
+
+@app.route('/api/map/groundwater', methods=['GET'])
+def get_map_groundwater():
+    geojson = geotechnical_service.get_map_groundwater()
+    if geojson is None:
+        return jsonify({"error": "Groundwater GeoJSON not found"}), 404
+    return jsonify(geojson)
+
+@app.route('/api/map/predictions', methods=['GET'])
+def get_map_predictions():
+    geojson = geotechnical_service.get_map_predictions()
+    if geojson is None:
+        return jsonify({"error": "Predictions GeoJSON not found"}), 404
+    return jsonify(geojson)
+
 @app.route('/api/upload', methods=['POST'])
 def mock_upload():
     if 'file' not in request.files:

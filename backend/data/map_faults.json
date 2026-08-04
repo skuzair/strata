@@ -1,0 +1,2443 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 1",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29291666666667,
+            33.1000031088756
+          ],
+          [
+            75.30958314872285,
+            33.09992466367911
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 2",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.35125000000001,
+            33.15099831618139
+          ],
+          [
+            75.36673043313084,
+            33.144823045510414
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 3",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29681944444445,
+            33.17035432047454
+          ],
+          [
+            75.30925263305349,
+            33.171644987361155
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 4",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.32819444444445,
+            33.1861856434228
+          ],
+          [
+            75.3405432666503,
+            33.18812383591281
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 5",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.28958333333334,
+            33.09886929345001
+          ],
+          [
+            75.30197931222835,
+            33.10047855018357
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 6",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29375,
+            33.17587214292102
+          ],
+          [
+            75.30598755644137,
+            33.17842012493517
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 7",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.3388003195379,
+            33.18903248826344
+          ],
+          [
+            75.34666719922983,
+            33.19178142412249
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 8",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.3137638888889,
+            33.073926874860646
+          ],
+          [
+            75.3218428048931,
+            33.08850455965539
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 9",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29902777777778,
+            33.130226614726766
+          ],
+          [
+            75.31660744624864,
+            33.15854739097965
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 10",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.34125,
+            33.106991202582726
+          ],
+          [
+            75.34521153358055,
+            33.08653798695613
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 11",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.3301388888889,
+            33.13110813283241
+          ],
+          [
+            75.33548123114345,
+            33.11532088617528
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 12",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29902777777778,
+            33.07690276222715
+          ],
+          [
+            75.30692694130289,
+            33.06721497529702
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 13",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.30791666666667,
+            33.08041963440555
+          ],
+          [
+            75.31429631429148,
+            33.069670211342746
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 14",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.33680555555556,
+            33.1166569999983
+          ],
+          [
+            75.34571030692224,
+            33.08888291409899
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 15",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.30654166666667,
+            33.10018732892188
+          ],
+          [
+            75.31659433156202,
+            33.09275806728278
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 16",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.36069444444445,
+            33.070294479933
+          ],
+          [
+            75.37259270546632,
+            33.06646285042904
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 17",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.2085138888889,
+            32.99990179147585
+          ],
+          [
+            75.22016384181443,
+            33.00443264093629
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 18",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.25041666666668,
+            33.00056292445011
+          ],
+          [
+            75.26290612497444,
+            33.001076179921135
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 19",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.23647222222223,
+            33.01430969493244
+          ],
+          [
+            75.25269448278947,
+            33.01813278790365
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 20",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27318055555557,
+            33.030859185961866
+          ],
+          [
+            75.28984373993583,
+            33.03119986775902
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 21",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.22004337436931,
+            33.00505939181666
+          ],
+          [
+            75.22380783249241,
+            33.006845439450544
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 22",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.22402777777779,
+            33.00888348527607
+          ],
+          [
+            75.23576667162878,
+            33.01317864198511
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 23",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.25180555555556,
+            33.02100529003214
+          ],
+          [
+            75.28714710678481,
+            33.03354421967987
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 24",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.1976388888889,
+            33.01412443394975
+          ],
+          [
+            75.20773569384542,
+            33.00086425644537
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 25",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27486111111112,
+            33.05603460945272
+          ],
+          [
+            75.27962950556645,
+            33.044479852236826
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 26",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27768055555556,
+            33.05129395502836
+          ],
+          [
+            75.28193260837223,
+            33.03517881231656
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 27",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.16791666666667,
+            33.04487115632295
+          ],
+          [
+            75.16986519002006,
+            33.03252396001199
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 28",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.28169444444445,
+            33.05982925301257
+          ],
+          [
+            75.28442258380105,
+            33.04338738470545
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 29",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27125000000001,
+            33.058525401466014
+          ],
+          [
+            75.27382940479131,
+            33.0552531267169
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 30",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.31069444444445,
+            33.02119894920894
+          ],
+          [
+            75.33854853370903,
+            33.01254769752577
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 31",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.35348611111112,
+            33.023935533144815
+          ],
+          [
+            75.37015156946306,
+            33.02373484508436
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 32",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.31958333333334,
+            33.050060523047144
+          ],
+          [
+            75.339100878819,
+            33.0573470308522
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 33",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.3151388888889,
+            33.008291331656395
+          ],
+          [
+            75.33073425833547,
+            33.01417029666758
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 34",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.28930555555556,
+            33.03907155729041
+          ],
+          [
+            75.30824539746278,
+            33.05538971860011
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 35",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.31625000000001,
+            33.04798518701026
+          ],
+          [
+            75.3430195734126,
+            33.059564668162366
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 36",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.34320833333334,
+            33.02445462774682
+          ],
+          [
+            75.35263375017487,
+            33.03820014684001
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 37",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.30541666666667,
+            33.032048238406894
+          ],
+          [
+            75.33986780402857,
+            33.06227758803463
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 38",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29705898825276,
+            33.04753170504113
+          ],
+          [
+            75.29964346581848,
+            33.05079997473982
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 39",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.30642758732463,
+            33.054714236679665
+          ],
+          [
+            75.31141073020483,
+            33.061393512948854
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 40",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.35930555555557,
+            33.011534222381144
+          ],
+          [
+            75.37524280680623,
+            32.99811662943938
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 41",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.34794444444445,
+            33.01893691897338
+          ],
+          [
+            75.3583051192173,
+            33.0119436065786
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 42",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.33688490552396,
+            33.01295967660618
+          ],
+          [
+            75.3408506063131,
+            33.01168126807908
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 43",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.28956944444445,
+            33.02911853473615
+          ],
+          [
+            75.30468908962666,
+            33.02210610952502
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 44",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.21208333333334,
+            33.08143426415978
+          ],
+          [
+            75.22873909340304,
+            33.08203711926574
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 45",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.21763235439528,
+            33.08300430278267
+          ],
+          [
+            75.23011275091443,
+            33.083704090410954
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 46",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.15456944444445,
+            33.10732997913915
+          ],
+          [
+            75.17066126505236,
+            33.10299049906651
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 47",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.21511111111111,
+            33.11421578266452
+          ],
+          [
+            75.23164110192276,
+            33.11634584875385
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 48",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.25375000000001,
+            33.14493114418956
+          ],
+          [
+            75.27040493388996,
+            33.14555640805296
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 49",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.19834722222222,
+            33.15259443544491
+          ],
+          [
+            75.21081351500142,
+            33.153511792705544
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 50",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.15045833333335,
+            33.18475214040516
+          ],
+          [
+            75.1628346209178,
+            33.1829978583222
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 51",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.20736111111113,
+            33.061793526650355
+          ],
+          [
+            75.22151318927862,
+            33.070596734095304
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 52",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.23323611111113,
+            33.082998290847186
+          ],
+          [
+            75.24550713546934,
+            33.085379878804844
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 53",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.25325000000001,
+            33.09118775335045
+          ],
+          [
+            75.26557419706853,
+            33.09327681213758
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 54",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.26913036904484,
+            33.14668800097687
+          ],
+          [
+            75.27730061507472,
+            33.148328587535254
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 55",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.20926283531756,
+            33.15274243113219
+          ],
+          [
+            75.21341526190488,
+            33.15308661792441
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 56",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.26708333333335,
+            33.15832549889506
+          ],
+          [
+            75.28745747648891,
+            33.16267544929184
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 57",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.19470833333334,
+            33.11573067781258
+          ],
+          [
+            75.20657617156093,
+            33.12743248081817
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 58",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.15218055555556,
+            33.11914662407959
+          ],
+          [
+            75.15836512001056,
+            33.13000945807915
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 59",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.17652777777779,
+            33.130661617067695
+          ],
+          [
+            75.18411039807286,
+            33.14550350533161
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 60",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27736111111112,
+            33.08228431372549
+          ],
+          [
+            75.2802776241491,
+            33.07012931674073
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 61",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.23597222222223,
+            33.11666985432675
+          ],
+          [
+            75.2390806011919,
+            33.12877720664594
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 62",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.18573611111113,
+            33.08566392188592
+          ],
+          [
+            75.19778148280751,
+            33.08232340984498
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 63",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.22152777777778,
+            33.09171168395587
+          ],
+          [
+            75.23764758622175,
+            33.08747735360653
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 64",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.15041666666667,
+            33.11099040404518
+          ],
+          [
+            75.1539542288359,
+            33.10878886707979
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 65",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.18406944444446,
+            33.16540908216096
+          ],
+          [
+            75.19819742279596,
+            33.15656724946196
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 66",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27134722222223,
+            33.19704848232308
+          ],
+          [
+            75.29020554384931,
+            33.18819458582564
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 1",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.12072222222221,
+            33.05476944444444
+          ],
+          [
+            75.2212138888889,
+            33.10307777777778
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 2",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            74.9995888888889,
+            33.221125
+          ],
+          [
+            75.19393611111111,
+            33.181666666666665
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 3",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.20350277777779,
+            32.92630555555555
+          ],
+          [
+            75.19263611111111,
+            32.90031388888889
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 4",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.11989722222222,
+            33.11879166666667
+          ],
+          [
+            75.16758055555556,
+            33.10380833333333
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 5",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.11043055555555,
+            33.116702777777775
+          ],
+          [
+            75.12783888888889,
+            33.16834166666666
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 6",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.14769166666667,
+            32.933825
+          ],
+          [
+            75.11610833333333,
+            32.91492777777778
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 7",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.14300833333334,
+            32.916691666666665
+          ],
+          [
+            75.05666388888889,
+            32.90132222222222
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 8",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.15593333333334,
+            32.83525277777778
+          ],
+          [
+            75.14211111111112,
+            32.90541388888889
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 9",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.14359166666668,
+            32.890347222222225
+          ],
+          [
+            75.09891111111111,
+            32.91629722222222
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 10",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.1065861111111,
+            32.908944444444444
+          ],
+          [
+            75.11875833333333,
+            32.95529722222223
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 11",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.66556944444444,
+            32.714983333333336
+          ],
+          [
+            75.25,
+            33.211800000000004
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 12",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.548925,
+            33.08623055555556
+          ],
+          [
+            75.31404722222221,
+            33.047469444444445
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 13",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.24725277777777,
+            33.24265
+          ],
+          [
+            75.50068333333333,
+            32.920852777777775
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 14",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.462875,
+            33.110822222222225
+          ],
+          [
+            75.39296111111112,
+            33.13609722222222
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 15",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.43388611111112,
+            33.224133333333334
+          ],
+          [
+            75.37027777777777,
+            33.19065
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 16",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.48484722222223,
+            32.749769444444446
+          ],
+          [
+            75.14565555555556,
+            32.937925
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 17",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.42963055555556,
+            32.99463333333333
+          ],
+          [
+            75.35536111111111,
+            32.98594166666667
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 18",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.40781944444446,
+            33.12237777777778
+          ],
+          [
+            75.28895,
+            33.138175
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 19",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.39145,
+            33.10848888888889
+          ],
+          [
+            75.42137500000001,
+            33.000055555555555
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 20",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.40283333333333,
+            33.102894444444445
+          ],
+          [
+            75.35835277777777,
+            33.14715555555556
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 21",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.38176666666666,
+            33.13899444444444
+          ],
+          [
+            75.34992222222222,
+            33.15108055555555
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 22",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.35903055555555,
+            33.149544444444444
+          ],
+          [
+            75.25209166666667,
+            33.25000277777778
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 23",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.405375,
+            32.75228055555556
+          ],
+          [
+            75.14695555555556,
+            32.93235555555555
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 24",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.29795277777778,
+            33.21246666666667
+          ],
+          [
+            75.35893888888889,
+            33.11775
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 25",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.36079166666666,
+            33.04767222222222
+          ],
+          [
+            75.33599166666666,
+            33.01676944444444
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 26",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.30935,
+            33.02299722222222
+          ],
+          [
+            75.34086111111111,
+            33.01180277777778
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 27",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.31374444444444,
+            32.904222222222224
+          ],
+          [
+            75.35318888888888,
+            32.90128611111111
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 28",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.31635,
+            32.97489166666667
+          ],
+          [
+            75.25555,
+            32.96660277777778
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 29",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.28425,
+            32.934999999999995
+          ],
+          [
+            75.21065833333334,
+            32.85355833333333
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 30",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.24433333333333,
+            33.128080555555556
+          ],
+          [
+            75.21097222222222,
+            33.10147222222222
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 31",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.25,
+            33.019625
+          ],
+          [
+            75.18305277777779,
+            32.972944444444444
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 32",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.14859722222224,
+            33.18521666666666
+          ],
+          [
+            75.21334444444445,
+            33.172580555555555
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament 33",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.1871888888889,
+            33.10874166666667
+          ],
+          [
+            75.19979444444445,
+            33.14918611111111
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament NEW_100",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.2811870779901,
+            33.06376847388115
+          ],
+          [
+            75.28346092200991,
+            33.06568752611886
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament NEW_101",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.2906393335052,
+            33.12131747388114
+          ],
+          [
+            75.2929146664948,
+            33.12323652611885
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament Murree Thrust",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.32801902306615,
+            33.1325372985082
+          ],
+          [
+            75.33105319915607,
+            33.13509603482514
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament Vaikritha Thrust",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.36919394014501,
+            33.13733452073042
+          ],
+          [
+            75.3722282820772,
+            33.13989325704736
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament Main Boundary Thrust (MBT)",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.13613869503229,
+            32.95789840961931
+          ],
+          [
+            75.13916686052329,
+            32.96045714593625
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament Fault-1",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.2503611111111,
+            33.062466666666666
+          ],
+          [
+            75.29153333333333,
+            33.065377777777776
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lineament Fault-2",
+        "description": "",
+        "stroke": "#ffa500",
+        "stroke-opacity": 1.0,
+        "stroke-width": 3.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.27148611111112,
+            33.093830555555556
+          ],
+          [
+            75.313075,
+            33.15211111111111
+          ]
+        ]
+      }
+    }
+  ]
+}

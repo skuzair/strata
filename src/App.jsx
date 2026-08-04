@@ -8,6 +8,7 @@ import WelcomeModal from './components/WelcomeModal';
 import GlossaryPanel from './components/GlossaryPanel';
 import Tooltip from './components/Tooltip';
 import { api } from './services/api';
+import { gisService } from './services/gisService';
 import { DEFAULT_PROJECT } from './config';
 
 export default function App() {
@@ -19,6 +20,14 @@ export default function App() {
   const [systemStatus, setSystemStatus] = useState(null);
   const [supportMatrix, setSupportMatrix] = useState(null);
   const [recommendationCategories, setRecommendationCategories] = useState([]);
+  const [mapData, setMapData] = useState({
+    route: null,
+    landslides: null,
+    faults: null,
+    boreholes: null,
+    groundwater: null,
+    predictions: null
+  });
 
   // UI Interactive States
   const [currentSegIdx, setCurrentSegIdx] = useState(null);
@@ -48,14 +57,26 @@ export default function App() {
           lyrs,
           statusData,
           matrix,
-          categories
+          categories,
+          mapRoute,
+          mapLandslides,
+          mapFaults,
+          mapBoreholes,
+          mapGroundwater,
+          mapPredictions
         ] = await Promise.all([
           api.getSegments(),
           api.getProjects(),
           api.getLayers(),
           api.getStatus(),
           api.getSupportMatrix(),
-          api.getCategories()
+          api.getCategories(),
+          gisService.getMapRoute(),
+          gisService.getMapLandslides(),
+          gisService.getMapFaults(),
+          gisService.getMapBoreholes(),
+          gisService.getMapGroundwater(),
+          gisService.getMapPredictions()
         ]);
 
         setSegments(segs);
@@ -75,6 +96,14 @@ export default function App() {
         setSystemStatus(statusData);
         setSupportMatrix(matrix);
         setRecommendationCategories(categories);
+        setMapData({
+          route: mapRoute,
+          landslides: mapLandslides,
+          faults: mapFaults,
+          boreholes: mapBoreholes,
+          groundwater: mapGroundwater,
+          predictions: mapPredictions
+        });
       } catch (err) {
         console.error("Error loading Strata REST API services:", err);
       }
@@ -187,6 +216,7 @@ export default function App() {
           onTogglePlay={handleTogglePlay}
           onPrevSegment={handlePrevSegment}
           onNextSegment={handleNextSegment}
+          mapData={mapData}
         />
 
         <RightPanel 

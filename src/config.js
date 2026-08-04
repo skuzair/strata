@@ -5,5 +5,17 @@ export const DEFAULT_PROJECT = 'nh44';
 export const FEATURES = {
   xai_endpoint: false,
   llm_integration: false,
-  map_visualization: false
+  map_visualization: true
+};
+
+// Map provider configuration
+export const MAP_CONFIG = {
+  basemap: {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  },
+  maptiler: {
+    url: 'https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key={key}',
+    attribution: '&copy; MapTiler'
+  }
 };

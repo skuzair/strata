@@ -1,0 +1,56 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Chenani-Nashri Tunnel",
+        "description": "",
+        "stroke": "#0000ff",
+        "stroke-opacity": 1.0,
+        "stroke-width": 4.0
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            75.2793,
+            33.0463
+          ],
+          [
+            75.2928,
+            33.1285
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "South Portal (Chenani)",
+        "description": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.2793,
+          33.0463
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "North Portal (Nashri)",
+        "description": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.2928,
+          33.1285
+        ]
+      }
+    }
+  ]
+}
