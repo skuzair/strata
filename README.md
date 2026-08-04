@@ -12,23 +12,23 @@ The system is separated into a presentation-agnostic Flask backend service and a
 
 ```mermaid
 graph TD
-    subgraph Frontend (React + Vite)
-        Vite[Vite Dev Server :5173] --> App[App.jsx]
-        App --> TopBar[TopBar.jsx]
-        App --> LayerToolbar[LayerToolbar.jsx]
-        App --> Viewport[Viewport.jsx]
-        App --> RightPanel[RightPanel.jsx]
-        App --> Ribbon[Ribbon.jsx]
-        App --> WelcomeModal[WelcomeModal.jsx]
-        App --> GlossaryPanel[GlossaryPanel.jsx]
-        App --> Tooltip[Tooltip.jsx]
-        App -.-> APIClient[api.js Client]
+    subgraph Frontend["React + Vite"]
+        Vite["Vite Dev Server :5173"] --> App["App.jsx"]
+        App --> TopBar["TopBar.jsx"]
+        App --> LayerToolbar["LayerToolbar.jsx"]
+        App --> Viewport["Viewport.jsx"]
+        App --> RightPanel["RightPanel.jsx"]
+        App --> Ribbon["Ribbon.jsx"]
+        App --> WelcomeModal["WelcomeModal.jsx"]
+        App --> GlossaryPanel["GlossaryPanel.jsx"]
+        App --> Tooltip["Tooltip.jsx"]
+        App -.-> APIClient["api.js Client"]
     end
 
-    subgraph Backend (Flask)
-        APIClient --> FlaskServer[Flask REST Server :5000]
-        FlaskServer --> GeoService[geotechnical_service.py]
-        GeoService --> Data[backend/data/]
+    subgraph Backend["Flask"]
+        APIClient --> FlaskServer["Flask REST Server :5000"]
+        FlaskServer --> GeoService["geotechnical_service.py"]
+        GeoService --> Data["backend/data/"]
         Data --> segs["segments.json"]
         Data --> matrix["supportMatrix.json"]
         Data --> cats["recommendationCategories.json"]
