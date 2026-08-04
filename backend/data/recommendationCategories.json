@@ -1,0 +1,113 @@
+[
+  {
+    "id": "rockMassInfo",
+    "title": "Rock Mass Information",
+    "fields": {
+      "rockMassClass": "Rock Mass Class",
+      "rmrRange": "RMR Range"
+    }
+  },
+  {
+    "id": "failureMode",
+    "title": "Failure Mode",
+    "fields": {
+      "failureMode": "Failure Mode"
+    }
+  },
+  {
+    "id": "excavation",
+    "title": "Excavation",
+    "fields": {
+      "excavationMethod": "Excavation Method",
+      "advanceLength": "Advance Length"
+    }
+  },
+  {
+    "id": "groundDeformation",
+    "title": "Ground Deformation",
+    "fields": {
+      "allowableDeformationTolerance": "Allowable Deformation Tolerance"
+    }
+  },
+  {
+    "id": "shotcrete",
+    "title": "Shotcrete",
+    "fosKey": "shotcrete",
+    "fields": {
+      "shotcreteFirstLayer": "First Layer Thickness",
+      "shotcreteSecondLayer": "Second Layer Thickness",
+      "shotcreteThirdLayer": "Third Layer Thickness"
+    }
+  },
+  {
+    "id": "wireMesh",
+    "title": "Wire Mesh",
+    "fields": {
+      "meshSpecification": "Mesh Specification"
+    }
+  },
+  {
+    "id": "rockBolts",
+    "title": "Rock Bolts",
+    "fosKey": "rockBolts",
+    "fields": {
+      "boltType": "Bolt Type",
+      "boltLength": "Bolt Length",
+      "boltDiameter": "Bolt Diameter",
+      "boltLongitudinalSpacing": "Longitudinal Spacing",
+      "boltTransverseSpacing": "Transverse Spacing"
+    }
+  },
+  {
+    "id": "latticeGirder",
+    "title": "Lattice Girder",
+    "fosKey": "latticeGirder",
+    "fields": {
+      "latticeGirderBarDiameter": "Bar Diameter",
+      "latticeGirderSpacing": "Spacing"
+    }
+  },
+  {
+    "id": "steelRibs",
+    "title": "Steel Ribs",
+    "fosKey": "steelRibs",
+    "fields": {
+      "steelRibType": "Steel Rib Type",
+      "steelRibSpacing": "Steel Rib Spacing"
+    }
+  },
+  {
+    "id": "crownSupport",
+    "title": "Crown Support",
+    "fosKey": "crownSupport",
+    "fields": {
+      "crownSupportType": "Crown Support Type"
+    }
+  },
+  {
+    "id": "faceSupport",
+    "title": "Face Support",
+    "fosKey": "faceSupport",
+    "fields": {
+      "faceShotcreteThickness": "Face Shotcrete Thickness",
+      "faceFiberglassRockBolts": "Fiberglass Rock Bolts"
+    }
+  },
+  {
+    "id": "temporaryInvert",
+    "title": "Temporary Invert",
+    "fosKey": "temporaryInvert",
+    "fields": {
+      "temporaryInvertThickness": "Temporary Invert Thickness"
+    }
+  },
+  {
+    "id": "finalLining",
+    "title": "Final Lining",
+    "fosKey": "finalLining",
+    "fields": {
+      "finalLiningCrownThickness": "Crown Final Lining Thickness",
+      "finalLiningInvertThickness": "Invert Final Lining Thickness"
+    }
+  }
+]

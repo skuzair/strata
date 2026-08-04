@@ -1,0 +1,803 @@
+[
+  {
+    "start": 0,
+    "end": 250,
+    "ground": "Hard Quartzite",
+    "rmr": 78,
+    "q": 9.2,
+    "gsi": 74,
+    "fault": 6,
+    "water": 10,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S1",
+    "confidence": 94,
+    "comment": "Massive hard rock, minor jointing observed at face.",
+    "probability": {
+      "fault": 6,
+      "water": 10,
+      "groundBehaviour": "Stable / Self-supporting",
+      "tunnelDeformation": "8 mm"
+    },
+    "supportClass": "A1",
+    "recommendationConfidence": {
+      "overall": 94
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 250,
+    "end": 520,
+    "ground": "Jointed Quartzite",
+    "rmr": 64,
+    "q": 5.1,
+    "gsi": 60,
+    "fault": 14,
+    "water": 18,
+    "hazard": "low",
+    "hazardTypes": [
+      "Localized block fall"
+    ],
+    "support": "S1",
+    "confidence": 91,
+    "comment": "Jointed rock mass, three dominant joint sets mapped.",
+    "probability": {
+      "fault": 14,
+      "water": 18,
+      "groundBehaviour": "Stable with spot bolting",
+      "tunnelDeformation": "12 mm"
+    },
+    "supportClass": "A2",
+    "recommendationConfidence": {
+      "overall": 91
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 520,
+    "end": 760,
+    "ground": "Weathered Gneiss",
+    "rmr": 52,
+    "q": 2.8,
+    "gsi": 46,
+    "fault": 22,
+    "water": 35,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Block instability"
+    ],
+    "support": "S2",
+    "confidence": 87,
+    "comment": "Moderate weathering grade III, seepage along joints.",
+    "probability": {
+      "fault": 22,
+      "water": 35,
+      "groundBehaviour": "Block Slippage",
+      "tunnelDeformation": "24 mm"
+    },
+    "supportClass": "B1",
+    "recommendationConfidence": {
+      "overall": 87
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 760,
+    "end": 1080,
+    "ground": "Fractured Gneiss",
+    "rmr": 44,
+    "q": 1.6,
+    "gsi": 38,
+    "fault": 38,
+    "water": 42,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Face instability",
+      "Wedge failure"
+    ],
+    "support": "S3",
+    "confidence": 83,
+    "comment": "Heavily jointed, RQD dropping ahead of mapped fault trace.",
+    "probability": {
+      "fault": 38,
+      "water": 42,
+      "groundBehaviour": "Joint Shear / Wedge Drop",
+      "tunnelDeformation": "45 mm"
+    },
+    "supportClass": "B2",
+    "recommendationConfidence": {
+      "overall": 83
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 1080,
+    "end": 1340,
+    "ground": "Sheared Phyllite",
+    "rmr": 38,
+    "q": 0.9,
+    "gsi": 31,
+    "fault": 76,
+    "water": 70,
+    "hazard": "high",
+    "hazardTypes": [
+      "Collapse risk",
+      "Heavy water ingress"
+    ],
+    "support": "S4",
+    "confidence": 84,
+    "comment": "Fault gouge encountered, heavy groundwater ingress at face.",
+    "probability": {
+      "fault": 76,
+      "water": 70,
+      "groundBehaviour": "Moderate Squeezing",
+      "tunnelDeformation": "90 mm"
+    },
+    "supportClass": "B3",
+    "recommendationConfidence": {
+      "overall": 84
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 1340,
+    "end": 1620,
+    "ground": "Fault Gouge",
+    "rmr": 24,
+    "q": 0.3,
+    "gsi": 19,
+    "fault": 91,
+    "water": 88,
+    "hazard": "high",
+    "hazardTypes": [
+      "Collapse risk",
+      "Squeezing ground"
+    ],
+    "support": "S5",
+    "confidence": 79,
+    "comment": "Fault core zone, clay gouge, very poor stand-up time.",
+    "probability": {
+      "fault": 91,
+      "water": 88,
+      "groundBehaviour": "Heavy Squeezing",
+      "tunnelDeformation": "280 mm"
+    },
+    "supportClass": "C4",
+    "recommendationConfidence": {
+      "overall": 79
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 1620,
+    "end": 1980,
+    "ground": "Weathered Gneiss",
+    "rmr": 48,
+    "q": 2.1,
+    "gsi": 42,
+    "fault": 28,
+    "water": 46,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Squeezing ground"
+    ],
+    "support": "S3",
+    "confidence": 85,
+    "comment": "Recovering rock mass quality, residual seepage present.",
+    "probability": {
+      "fault": 28,
+      "water": 46,
+      "groundBehaviour": "Minor Squeezing",
+      "tunnelDeformation": "48 mm"
+    },
+    "supportClass": "B2",
+    "recommendationConfidence": {
+      "overall": 85
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 1980,
+    "end": 2400,
+    "ground": "Jointed Quartzite",
+    "rmr": 66,
+    "q": 5.8,
+    "gsi": 62,
+    "fault": 12,
+    "water": 20,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S1",
+    "confidence": 92,
+    "comment": "Stable jointed rock, consistent with regional trend.",
+    "probability": {
+      "fault": 12,
+      "water": 20,
+      "groundBehaviour": "Joint Controlled Wedge",
+      "tunnelDeformation": "10 mm"
+    },
+    "supportClass": "A2",
+    "recommendationConfidence": {
+      "overall": 92
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 2400,
+    "end": 2850,
+    "ground": "Hard Quartzite",
+    "rmr": 80,
+    "q": 10.1,
+    "gsi": 76,
+    "fault": 4,
+    "water": 8,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S1",
+    "confidence": 95,
+    "comment": "Massive competent rock, minimal support required.",
+    "probability": {
+      "fault": 4,
+      "water": 8,
+      "groundBehaviour": "Stable / Self-supporting",
+      "tunnelDeformation": "6 mm"
+    },
+    "supportClass": "A1",
+    "recommendationConfidence": {
+      "overall": 95
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 2850,
+    "end": 3200,
+    "ground": "Mixed Ground",
+    "rmr": 56,
+    "q": 3.2,
+    "gsi": 50,
+    "fault": 30,
+    "water": 40,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Differential overbreak"
+    ],
+    "support": "S2",
+    "confidence": 86,
+    "comment": "Lithological contact zone, variable weathering observed.",
+    "probability": {
+      "fault": 30,
+      "water": 40,
+      "groundBehaviour": "Differential Deflection",
+      "tunnelDeformation": "32 mm"
+    },
+    "supportClass": "B1",
+    "recommendationConfidence": {
+      "overall": 86
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 3200,
+    "end": 3580,
+    "ground": "Sheared Phyllite",
+    "rmr": 34,
+    "q": 0.7,
+    "gsi": 28,
+    "fault": 68,
+    "water": 62,
+    "hazard": "high",
+    "hazardTypes": [
+      "Rockburst risk",
+      "Collapse risk"
+    ],
+    "support": "S4",
+    "confidence": 81,
+    "comment": "Second mapped shear zone, high horizontal stress ratio.",
+    "probability": {
+      "fault": 68,
+      "water": 62,
+      "groundBehaviour": "Heavy Squeezing / Spalling",
+      "tunnelDeformation": "145 mm"
+    },
+    "supportClass": "C2",
+    "recommendationConfidence": {
+      "overall": 81
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 3580,
+    "end": 4000,
+    "ground": "Weathered Gneiss",
+    "rmr": 50,
+    "q": 2.4,
+    "gsi": 44,
+    "fault": 24,
+    "water": 38,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Block instability"
+    ],
+    "support": "S2",
+    "confidence": 88,
+    "comment": "Improving ground, transitioning out of shear influence.",
+    "probability": {
+      "fault": 24,
+      "water": 38,
+      "groundBehaviour": "Block Instability",
+      "tunnelDeformation": "28 mm"
+    },
+    "supportClass": "B1",
+    "recommendationConfidence": {
+      "overall": 88
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 4000,
+    "end": 4260,
+    "ground": "Jointed Quartzite",
+    "rmr": 62,
+    "q": 4.6,
+    "gsi": 58,
+    "fault": 16,
+    "water": 22,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S1",
+    "confidence": 90,
+    "comment": "Current face — stable conditions, advance on schedule.",
+    "probability": {
+      "fault": 16,
+      "water": 22,
+      "groundBehaviour": "Joint Controlled Wedge",
+      "tunnelDeformation": "14 mm"
+    },
+    "supportClass": "A2",
+    "recommendationConfidence": {
+      "overall": 90
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 4260,
+    "end": 4650,
+    "ground": "Weathered Gneiss",
+    "rmr": 46,
+    "q": 1.9,
+    "gsi": 40,
+    "fault": 34,
+    "water": 48,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Face instability"
+    ],
+    "support": "S3",
+    "confidence": 74,
+    "comment": "Predicted ahead of face — proximity to inferred fault trace.",
+    "probability": {
+      "fault": 34,
+      "water": 48,
+      "groundBehaviour": "Face Instability",
+      "tunnelDeformation": "42 mm"
+    },
+    "supportClass": "B2",
+    "recommendationConfidence": {
+      "overall": 74
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 4650,
+    "end": 5100,
+    "ground": "Sheared Phyllite",
+    "rmr": 29,
+    "q": 0.5,
+    "gsi": 24,
+    "fault": 82,
+    "water": 79,
+    "hazard": "high",
+    "hazardTypes": [
+      "Collapse risk",
+      "Heavy water ingress"
+    ],
+    "support": "S5",
+    "confidence": 68,
+    "comment": "Predicted fault zone — recommend advance probing.",
+    "probability": {
+      "fault": 82,
+      "water": 79,
+      "groundBehaviour": "Chimney Failure / Heavy Inflow",
+      "tunnelDeformation": "220 mm"
+    },
+    "supportClass": "C3",
+    "recommendationConfidence": {
+      "overall": 68
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 5100,
+    "end": 5600,
+    "ground": "Mixed Ground",
+    "rmr": 53,
+    "q": 2.9,
+    "gsi": 47,
+    "fault": 26,
+    "water": 36,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Squeezing ground"
+    ],
+    "support": "S2",
+    "confidence": 71,
+    "comment": "Forecast transition zone, moderate confidence — limited borehole density.",
+    "probability": {
+      "fault": 26,
+      "water": 36,
+      "groundBehaviour": "Minor Squeezing",
+      "tunnelDeformation": "38 mm"
+    },
+    "supportClass": "B1",
+    "recommendationConfidence": {
+      "overall": 71
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 5600,
+    "end": 6200,
+    "ground": "Hard Quartzite",
+    "rmr": 75,
+    "q": 8.4,
+    "gsi": 70,
+    "fault": 8,
+    "water": 14,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S1",
+    "confidence": 77,
+    "comment": "Forecast stable corridor based on regional geological mapping.",
+    "probability": {
+      "fault": 8,
+      "water": 14,
+      "groundBehaviour": "Stable / Self-supporting",
+      "tunnelDeformation": "9 mm"
+    },
+    "supportClass": "A1",
+    "recommendationConfidence": {
+      "overall": 77
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 6200,
+    "end": 6800,
+    "ground": "Jointed Quartzite",
+    "rmr": 60,
+    "q": 4,
+    "gsi": 55,
+    "fault": 20,
+    "water": 28,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S2",
+    "confidence": 69,
+    "comment": "Long-range forecast — confidence reduced beyond 2km lookahead.",
+    "probability": {
+      "fault": 20,
+      "water": 28,
+      "groundBehaviour": "Joint Controlled Wedge",
+      "tunnelDeformation": "16 mm"
+    },
+    "supportClass": "B1",
+    "recommendationConfidence": {
+      "overall": 69
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 6800,
+    "end": 7500,
+    "ground": "Weathered Gneiss",
+    "rmr": 45,
+    "q": 1.7,
+    "gsi": 39,
+    "fault": 36,
+    "water": 44,
+    "hazard": "moderate",
+    "hazardTypes": [
+      "Block instability"
+    ],
+    "support": "S3",
+    "confidence": 62,
+    "comment": "Long-range forecast — sparse data density, recommend infill boreholes.",
+    "probability": {
+      "fault": 36,
+      "water": 44,
+      "groundBehaviour": "Block Instability",
+      "tunnelDeformation": "52 mm"
+    },
+    "supportClass": "B3",
+    "recommendationConfidence": {
+      "overall": 62
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 7500,
+    "end": 8400,
+    "ground": "Mixed Ground",
+    "rmr": 50,
+    "q": 2.3,
+    "gsi": 44,
+    "fault": 24,
+    "water": 32,
+    "hazard": "moderate",
+    "hazardTypes": [],
+    "support": "S2",
+    "confidence": 58,
+    "comment": "Sparse data zone — low borehole density, model extrapolating from surface mapping.",
+    "probability": {
+      "fault": 24,
+      "water": 32,
+      "groundBehaviour": "Differential Deflection",
+      "tunnelDeformation": "48 mm"
+    },
+    "supportClass": "B2",
+    "recommendationConfidence": {
+      "overall": 58
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 8400,
+    "end": 9100,
+    "ground": "Jointed Quartzite",
+    "rmr": 58,
+    "q": 3.6,
+    "gsi": 52,
+    "fault": 18,
+    "water": 24,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S2",
+    "confidence": 55,
+    "comment": "Far-field forecast, indicative only — to be confirmed by advance investigation.",
+    "probability": {
+      "fault": 18,
+      "water": 24,
+      "groundBehaviour": "Joint Controlled Wedge",
+      "tunnelDeformation": "20 mm"
+    },
+    "supportClass": "B1",
+    "recommendationConfidence": {
+      "overall": 55
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  },
+  {
+    "start": 9100,
+    "end": 9800,
+    "ground": "Hard Quartzite",
+    "rmr": 72,
+    "q": 7.2,
+    "gsi": 66,
+    "fault": 10,
+    "water": 16,
+    "hazard": "low",
+    "hazardTypes": [],
+    "support": "S1",
+    "confidence": 52,
+    "comment": "Portal approach zone — preliminary forecast pending detailed survey.",
+    "probability": {
+      "fault": 10,
+      "water": 16,
+      "groundBehaviour": "Stable / Self-supporting",
+      "tunnelDeformation": "10 mm"
+    },
+    "supportClass": "A2",
+    "recommendationConfidence": {
+      "overall": 52
+    },
+    "supportFactorOfSafety": {
+      "rockBolts": 1.95,
+      "shotcrete": 2.18,
+      "latticeGirder": 2.03,
+      "steelRibs": 2.42,
+      "crownSupport": 1.88,
+      "faceSupport": 1.74,
+      "temporaryInvert": 2.1,
+      "finalLining": 2.8
+    }
+  }
+]

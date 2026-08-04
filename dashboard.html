@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strata — Geological Behaviour Prediction Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#11151A;
+    --panel:#181D24;
+    --panel-2:#1E242C;
+    --line:#2A323C;
+    --line-soft:#222931;
+    --text:#E7EAEE;
+    --text-dim:#8B95A3;
+    --text-faint:#5C6573;
+    --amber:#E0913F;
+    --amber-dim:#7A5A30;
+    --teal:#4FA6A0;
+    --teal-dim:#2C5350;
+    --red:#D6543F;
+    --red-dim:#5C2B22;
+    --green:#5FA864;
+    --green-dim:#2E4A30;
+    --yellow:#D9B23C;
+    --yellow-dim:#5C4D22;
+    --mono:'IBM Plex Mono', monospace;
+    --display:'Oswald', sans-serif;
+    --body:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--body);height:100%;overflow:hidden;}
+  ::selection{background:var(--amber);color:#11151A;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+
+  .app{display:grid;grid-template-rows:auto auto 1fr auto;height:100vh;}
+
+  /* ===== TOP BAR ===== */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 18px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#161B21,#13171C);
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:26px;height:26px;border:1.5px solid var(--amber);border-radius:3px;
+    position:relative;flex-shrink:0;
+  }
+  .brand-mark::before{content:'';position:absolute;left:3px;right:3px;bottom:3px;height:2px;background:var(--amber);}
+  .brand-mark::after{content:'';position:absolute;left:6px;right:9px;top:4px;bottom:8px;background:var(--amber);opacity:.55;clip-path:polygon(0 100%,40% 30%,70% 60%,100% 0,100% 100%);}
+  .brand-name{font-family:var(--display);font-size:17px;letter-spacing:.06em;font-weight:600;}
+  .brand-sub{font-size:10px;color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;margin-top:1px;}
+  .topbar-mid{display:flex;align-items:center;gap:22px;}
+  .proj-select{
+    display:flex;flex-direction:column;gap:1px;
+  }
+  .proj-select label{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.07em;}
+  .proj-select select{
+    background:transparent;border:none;color:var(--text);font-family:var(--body);font-size:12.5px;font-weight:600;padding:0;outline:none;cursor:pointer;
+  }
+  .topbar-stat{display:flex;flex-direction:column;gap:1px;border-left:1px solid var(--line);padding-left:18px;}
+  .topbar-stat span.label{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.07em;}
+  .topbar-stat span.val{font-family:var(--mono);font-size:13px;color:var(--text);}
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .live-pill{
+    display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--teal);
+    border:1px solid var(--teal-dim);background:rgba(79,166,160,.08);
+    padding:4px 10px;border-radius:20px;font-family:var(--mono);letter-spacing:.04em;
+  }
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 0 rgba(79,166,160,.7);animation:pulse 2s infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(79,166,160,.55);}
+    70%{box-shadow:0 0 0 6px rgba(79,166,160,0);}
+    100%{box-shadow:0 0 0 0 rgba(79,166,160,0);}
+  }
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--panel-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--text-dim);}
+
+  /* ===== HELP BUTTON ===== */
+  .help-btn{
+    width:28px;height:28px;border-radius:50%;border:1px solid var(--amber-dim);background:rgba(224,145,63,.1);
+    color:var(--amber);display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+    font-size:13px;font-weight:600;cursor:pointer;transition:all .15s ease;
+  }
+  .help-btn:hover{background:rgba(224,145,63,.22);}
+
+  /* ===== INFO TOOLTIP (the small "?" next to technical terms) ===== */
+  .info-ic{
+    display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;
+    border:1px solid var(--text-faint);color:var(--text-faint);font-size:9px;font-family:var(--mono);
+    cursor:help;margin-left:5px;position:relative;flex-shrink:0;
+  }
+  .info-ic:focus-visible{outline:1px solid var(--amber);outline-offset:2px;}
+  .info-ic:hover{border-color:var(--amber);color:var(--amber);}
+  .app-tooltip{
+    position:fixed;left:0;top:0;display:block;opacity:0;visibility:hidden;pointer-events:none;
+    min-width:170px;width:max-content;max-width:min(320px, calc(100vw - 24px));
+    background:#0E1114;border:1px solid var(--line);border-radius:7px;padding:9px 10px;
+    font-size:11px;line-height:1.5;color:var(--text-dim);font-family:var(--body);font-weight:400;
+    box-shadow:0 8px 22px rgba(0,0,0,.5);z-index:500;text-align:left;white-space:normal;
+    overflow-wrap:anywhere;transition:opacity .14s ease, visibility .14s ease, transform .14s ease;
+    transform:translateY(3px);
+  }
+  .app-tooltip.visible{opacity:1;visibility:visible;transform:translateY(0);}
+  .app-tooltip::after{
+    content:'';position:absolute;left:var(--arrow-left, 50%);transform:translateX(-50%);
+    border:6px solid transparent;
+  }
+  .app-tooltip.above::after{top:100%;border-top-color:var(--line);}
+  .app-tooltip.below::after{bottom:100%;border-bottom-color:var(--line);}
+
+  /* ===== PLAIN-LANGUAGE SUMMARY CARD ===== */
+  .plain-summary{
+    margin:0 16px 13px;padding:12px 13px;border-radius:8px;border:1px solid var(--line-soft);
+    background:var(--panel-2);font-size:12.5px;line-height:1.6;color:var(--text);
+  }
+  .plain-summary b{font-weight:600;}
+  .plain-summary .plain-icon{font-size:15px;margin-right:6px;}
+
+  /* ===== WELCOME MODAL ===== */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(6,8,10,.72);backdrop-filter:blur(3px);z-index:200;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .modal-card{
+    width:520px;max-width:90vw;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 24px 60px rgba(0,0,0,.6);overflow:hidden;
+  }
+  .modal-head{padding:20px 24px 14px;border-bottom:1px solid var(--line-soft);}
+  .modal-head .k{font-family:var(--mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;}
+  .modal-head h2{font-family:var(--display);font-size:22px;margin:6px 0 0;font-weight:600;letter-spacing:.01em;}
+  .modal-body{padding:18px 24px;display:flex;flex-direction:column;gap:14px;max-height:56vh;overflow-y:auto;}
+  .modal-step{display:flex;gap:12px;align-items:flex-start;}
+  .modal-step .num{
+    width:24px;height:24px;border-radius:50%;background:rgba(224,145,63,.15);color:var(--amber);
+    display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;flex-shrink:0;margin-top:1px;
+  }
+  .modal-step .txt{font-size:13px;line-height:1.6;color:var(--text-dim);}
+  .modal-step .txt b{color:var(--text);}
+  .modal-foot{padding:16px 24px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:center;}
+  .modal-foot label{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text-faint);cursor:pointer;}
+  .modal-btn{
+    background:var(--amber);color:#161B21;border:none;padding:9px 20px;border-radius:7px;font-weight:600;
+    font-size:12.5px;cursor:pointer;font-family:var(--body);
+  }
+  .modal-btn:hover{opacity:.9;}
+
+  /* ===== GLOSSARY PANEL (slide-in) ===== */
+  .glossary-panel{
+    position:fixed;top:0;right:0;bottom:0;width:360px;max-width:90vw;background:var(--panel);
+    border-left:1px solid var(--line);z-index:180;transform:translateX(100%);transition:transform .25s ease;
+    display:flex;flex-direction:column;box-shadow:-14px 0 40px rgba(0,0,0,.4);
+  }
+  .glossary-panel.open{transform:translateX(0);}
+  .glossary-head{padding:16px 18px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:center;}
+  .glossary-head h3{font-family:var(--display);font-size:16px;margin:0;font-weight:600;}
+  .glossary-close{width:26px;height:26px;border-radius:50%;background:var(--panel-2);border:1px solid var(--line);
+    color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;}
+  .glossary-body{padding:16px 18px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+  .gterm{font-family:var(--mono);font-size:12.5px;color:var(--amber);font-weight:600;margin-bottom:4px;}
+  .gdef{font-size:12.5px;color:var(--text-dim);line-height:1.6;}
+
+  /* ===== LAYER TOOLBAR ===== */
+  .layerbar{
+    display:flex;align-items:center;gap:6px;padding:9px 18px;border-bottom:1px solid var(--line);
+    background:var(--panel);overflow-x:auto;
+  }
+  .layerbar-label{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;margin-right:4px;white-space:nowrap;font-family:var(--mono);}
+  .chip{
+    display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:6px;border:1px solid var(--line);
+    background:var(--panel-2);font-size:11.5px;color:var(--text-dim);cursor:pointer;white-space:nowrap;
+    transition:all .15s ease;user-select:none;
+  }
+  .chip:hover{border-color:#3a4452;color:var(--text);}
+  .chip.active{background:rgba(224,145,63,.12);border-color:var(--amber-dim);color:var(--amber);}
+  .chip .dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+  .chip-sep{width:1px;height:18px;background:var(--line);margin:0 4px;flex-shrink:0;}
+
+  /* ===== MAIN GRID ===== */
+  .main{
+    display:grid;grid-template-columns:1fr 330px;overflow:hidden;
+  }
+  .viewport{position:relative;overflow:hidden;background:radial-gradient(ellipse at 30% 20%, #161B21, #0F1318 70%);}
+  .view-tabs{
+    position:absolute;top:14px;left:14px;z-index:5;display:flex;gap:2px;
+    background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:3px;
+  }
+  .view-tab{padding:6px 13px;font-size:11.5px;border-radius:5px;color:var(--text-dim);cursor:pointer;font-weight:500;}
+  .view-tab.active{background:var(--panel-2);color:var(--amber);}
+  .view-toolset{
+    position:absolute;top:14px;right:14px;z-index:5;display:flex;flex-direction:column;gap:6px;
+  }
+  .tool-btn{
+    width:32px;height:32px;border-radius:7px;background:var(--panel);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;color:var(--text-dim);cursor:pointer;
+  }
+  .tool-btn:hover{color:var(--text);border-color:#3a4452;}
+
+  /* ===== CHAINAGE NAV CONTROL (simple media-player style navigation) ===== */
+  .chnav{
+    position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:6;
+    display:flex;align-items:center;gap:2px;background:rgba(24,29,36,.94);backdrop-filter:blur(6px);
+    border:1px solid var(--line);border-radius:30px;padding:6px;box-shadow:0 10px 26px rgba(0,0,0,.45);
+  }
+  .chnav-btn{
+    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    color:var(--text-dim);cursor:pointer;font-size:14px;transition:all .15s ease;background:transparent;
+  }
+  .chnav-btn:hover{background:var(--panel-2);color:var(--text);}
+  .chnav-btn.disabled{opacity:.3;pointer-events:none;}
+  .chnav-play{
+    width:38px;height:38px;border-radius:50%;background:var(--amber);color:#161B21;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;margin:0 4px;
+    transition:all .15s ease;flex-shrink:0;
+  }
+  .chnav-play:hover{opacity:.88;}
+  .chnav-play.playing{background:var(--red);color:#fff;}
+  .chnav-info{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;
+    min-width:150px;
+  }
+  .chnav-info .seg{font-family:var(--mono);font-size:10.5px;color:var(--text-faint);letter-spacing:.03em;}
+  .chnav-info .ch{font-family:var(--mono);font-size:12px;color:var(--text);margin-top:1px;}
+  .chnav-dots{display:flex;gap:3px;margin-top:5px;}
+  .chnav-dot{width:5px;height:5px;border-radius:50%;background:var(--line);transition:all .15s ease;}
+  .chnav-dot.done{background:var(--text-faint);}
+  .chnav-dot.current{background:var(--amber);width:12px;border-radius:3px;}
+
+  svg{display:block;}
+
+  /* legend */
+  .legend{
+    position:absolute;bottom:14px;left:14px;z-index:5;background:rgba(24,29,36,.92);backdrop-filter:blur(6px);
+    border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:10.5px;color:var(--text-dim);
+    display:flex;flex-direction:column;gap:6px;min-width:150px;
+  }
+  .legend-title{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-faint);margin-bottom:2px;font-family:var(--mono);}
+  .legend-row{display:flex;align-items:center;gap:7px;}
+  .legend-swatch{width:11px;height:11px;border-radius:2px;flex-shrink:0;}
+
+  /* scale */
+  .scalebar{position:absolute;bottom:14px;right:14px;z-index:5;font-family:var(--mono);font-size:10px;color:var(--text-faint);
+    display:flex;align-items:center;gap:8px;background:rgba(24,29,36,.92);padding:6px 10px;border-radius:6px;border:1px solid var(--line);}
+  .scalebar .bar{width:60px;height:2px;background:var(--text-faint);position:relative;}
+  .scalebar .bar::before,.scalebar .bar::after{content:'';position:absolute;top:-3px;width:1px;height:8px;background:var(--text-faint);}
+  .scalebar .bar::before{left:0;} .scalebar .bar::after{right:0;}
+
+  /* ===== RIGHT PANEL ===== */
+  .rightpanel{
+    border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column;overflow-y:auto;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .rightpanel.mode-switch{opacity:.55;transform:translateY(4px);}
+  .rp-header{padding:14px 16px 10px;border-bottom:1px solid var(--line-soft);}
+  .rp-head-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .rp-chainage{font-family:var(--display);font-size:22px;letter-spacing:.02em;color:var(--text);}
+  .rp-chainage .sep{color:var(--text-faint);margin:0 6px;font-weight:400;}
+  .rp-meta{display:flex;align-items:center;gap:8px;margin-top:4px;}
+  .hazard-badge{
+    font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:4px;font-family:var(--mono);
+  }
+  .hazard-badge.low{background:var(--green-dim);color:var(--green);}
+  .hazard-badge.moderate{background:var(--yellow-dim);color:var(--yellow);}
+  .hazard-badge.high{background:var(--red-dim);color:var(--red);}
+  .conf-inline{font-size:11px;color:var(--text-faint);font-family:var(--mono);}
+
+  .rp-section{padding:13px 16px;border-bottom:1px solid var(--line-soft);}
+  .rp-section-title{
+    font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);font-family:var(--mono);
+    margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .metric{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:7px;padding:9px 10px;}
+  .metric-label{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.05em;}
+  .metric-value{font-family:var(--mono);font-size:17px;color:var(--text);margin-top:3px;font-weight:600;}
+  .metric-value.amber{color:var(--amber);}
+  .metric-value.red{color:var(--red);}
+  .metric-value.teal{color:var(--teal);}
+  .metric-bar{height:3px;background:var(--line);border-radius:2px;margin-top:7px;overflow:hidden;}
+  .metric-bar > div{height:100%;border-radius:2px;}
+
+  .prob-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+  .prob-row:last-child{margin-bottom:0;}
+  .prob-label{font-size:11.5px;color:var(--text-dim);width:84px;flex-shrink:0;}
+  .prob-track{flex:1;height:6px;background:var(--panel-2);border-radius:3px;overflow:hidden;border:1px solid var(--line-soft);}
+  .prob-fill{height:100%;border-radius:3px;}
+  .prob-val{font-family:var(--mono);font-size:11px;color:var(--text-dim);width:30px;text-align:right;flex-shrink:0;}
+
+  .ground-tag{
+    display:inline-flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--line-soft);
+    padding:6px 10px;border-radius:6px;font-size:12px;color:var(--text);margin-bottom:8px;
+  }
+  .ground-tag .sw{width:8px;height:8px;border-radius:2px;}
+
+  .rec-card{
+    background:linear-gradient(180deg,rgba(224,145,63,.07),rgba(224,145,63,.02));
+    border:1px solid var(--amber-dim);border-radius:8px;padding:11px 12px;margin-bottom:9px;
+  }
+  .rec-card:last-child{margin-bottom:0;}
+  .rec-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .rec-card-title{font-size:12px;font-weight:600;color:var(--amber);}
+  .rec-card-class{font-family:var(--mono);font-size:10px;color:var(--text-dim);background:var(--panel-2);padding:2px 7px;border-radius:4px;}
+  .rec-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;}
+  .rec-list li{font-size:11.5px;color:var(--text-dim);display:flex;justify-content:space-between;gap:10px;}
+  .rec-list li b{color:var(--text);font-weight:500;font-family:var(--mono);font-size:11px;}
+
+  .comment-box{
+    font-size:11.5px;color:var(--text-dim);font-style:italic;background:var(--panel-2);border-left:2px solid var(--line);
+    padding:8px 10px;border-radius:4px;line-height:1.5;
+  }
+
+  .confidence-ring-row{display:flex;align-items:center;gap:14px;}
+  .conf-detail{flex:1;display:flex;flex-direction:column;gap:7px;}
+  .conf-detail-row{display:flex;justify-content:space-between;font-size:11px;color:var(--text-dim);}
+  .conf-detail-row b{color:var(--text);font-family:var(--mono);font-weight:500;}
+  .header-btn{
+    display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel-2);
+    color:var(--text-dim);border-radius:999px;padding:7px 10px;font-size:10.5px;font-family:var(--mono);
+    cursor:pointer;white-space:nowrap;transition:all .15s ease;
+  }
+  .header-btn:hover{border-color:#3a4452;color:var(--text);background:#222931;}
+  .overview-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .mini-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+  .mini-list li{font-size:11.5px;color:var(--text-dim);display:flex;justify-content:space-between;gap:10px;}
+  .mini-list li b{color:var(--text);font-family:var(--mono);font-weight:500;}
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .micro-tag{
+    display:inline-flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--line-soft);
+    padding:6px 10px;border-radius:999px;font-size:11px;color:var(--text);
+  }
+  .micro-tag b{font-family:var(--mono);font-weight:500;}
+
+
+  /* ===== BOTTOM CHAINAGE RIBBON ===== */
+  .ribbon-wrap{
+    border-top:1px solid var(--line);background:var(--panel);padding:10px 18px 14px;
+  }
+  .ribbon-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .ribbon-title{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);font-family:var(--mono);}
+  .ribbon-range{font-family:var(--mono);font-size:11px;color:var(--text-dim);}
+  .ribbon{position:relative;height:64px;cursor:pointer;}
+  .ribbon svg{width:100%;height:100%;}
+  .ribbon-cursor{
+    position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text);pointer-events:none;
+    box-shadow:0 0 8px rgba(231,234,238,.5);
+  }
+  .ribbon-cursor::before{
+    content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%);
+    border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--text);
+  }
+  .ribbon-ticks{display:flex;justify-content:space-between;margin-top:5px;font-family:var(--mono);font-size:9.5px;color:var(--text-faint);}
+
+  .tooltip-pin{
+    position:absolute;pointer-events:none;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;
+    padding:6px 9px;font-size:10.5px;color:var(--text);font-family:var(--mono);white-space:nowrap;
+    transform:translate(-50%,-110%);box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:10;
+  }
+
+  /* responsive */
+  @media (max-width: 980px){
+    .main{grid-template-columns:1fr;grid-template-rows:1fr auto;}
+    .rightpanel{border-left:none;border-top:1px solid var(--line);max-height:280px;}
+    .topbar-mid{display:none;}
+  }
+
+  .pulse-node{animation:nodePulse 2.4s ease-in-out infinite;}
+  @keyframes nodePulse{0%,100%{opacity:1;}50%{opacity:.55;}}
+
+  button{font-family:inherit;}
+
+  /* Recommendation Accordion Styling */
+  .rec-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rec-accordion-item {
+    border: 1px solid var(--line-soft);
+    background: var(--panel-2);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+  .rec-accordion-item.active {
+    border-color: var(--amber-dim);
+  }
+  .rec-accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .rec-accordion-header:hover {
+    background: rgba(255,255,255,0.02);
+    color: var(--text);
+  }
+  .rec-accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rec-accordion-toggle-icon {
+    font-size: 8px;
+    color: var(--text-faint);
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  .rec-accordion-item.active .rec-accordion-toggle-icon {
+    transform: rotate(90deg);
+  }
+  .rec-accordion-fos {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--teal);
+    background: rgba(79, 166, 160, 0.08);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(79, 166, 160, 0.15);
+  }
+  .rec-accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s cubic-bezier(0, 1, 0, 1);
+  }
+  .rec-accordion-item.active .rec-accordion-body {
+    max-height: 1000px;
+    transition: max-height 0.25s cubic-bezier(1, 0, 1, 0);
+  }
+  .rec-accordion-content {
+    padding: 10px 12px;
+    border-top: 1px solid var(--line-soft);
+    background: rgba(0,0,0,0.1);
+  }
+  .rec-accordion-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rec-accordion-list li {
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+  }
+  .rec-accordion-list li b {
+    color: var(--text);
+    font-weight: 500;
+    font-family: var(--mono);
+  }
+  .info-ic .tip {
+    display: none;
+  }
+  .rp-fade {
+    animation: rpFadeIn 0.22s ease-out forwards;
+  }
+  @keyframes rpFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div>
+        <div class="brand-name">STRATA</div>
+        <div class="brand-sub">Geological Behaviour Prediction</div>
+      </div>
+    </div>
+    <div class="topbar-mid">
+      <div class="proj-select">
+        <label>Project</label>
+        <select id="projectSelect">
+          <option>NH-44 Tunnel T-3 — Pkg 7</option>
+          <option>Himank Hydro Headrace Tunnel</option>
+          <option>Metro Line 6 — Reach C</option>
+        </select>
+      </div>
+      <div class="topbar-stat">
+        <span class="label">Excavated</span>
+        <span class="val">4,260 m / 9,800 m</span>
+      </div>
+      <div class="topbar-stat">
+        <span class="label">Face Method</span>
+        <span class="val">NATM — Drill &amp; Blast</span>
+      </div>
+      <div class="topbar-stat">
+        <span class="label">Last Sync</span>
+        <span class="val">2 min ago</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="live-pill"><span class="live-dot"></span>MODEL LIVE</div>
+      <div class="help-btn" id="helpBtn" title="What am I looking at?">?</div>
+      <div class="avatar">DK</div>
+    </div>
+  </div>
+
+  <!-- LAYER TOOLBAR -->
+  <div class="layerbar" id="layerbar">
+    <span class="layerbar-label">LAYERS</span>
+    <div class="chip active" data-layer="geology"><span class="dot" style="background:#C98B4A"></span>Geology</div>
+    <div class="chip active" data-layer="hydrology"><span class="dot" style="background:#4F8FA6"></span>Hydrology</div>
+    <div class="chip" data-layer="faults"><span class="dot" style="background:#D6543F"></span>Faults &amp; Shear</div>
+    <div class="chip" data-layer="boreholes"><span class="dot" style="background:#D9B23C"></span>Boreholes</div>
+    <div class="chip" data-layer="terrain"><span class="dot" style="background:#7C8B6E"></span>DEM / Terrain</div>
+    <div class="chip" data-layer="pointcloud"><span class="dot" style="background:#9B8AC4"></span>Point Cloud</div>
+    <div class="chip-sep"></div>
+    <span class="layerbar-label">OVERLAY</span>
+    <div class="chip active" data-layer="hazard"><span class="dot" style="background:#E0913F"></span>Hazard Heat</div>
+    <div class="chip" data-layer="confidence"><span class="dot" style="background:#4FA6A0"></span>Confidence Map</div>
+    <div class="chip-sep"></div>
+    <span class="layerbar-label">L-SECTION</span>
+    <div class="chip" data-layer="rmrtrack"><span class="dot" style="background:#5FA864"></span>RMR Track</div>
+    <div class="chip" data-layer="supporttrack"><span class="dot" style="background:#D9B23C"></span>Support Track</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- VIEWPORT -->
+    <div class="viewport">
+      <div class="view-tabs">
+        <div class="view-tab active" data-view="profile">Geological Profile</div>
+        <div class="view-tab" data-view="plan">Plan / GIS</div>
+        <div class="view-tab" data-view="3d">3D Block Model</div>
+      </div>
+      <div class="view-toolset">
+        <div class="tool-btn" title="Zoom in">+</div>
+        <div class="tool-btn" title="Zoom out">–</div>
+        <div class="tool-btn" title="Reset view">⤢</div>
+        <div class="tool-btn" title="Export view">⇩</div>
+      </div>
+
+      <div id="viewportSvgHolder"></div>
+
+      <div class="legend">
+        <div class="legend-title">Ground Type</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#C98B4A"></div>Hard / Jointed Rock</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#A87A56"></div>Weathered Rock</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#8B6F8F"></div>Sheared Phyllite</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#6E5A4A"></div>Fault Gouge</div>
+        <div class="legend-row"><div class="legend-swatch" style="background:#D6543F;height:3px;border-radius:0;align-self:center;"></div>Inferred Fault</div>
+      </div>
+
+      <div class="scalebar"><div class="bar"></div>200 m</div>
+
+      <div class="chnav">
+        <div class="chnav-btn" id="chPrev" title="Previous section">◀</div>
+        <div class="chnav-play" id="chPlay" title="Walk through the tunnel automatically">▶</div>
+        <div class="chnav-btn" id="chNext" title="Next section">▶</div>
+        <div class="chnav-info">
+          <div class="seg" id="chnavSeg">SECTION 1 OF 12</div>
+          <div class="ch" id="chnavCh">CH 0+000 – 0+250</div>
+          <div class="chnav-dots" id="chnavDots"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="rightpanel" id="rightPanel">
+      <!-- populated by JS based on selected chainage -->
+    </div>
+  </div>
+
+  <!-- BOTTOM RIBBON -->
+  <div class="ribbon-wrap">
+    <div class="ribbon-head">
+      <span class="ribbon-title">Chainage Risk Ribbon — drag to inspect</span>
+      <span class="ribbon-range" id="ribbonRange">CH 0+000 selected</span>
+    </div>
+    <div class="ribbon" id="ribbon">
+      <svg id="ribbonSvg" viewBox="0 0 1000 64" preserveAspectRatio="none"></svg>
+      <div class="ribbon-cursor" id="ribbonCursor" style="left:2%"></div>
+    </div>
+    <div class="ribbon-ticks">
+      <span>0+000</span><span>2+000</span><span>4+000</span><span>6+000</span><span>8+000</span><span>9+800</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- WELCOME MODAL — shown on first load, explains the dashboard in plain terms -->
+<div class="modal-overlay" id="welcomeModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="k">Quick Start</div>
+      <h2>What this dashboard shows</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-step">
+        <div class="num">1</div>
+        <div class="txt">The <b>grey/orange shape in the middle</b> is a side-view of the mountain the tunnel passes through. The horizontal tube running through it is the <b>tunnel itself</b> — coloured green, yellow or red depending on how risky that section of ground is.</div>
+      </div>
+      <div class="modal-step">
+        <div class="num">2</div>
+        <div class="txt"><b>Click anywhere on the mountain or tunnel</b> to select that section. The panel on the right will update with everything known about the ground at that point.</div>
+      </div>
+      <div class="modal-step">
+        <div class="num">3</div>
+        <div class="txt">Every technical term (like RMR, GSI, Q-value) has a small <b>"?" symbol</b> next to it — hover over it any time for a plain-English explanation. There's also a plain-language summary sentence at the top of every panel.</div>
+      </div>
+      <div class="modal-step">
+        <div class="num">4</div>
+        <div class="txt"><b style="color:var(--green)">Green</b> = safe, proceed as planned. <b style="color:var(--yellow)">Yellow</b> = caution, extra support needed. <b style="color:var(--red)">Red</b> = high risk, requires reinforcement and careful monitoring before excavation reaches that point.</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <label><input type="checkbox" id="dontShowAgain"> Don't show this again</label>
+      <button class="modal-btn" id="closeWelcome">Got it, let's start</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOSSARY SLIDE-IN PANEL -->
+<div class="glossary-panel" id="glossaryPanel">
+  <div class="glossary-head">
+    <h3>Plain-English Glossary</h3>
+    <div class="glossary-close" id="glossaryClose">✕</div>
+  </div>
+  <div class="glossary-body">
+    <div>
+      <div class="gterm">RMR (Rock Mass Rating)</div>
+      <div class="gdef">A score from 0–100 describing how strong and stable the rock is. Higher = better rock, needs less support. Below ~40 usually means weak, risky ground.</div>
+    </div>
+    <div>
+      <div class="gterm">Q-System (Q-value)</div>
+      <div class="gdef">Another rock-quality score, ranging from about 0.001 (very poor, squeezing ground) to 1000 (excellent, almost solid rock). Used alongside RMR to decide how much tunnel support is needed.</div>
+    </div>
+    <div>
+      <div class="gterm">GSI (Geological Strength Index)</div>
+      <div class="gdef">A 0–100 score describing how broken-up/fractured the rock mass looks. Lower numbers mean more fractured, weaker rock.</div>
+    </div>
+    <div>
+      <div class="gterm">Support Class (S1–S5)</div>
+      <div class="gdef">How much reinforcement (bolts, sprayed concrete, steel ribs) this section needs. S1 = minimal support. S5 = heavy reinforcement, this is the riskiest ground type.</div>
+    </div>
+    <div>
+      <div class="gterm">Fault zone probability</div>
+      <div class="gdef">The estimated chance that a geological fault (a fracture where rock has shifted) crosses this section. Faults are weak, unpredictable zones — higher probability means higher risk of sudden ground movement.</div>
+    </div>
+    <div>
+      <div class="gterm">Water ingress probability</div>
+      <div class="gdef">The estimated chance that groundwater will seep or flow into the tunnel at this section. High values mean the crew should expect wet conditions and may need drainage/grouting.</div>
+    </div>
+    <div>
+      <div class="gterm">Prediction confidence</div>
+      <div class="gdef">How sure the model is about its own prediction for this section. Sections already excavated have high confidence (directly observed). Sections ahead of the tunnel face are forecasts — confidence is lower the further ahead they are.</div>
+    </div>
+    <div>
+      <div class="gterm">Chainage</div>
+      <div class="gdef">Just a distance marker along the tunnel, measured in metres from the starting portal — e.g. "2+070" means 2,070 metres in. It's how engineers say "where" along the tunnel something is.</div>
+    </div>
+    <div>
+      <div class="gterm">Ahead of face / Forecast</div>
+      <div class="gdef">The tunnel-boring machine has a "face" — the point it has currently dug up to. Ground beyond that point hasn't been excavated yet, so anything shown there is a prediction, not a direct observation.</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ============== DATA ============== */
+// Chainage-wise prediction segments derived from platform's output structure
+const segments = [
+  {
+    start:0, end:250, ground:'Hard Quartzite', rmr:78, q:9.2, gsi:74, fault:6, water:10, hazard:'low', hazardTypes:[], support:'S1', confidence:94, comment:'Massive hard rock, minor jointing observed at face.',
+    probability: { fault:6, water:10, groundBehaviour:'Stable / Self-supporting', tunnelDeformation:'8 mm' },
+    supportClass:'A1',
+    recommendationConfidence: { overall: 94 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:250, end:520, ground:'Jointed Quartzite', rmr:64, q:5.1, gsi:60, fault:14, water:18, hazard:'low', hazardTypes:['Localized block fall'], support:'S1', confidence:91, comment:'Jointed rock mass, three dominant joint sets mapped.',
+    probability: { fault:14, water:18, groundBehaviour:'Stable with spot bolting', tunnelDeformation:'12 mm' },
+    supportClass:'A2',
+    recommendationConfidence: { overall: 91 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:520, end:760, ground:'Weathered Gneiss', rmr:52, q:2.8, gsi:46, fault:22, water:35, hazard:'moderate', hazardTypes:['Block instability'], support:'S2', confidence:87, comment:'Moderate weathering grade III, seepage along joints.',
+    probability: { fault:22, water:35, groundBehaviour:'Block Slippage', tunnelDeformation:'24 mm' },
+    supportClass:'B1',
+    recommendationConfidence: { overall: 87 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:760, end:1080, ground:'Fractured Gneiss', rmr:44, q:1.6, gsi:38, fault:38, water:42, hazard:'moderate', hazardTypes:['Face instability','Wedge failure'], support:'S3', confidence:83, comment:'Heavily jointed, RQD dropping ahead of mapped fault trace.',
+    probability: { fault:38, water:42, groundBehaviour:'Joint Shear / Wedge Drop', tunnelDeformation:'45 mm' },
+    supportClass:'B2',
+    recommendationConfidence: { overall: 83 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:1080, end:1340, ground:'Sheared Phyllite', rmr:38, q:0.9, gsi:31, fault:76, water:70, hazard:'high', hazardTypes:['Collapse risk','Heavy water ingress'], support:'S4', confidence:84, comment:'Fault gouge encountered, heavy groundwater ingress at face.',
+    probability: { fault:76, water:70, groundBehaviour:'Moderate Squeezing', tunnelDeformation:'90 mm' },
+    supportClass:'B3',
+    recommendationConfidence: { overall: 84 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:1340, end:1620, ground:'Fault Gouge', rmr:24, q:0.3, gsi:19, fault:91, water:88, hazard:'high', hazardTypes:['Collapse risk','Squeezing ground'], support:'S5', confidence:79, comment:'Fault core zone, clay gouge, very poor stand-up time.',
+    probability: { fault:91, water:88, groundBehaviour:'Heavy Squeezing', tunnelDeformation:'280 mm' },
+    supportClass:'C4',
+    recommendationConfidence: { overall: 79 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:1620, end:1980, ground:'Weathered Gneiss', rmr:48, q:2.1, gsi:42, fault:28, water:46, hazard:'moderate', hazardTypes:['Squeezing ground'], support:'S3', confidence:85, comment:'Recovering rock mass quality, residual seepage present.',
+    probability: { fault:28, water:46, groundBehaviour:'Minor Squeezing', tunnelDeformation:'48 mm' },
+    supportClass:'B2',
+    recommendationConfidence: { overall: 85 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:1980, end:2400, ground:'Jointed Quartzite', rmr:66, q:5.8, gsi:62, fault:12, water:20, hazard:'low', hazardTypes:[], support:'S1', confidence:92, comment:'Stable jointed rock, consistent with regional trend.',
+    probability: { fault:12, water:20, groundBehaviour:'Joint Controlled Wedge', tunnelDeformation:'10 mm' },
+    supportClass:'A2',
+    recommendationConfidence: { overall: 92 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:2400, end:2850, ground:'Hard Quartzite', rmr:80, q:10.1, gsi:76, fault:4, water:8, hazard:'low', hazardTypes:[], support:'S1', confidence:95, comment:'Massive competent rock, minimal support required.',
+    probability: { fault:4, water:8, groundBehaviour:'Stable / Self-supporting', tunnelDeformation:'6 mm' },
+    supportClass:'A1',
+    recommendationConfidence: { overall: 95 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:2850, end:3200, ground:'Mixed Ground', rmr:56, q:3.2, gsi:50, fault:30, water:40, hazard:'moderate', hazardTypes:['Differential overbreak'], support:'S2', confidence:86, comment:'Lithological contact zone, variable weathering observed.',
+    probability: { fault:30, water:40, groundBehaviour:'Differential Deflection', tunnelDeformation:'32 mm' },
+    supportClass:'B1',
+    recommendationConfidence: { overall: 86 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:3200, end:3580, ground:'Sheared Phyllite', rmr:34, q:0.7, gsi:28, fault:68, water:62, hazard:'high', hazardTypes:['Rockburst risk','Collapse risk'], support:'S4', confidence:81, comment:'Second mapped shear zone, high horizontal stress ratio.',
+    probability: { fault:68, water:62, groundBehaviour:'Heavy Squeezing / Spalling', tunnelDeformation:'145 mm' },
+    supportClass:'C2',
+    recommendationConfidence: { overall: 81 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:3580, end:4000, ground:'Weathered Gneiss', rmr:50, q:2.4, gsi:44, fault:24, water:38, hazard:'moderate', hazardTypes:['Block instability'], support:'S2', confidence:88, comment:'Improving ground, transitioning out of shear influence.',
+    probability: { fault:24, water:38, groundBehaviour:'Block Instability', tunnelDeformation:'28 mm' },
+    supportClass:'B1',
+    recommendationConfidence: { overall: 88 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:4000, end:4260, ground:'Jointed Quartzite', rmr:62, q:4.6, gsi:58, fault:16, water:22, hazard:'low', hazardTypes:[], support:'S1', confidence:90, comment:'Current face — stable conditions, advance on schedule.',
+    probability: { fault:16, water:22, groundBehaviour:'Joint Controlled Wedge', tunnelDeformation:'14 mm' },
+    supportClass:'A2',
+    recommendationConfidence: { overall: 90 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  // Predicted ahead of face (lower confidence)
+  {
+    start:4260, end:4650, ground:'Weathered Gneiss', rmr:46, q:1.9, gsi:40, fault:34, water:48, hazard:'moderate', hazardTypes:['Face instability'], support:'S3', confidence:74, comment:'Predicted ahead of face — proximity to inferred fault trace.',
+    probability: { fault:34, water:48, groundBehaviour:'Face Instability', tunnelDeformation:'42 mm' },
+    supportClass:'B2',
+    recommendationConfidence: { overall: 74 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:4650, end:5100, ground:'Sheared Phyllite', rmr:29, q:0.5, gsi:24, fault:82, water:79, hazard:'high', hazardTypes:['Collapse risk','Heavy water ingress'], support:'S5', confidence:68, comment:'Predicted fault zone — recommend advance probing.',
+    probability: { fault:82, water:79, groundBehaviour:'Chimney Failure / Heavy Inflow', tunnelDeformation:'220 mm' },
+    supportClass:'C3',
+    recommendationConfidence: { overall: 68 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:5100, end:5600, ground:'Mixed Ground', rmr:53, q:2.9, gsi:47, fault:26, water:36, hazard:'moderate', hazardTypes:['Squeezing ground'], support:'S2', confidence:71, comment:'Forecast transition zone, moderate confidence — limited borehole density.',
+    probability: { fault:26, water:36, groundBehaviour:'Minor Squeezing', tunnelDeformation:'38 mm' },
+    supportClass:'B1',
+    recommendationConfidence: { overall: 71 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:5600, end:6200, ground:'Hard Quartzite', rmr:75, q:8.4, gsi:70, fault:8, water:14, hazard:'low', hazardTypes:[], support:'S1', confidence:77, comment:'Forecast stable corridor based on regional geological mapping.',
+    probability: { fault:8, water:14, groundBehaviour:'Stable / Self-supporting', tunnelDeformation:'9 mm' },
+    supportClass:'A1',
+    recommendationConfidence: { overall: 77 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:6200, end:6800, ground:'Jointed Quartzite', rmr:60, q:4.0, gsi:55, fault:20, water:28, hazard:'low', hazardTypes:[], support:'S2', confidence:69, comment:'Long-range forecast — confidence reduced beyond 2km lookahead.',
+    probability: { fault:20, water:28, groundBehaviour:'Joint Controlled Wedge', tunnelDeformation:'16 mm' },
+    supportClass:'B1',
+    recommendationConfidence: { overall: 69 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:6800, end:7500, ground:'Weathered Gneiss', rmr:45, q:1.7, gsi:39, fault:36, water:44, hazard:'moderate', hazardTypes:['Block instability'], support:'S3', confidence:62, comment:'Long-range forecast — sparse data density, recommend infill boreholes.',
+    probability: { fault:36, water:44, groundBehaviour:'Block Instability', tunnelDeformation:'52 mm' },
+    supportClass:'B3',
+    recommendationConfidence: { overall: 62 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:7500, end:8400, ground:'Mixed Ground', rmr:50, q:2.3, gsi:44, fault:24, water:32, hazard:'moderate', hazardTypes:[], support:'S2', confidence:58, comment:'Sparse data zone — low borehole density, model extrapolating from surface mapping.',
+    probability: { fault:24, water:32, groundBehaviour:'Differential Deflection', tunnelDeformation:'48 mm' },
+    supportClass:'B2',
+    recommendationConfidence: { overall: 58 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:8400, end:9100, ground:'Jointed Quartzite', rmr:58, q:3.6, gsi:52, fault:18, water:24, hazard:'low', hazardTypes:[], support:'S2', confidence:55, comment:'Far-field forecast, indicative only — to be confirmed by advance investigation.',
+    probability: { fault:18, water:24, groundBehaviour:'Joint Controlled Wedge', tunnelDeformation:'20 mm' },
+    supportClass:'B1',
+    recommendationConfidence: { overall: 55 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  },
+  {
+    start:9100, end:9800, ground:'Hard Quartzite', rmr:72, q:7.2, gsi:66, fault:10, water:16, hazard:'low', hazardTypes:[], support:'S1', confidence:52, comment:'Portal approach zone — preliminary forecast pending detailed survey.',
+    probability: { fault:10, water:16, groundBehaviour:'Stable / Self-supporting', tunnelDeformation:'10 mm' },
+    supportClass:'A2',
+    recommendationConfidence: { overall: 52 },
+    supportFactorOfSafety: { rockBolts:1.95, shotcrete:2.18, latticeGirder:2.03, steelRibs:2.42, crownSupport:1.88, faceSupport:1.74, temporaryInvert:2.10, finalLining:2.80 }
+  }
+];
+
+// Keep fault and water at root for backward compatibility with profile and ribbon
+segments.forEach(s => {
+  s.fault = s.probability.fault;
+  s.water = s.probability.water;
+});
+
+const supportMatrix = {
+  A1: {
+    rockMassClass: "Class I - Very Good Rock",
+    rmrRange: "81 - 100",
+    failureMode: "Self Standing Tunnel",
+    excavationMethod: "Full Face excavation without support",
+    advanceLength: "3.0 - 4.0 m",
+    allowableDeformationTolerance: "10 mm",
+    finalLiningCrownThickness: "100 mm (plain concrete)",
+    finalLiningInvertThickness: "None"
+  },
+  A2: {
+    rockMassClass: "Class II - Good Rock",
+    rmrRange: "61 - 80",
+    failureMode: "Localized Wedge Failure",
+    excavationMethod: "Full Face with spot bolting",
+    advanceLength: "2.5 - 3.0 m",
+    allowableDeformationTolerance: "15 mm",
+    shotcreteFirstLayer: "50 mm",
+    boltType: "Expansion shell bolts",
+    boltLength: "2.0 m",
+    boltDiameter: "25 mm",
+    boltLongitudinalSpacing: "2.5 m",
+    boltTransverseSpacing: "2.5 m",
+    finalLiningCrownThickness: "150 mm (nominal)",
+    finalLiningInvertThickness: "None"
+  },
+  B1: {
+    rockMassClass: "Class III - Fair Rock",
+    rmrRange: "51 - 60",
+    failureMode: "Wedge Failure / Joint Controlled",
+    excavationMethod: "Top Heading and Bench",
+    advanceLength: "1.5 - 2.0 m",
+    allowableDeformationTolerance: "30 mm",
+    shotcreteFirstLayer: "50 mm",
+    shotcreteSecondLayer: "50 mm",
+    meshSpecification: "Welded wire mesh 150x150x6 mm",
+    boltType: "Fully grout-bonded SN bolts",
+    boltLength: "3.0 m",
+    boltDiameter: "25 mm",
+    boltLongitudinalSpacing: "1.5 m",
+    boltTransverseSpacing: "1.5 m",
+    finalLiningCrownThickness: "200 mm (reinforced)",
+    finalLiningInvertThickness: "None"
+  },
+  B2: {
+    rockMassClass: "Class III - Fair Rock (Poor)",
+    rmrRange: "41 - 50",
+    failureMode: "Shear Failure / Minor Squeezing",
+    excavationMethod: "Top Heading and Bench with invert",
+    advanceLength: "1.2 - 1.5 m",
+    allowableDeformationTolerance: "50 mm",
+    shotcreteFirstLayer: "75 mm",
+    shotcreteSecondLayer: "75 mm",
+    meshSpecification: "Double layer wire mesh 150x150x6 mm",
+    boltType: "Fully grout-bonded SN bolts",
+    boltLength: "4.0 m",
+    boltDiameter: "25 mm",
+    boltLongitudinalSpacing: "1.2 m",
+    boltTransverseSpacing: "1.2 m",
+    latticeGirderBarDiameter: "3 x 20 mm",
+    latticeGirderSpacing: "1.2 m c/c",
+    crownSupportType: "Forepoling (dia 32mm, 4.0m length)",
+    finalLiningCrownThickness: "250 mm (reinforced)",
+    finalLiningInvertThickness: "150 mm"
+  },
+  B3: {
+    rockMassClass: "Class IV - Poor Rock",
+    rmrRange: "31 - 40",
+    failureMode: "Squeezing Ground",
+    excavationMethod: "Top Heading, Bench, and Invert sequence",
+    advanceLength: "1.0 - 1.2 m",
+    allowableDeformationTolerance: "80 mm",
+    shotcreteFirstLayer: "100 mm",
+    shotcreteSecondLayer: "50 mm",
+    meshSpecification: "Double layer wire mesh 150x150x8 mm",
+    boltType: "Self-drilling anchor (SDA) bolts",
+    boltLength: "4.5 m",
+    boltDiameter: "28 mm",
+    boltLongitudinalSpacing: "1.0 m",
+    boltTransverseSpacing: "1.0 m",
+    latticeGirderBarDiameter: "3 x 25 mm",
+    latticeGirderSpacing: "1.0 m c/c",
+    crownSupportType: "Forepoling (dia 32mm) & Spot Pre-grouting",
+    faceShotcreteThickness: "50 mm",
+    temporaryInvertThickness: "150 mm",
+    finalLiningCrownThickness: "300 mm (reinforced)",
+    finalLiningInvertThickness: "200 mm"
+  },
+  C1: {
+    rockMassClass: "Class IV - Poor Rock (Very Poor)",
+    rmrRange: "21 - 30",
+    failureMode: "Heavy Squeezing / Chimney Failure Risk",
+    excavationMethod: "Heading, Bench, Invert with short advance",
+    advanceLength: "0.8 - 1.0 m",
+    allowableDeformationTolerance: "120 mm",
+    shotcreteFirstLayer: "100 mm",
+    shotcreteSecondLayer: "100 mm",
+    meshSpecification: "Double layer wire mesh 150x150x8 mm",
+    boltType: "Self-drilling anchor (SDA) bolts",
+    boltLength: "5.0 m",
+    boltDiameter: "32 mm",
+    boltLongitudinalSpacing: "0.8 m",
+    boltTransverseSpacing: "0.8 m",
+    latticeGirderBarDiameter: "3 x 28 mm",
+    latticeGirderSpacing: "0.8 m c/c",
+    crownSupportType: "Pipe roofing (dia 76mm, 12m length)",
+    faceShotcreteThickness: "75 mm",
+    faceFiberglassRockBolts: "4 nos, 12m length",
+    temporaryInvertThickness: "200 mm",
+    finalLiningCrownThickness: "350 mm (reinforced)",
+    finalLiningInvertThickness: "250 mm"
+  },
+  C2: {
+    rockMassClass: "Class V - Extremely Poor Rock",
+    rmrRange: "11 - 20",
+    failureMode: "Heavy Squeezing / Clay Swelling",
+    excavationMethod: "Multiple drift excavation / Side drift",
+    advanceLength: "0.6 - 0.8 m",
+    allowableDeformationTolerance: "180 mm",
+    shotcreteFirstLayer: "100 mm",
+    shotcreteSecondLayer: "100 mm",
+    shotcreteThirdLayer: "50 mm",
+    meshSpecification: "Heavy double layer mesh 100x100x8 mm",
+    boltType: "Swellex / Yielding rock bolts",
+    boltLength: "6.0 m",
+    boltDiameter: "32 mm",
+    boltLongitudinalSpacing: "0.6 m",
+    boltTransverseSpacing: "0.6 m",
+    latticeGirderBarDiameter: "4 x 28 mm",
+    latticeGirderSpacing: "0.6 m c/c",
+    crownSupportType: "SDA Pipe Roofing (dia 89mm, 15m length)",
+    faceShotcreteThickness: "100 mm",
+    faceFiberglassRockBolts: "6 nos, 15m length",
+    temporaryInvertThickness: "250 mm",
+    finalLiningCrownThickness: "400 mm (reinforced)",
+    finalLiningInvertThickness: "300 mm"
+  },
+  C3: {
+    rockMassClass: "Class V - Extremely Poor / Shear Zone",
+    rmrRange: "5 - 10",
+    failureMode: "Shear Failure / Chimney Failure",
+    excavationMethod: "Top heading and bench with immediate invert",
+    advanceLength: "0.5 - 0.75 m",
+    allowableDeformationTolerance: "220 mm",
+    shotcreteFirstLayer: "100 mm",
+    shotcreteSecondLayer: "100 mm",
+    shotcreteThirdLayer: "100 mm",
+    meshSpecification: "Heavy double layer mesh 100x100x8 mm",
+    boltType: "Self-drilling anchor (SDA) yielding bolts",
+    boltLength: "6.0 m",
+    boltDiameter: "32 mm",
+    boltLongitudinalSpacing: "0.5 m",
+    boltTransverseSpacing: "0.5 m",
+    steelRibType: "ISMB 150 heavy steel rib",
+    steelRibSpacing: "0.6 m c/c",
+    crownSupportType: "SDA Pipe Roofing (dia 89mm) & Pre-grouting",
+    faceShotcreteThickness: "100 mm",
+    faceFiberglassRockBolts: "8 nos, 15m length",
+    temporaryInvertThickness: "300 mm",
+    finalLiningCrownThickness: "450 mm (heavy reinforced)",
+    finalLiningInvertThickness: "350 mm"
+  },
+  C4: {
+    rockMassClass: "Class V - Fault Zone / Clay Gouge",
+    rmrRange: "< 5",
+    failureMode: "Fault Zone / Running Ground / Heavy Squeezing",
+    excavationMethod: "Multiple division excavation with spiling",
+    advanceLength: "0.5 m",
+    allowableDeformationTolerance: "300 mm",
+    shotcreteFirstLayer: "120 mm",
+    shotcreteSecondLayer: "120 mm",
+    shotcreteThirdLayer: "100 mm",
+    meshSpecification: "Heavy double layer mesh 100x100x10 mm",
+    boltType: "Self-drilling anchor (SDA) heavy yielding bolts",
+    boltLength: "8.0 m",
+    boltDiameter: "38 mm",
+    boltLongitudinalSpacing: "0.5 m",
+    boltTransverseSpacing: "0.5 m",
+    steelRibType: "ISMB 200 heavy steel rib",
+    steelRibSpacing: "0.5 m c/c",
+    crownSupportType: "Double SDA Pipe Roofing & Systematic Pre-grouting",
+    faceShotcreteThickness: "150 mm",
+    faceFiberglassRockBolts: "12 nos, 18m length",
+    temporaryInvertThickness: "350 mm",
+    finalLiningCrownThickness: "500 mm (heavy reinforced)",
+    finalLiningInvertThickness: "400 mm"
+  }
+};
+
+const recommendationCategories = [
+  { id:'rockMassInfo', title:'Rock Mass Information', fields:{ rockMassClass:'Rock Mass Class', rmrRange:'RMR Range' } },
+  { id:'failureMode', title:'Failure Mode', fields:{ failureMode:'Failure Mode' } },
+  { id:'excavation', title:'Excavation', fields:{ excavationMethod:'Excavation Method', advanceLength:'Advance Length' } },
+  { id:'groundDeformation', title:'Ground Deformation', fields:{ allowableDeformationTolerance:'Allowable Deformation Tolerance' } },
+  { id:'shotcrete', title:'Shotcrete', fosKey:'shotcrete', fields:{ shotcreteFirstLayer:'First Layer Thickness', shotcreteSecondLayer:'Second Layer Thickness', shotcreteThirdLayer:'Third Layer Thickness' } },
+  { id:'wireMesh', title:'Wire Mesh', fields:{ meshSpecification:'Mesh Specification' } },
+  { id:'rockBolts', title:'Rock Bolts', fosKey:'rockBolts', fields:{ boltType:'Bolt Type', boltLength:'Bolt Length', boltDiameter:'Bolt Diameter', boltLongitudinalSpacing:'Longitudinal Spacing', boltTransverseSpacing:'Transverse Spacing' } },
+  { id:'latticeGirder', title:'Lattice Girder', fosKey:'latticeGirder', fields:{ latticeGirderBarDiameter:'Bar Diameter', latticeGirderSpacing:'Spacing' } },
+  { id:'steelRibs', title:'Steel Ribs', fosKey:'steelRibs', fields:{ steelRibType:'Steel Rib Type', steelRibSpacing:'Steel Rib Spacing' } },
+  { id:'crownSupport', title:'Crown Support', fosKey:'crownSupport', fields:{ crownSupportType:'Crown Support Type' } },
+  { id:'faceSupport', title:'Face Support', fosKey:'faceSupport', fields:{ faceShotcreteThickness:'Face Shotcrete Thickness', faceFiberglassRockBolts:'Fiberglass Rock Bolts' } },
+  { id:'temporaryInvert', title:'Temporary Invert', fosKey:'temporaryInvert', fields:{ temporaryInvertThickness:'Temporary Invert Thickness' } },
+  { id:'finalLining', title:'Final Lining', fosKey:'finalLining', fields:{ finalLiningCrownThickness:'Crown Final Lining Thickness', finalLiningInvertThickness:'Invert Final Lining Thickness' } }
+];
+const groundColors = {
+  'Hard Quartzite':'#C98B4A','Jointed Quartzite':'#B98C5C','Weathered Gneiss':'#A87A56',
+  'Fractured Gneiss':'#9A7560','Sheared Phyllite':'#8B6F8F','Fault Gouge':'#6E5A4A','Mixed Ground':'#9B8A6E'
+};
+const hazardColors = {low:'#5FA864', moderate:'#D9B23C', high:'#D6543F'};
+const TOTAL = 9800;
+const FACE_CH = 4260;
+
+let currentSegIdx = null; // default to overview
+
+const layerState = {
+  geology:true, hydrology:true, faults:false, boreholes:false, terrain:false, pointcloud:false,
+  hazard:true, confidence:false, rmrtrack:false, supporttrack:false
+};
+
+function segAt(ch){
+  return segments.findIndex(s => ch >= s.start && ch < s.end);
+}
+
+/* ============== RIBBON ============== */
+function buildRibbon(){
+  const svg = document.getElementById('ribbonSvg');
+  let html = '';
+  segments.forEach(s=>{
+    const x1 = (s.start/TOTAL)*1000;
+    const x2 = (s.end/TOTAL)*1000;
+    const w = x2-x1;
+    const isAhead = s.start >= FACE_CH;
+    html += `<rect x="${x1}" y="18" width="${w}" height="28" fill="${hazardColors[s.hazard]}" opacity="${isAhead? 0.55:0.92}" />`;
+  });
+  // confidence line beneath
+  segments.forEach(s=>{
+    const x1=(s.start/TOTAL)*1000, x2=(s.end/TOTAL)*1000;
+    const h = (s.confidence/100)*16;
+    html += `<rect x="${x1}" y="${50-h}" width="${x2-x1}" height="${h}" fill="#4FA6A0" opacity="0.7"/>`;
+  });
+  // face marker
+  const fx = (FACE_CH/TOTAL)*1000;
+  html += `<line x1="${fx}" y1="2" x2="${fx}" y2="64" stroke="#E7EAEE" stroke-width="1.5" stroke-dasharray="3,2"/>`;
+  html += `<text x="${fx+4}" y="11" fill="#8B95A3" font-size="9" font-family="IBM Plex Mono">FACE</text>`;
+  svg.innerHTML = html;
+}
+
+function setCursor(ch){
+  const pct = (ch/TOTAL)*100;
+  document.getElementById('ribbonCursor').style.left = pct+'%';
+  document.getElementById('ribbonRange').textContent = `CH ${formatCh(ch)} selected`;
+}
+
+function formatCh(m){
+  const km = Math.floor(m/1000);
+  const rem = Math.round(m%1000).toString().padStart(3,'0');
+  return `${km}+${rem}`;
+}
+
+document.getElementById('ribbon').addEventListener('click', (e)=>{
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = Math.min(1,Math.max(0,(e.clientX-rect.left)/rect.width));
+  const ch = pct*TOTAL;
+  const idx = segAt(ch);
+  if(idx>=0){ currentSegIdx = idx; renderAll(); }
+});
+
+let isDragging = false;
+document.getElementById('ribbon').addEventListener('mousedown', ()=> isDragging=true);
+window.addEventListener('mouseup', ()=> isDragging=false);
+window.addEventListener('mousemove', (e)=>{
+  if(!isDragging) return;
+  const rect = document.getElementById('ribbon').getBoundingClientRect();
+  if(e.clientX < rect.left || e.clientX > rect.right) return;
+  const pct = Math.min(1,Math.max(0,(e.clientX-rect.left)/rect.width));
+  const ch = pct*TOTAL;
+  const idx = segAt(ch);
+  if(idx>=0 && idx!==currentSegIdx){ currentSegIdx = idx; renderAll(); }
+});
+
+
+/* ============== GEOLOGICAL PROFILE (main viewport) ============== */
+function buildProfileSVG(){
+  const w = 1400, h = 560;
+  const x0 = 60, x1 = w-60;
+  const tunnelY = 300, tunnelH = 60;
+  const mountainBottom = 460;   // mountain/tunnel art stops here; below is the L-section track band
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">`;
+
+  // sky/surface gradient
+  svg += `<defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1A2027"/>
+      <stop offset="100%" stop-color="#11151A"/>
+    </linearGradient>
+    <linearGradient id="rockGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#23282F"/>
+      <stop offset="100%" stop-color="#161A1F"/>
+    </linearGradient>
+    <pattern id="hatch" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#4FA6A0" stroke-width="2"/>
+    </pattern>
+  </defs>`;
+  svg += `<rect x="0" y="0" width="${w}" height="${h}" fill="url(#skyGrad)"/>`;
+
+  // ===== MOUNTAIN SILHOUETTE — arches over the full tunnel length, tunnel bored through its base =====
+  // ridge peak sits above the tunnel band; irregular but a single coherent massif (not a flat line)
+  const ridgeBase = tunnelY - 8;       // where the mountain meets the tunnel band
+  const ridgePeakY = 46;               // highest point of the ridge (smaller y = higher)
+  let mtPts = `${x0},${ridgeBase} `;
+  const nSteps = 60;
+  for(let i=0;i<=nSteps;i++){
+    const t = i/nSteps;
+    const x = x0 + t*(x1-x0);
+    // bell-ish envelope (single massif) + irregular rock texture on top
+    const envelope = Math.pow(Math.sin(Math.PI*t), 0.6);           // 0 at edges, 1 near middle
+    const baseY = ridgeBase - envelope*(ridgeBase-ridgePeakY);
+    const texture = Math.sin(t*37+1.3)*10 + Math.cos(t*19+0.4)*7 + Math.sin(t*71)*3.5;
+    const y = baseY + texture*(0.35+0.65*envelope);
+    mtPts += `${x.toFixed(1)},${y.toFixed(1)} `;
+  }
+  mtPts += `${x1},${ridgeBase} ${x1},${mountainBottom} ${x0},${mountainBottom}`;
+  svg += `<polygon points="${mtPts}" fill="url(#rockGrad)" opacity="0.9"/>`;
+  // subtle ridge outline for definition
+  let ridgeLine = `M ${x0},${ridgeBase} `;
+  for(let i=0;i<=nSteps;i++){
+    const t = i/nSteps;
+    const x = x0 + t*(x1-x0);
+    const envelope = Math.pow(Math.sin(Math.PI*t), 0.6);
+    const baseY = ridgeBase - envelope*(ridgeBase-ridgePeakY);
+    const texture = Math.sin(t*37+1.3)*10 + Math.cos(t*19+0.4)*7 + Math.sin(t*71)*3.5;
+    const y = baseY + texture*(0.35+0.65*envelope);
+    ridgeLine += `L ${x.toFixed(1)},${y.toFixed(1)} `;
+  }
+  svg += `<path d="${ridgeLine}" fill="none" stroke="#333B45" stroke-width="1.5" opacity="0.8"/>`;
+  svg += `<text x="${(x0+x1)/2}" y="${ridgePeakY-10}" text-anchor="middle" fill="#5C6573" font-family="IBM Plex Mono" font-size="10" letter-spacing="1">MOUNTAIN CROSS-SECTION — click ridge to inspect chainage</text>`;
+
+  // borehole markers (still shown, dropping down onto the mountain toward the tunnel)
+  if(layerState.boreholes){
+    const boreholes = [300, 900, 1600, 2700, 3400, 4100];
+    boreholes.forEach(bh=>{
+      const bx = x0 + (bh/TOTAL)*(x1-x0);
+      svg += `<line x1="${bx}" y1="60" x2="${bx}" y2="${tunnelY-8}" stroke="#D9B23C" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.55"/>`;
+      svg += `<circle cx="${bx}" cy="60" r="3.5" fill="#D9B23C"/>`;
+    });
+  }
+
+  // thin ground-type strip just above the tunnel, toggled by the "Geology" layer
+  if(layerState.geology){
+    segments.forEach(s=>{
+      const sx0 = x0 + (s.start/TOTAL)*(x1-x0);
+      const sx1 = x0 + (s.end/TOTAL)*(x1-x0);
+      svg += `<rect x="${sx0}" y="${tunnelY-9}" width="${sx1-sx0}" height="6" fill="${groundColors[s.ground]}" opacity="0.85"/>`;
+    });
+  }
+
+  // tunnel alignment (the bore itself) — horizontal tube, filled per-segment by hazard colour
+  svg += `<rect x="${x0}" y="${tunnelY}" width="${x1-x0}" height="${tunnelH}" fill="#05070A" stroke="#3A4452" stroke-width="1.5" rx="2"/>`;
+  const faceX = x0 + (FACE_CH/TOTAL)*(x1-x0);
+  segments.forEach(s=>{
+    const sx0 = x0 + (s.start/TOTAL)*(x1-x0);
+    const sx1 = x0 + (s.end/TOTAL)*(x1-x0);
+    const isAhead = s.start >= FACE_CH;
+    if(layerState.hazard){
+      svg += `<rect x="${sx0}" y="${tunnelY}" width="${sx1-sx0}" height="${tunnelH}" fill="${hazardColors[s.hazard]}" opacity="${isAhead?0.28:0.65}"/>`;
+    } else {
+      svg += `<rect x="${sx0}" y="${tunnelY}" width="${sx1-sx0}" height="${tunnelH}" fill="#20262E" opacity="${isAhead?0.5:1}"/>`;
+    }
+    if(isAhead){
+      svg += `<rect x="${sx0}" y="${tunnelY}" width="${sx1-sx0}" height="${tunnelH}" fill="none" stroke="#5C6573" stroke-width="1" stroke-dasharray="5,4"/>`;
+    }
+    if(layerState.confidence && isAhead){
+      const hatchOpacity = s.confidence < 70 ? 0.5 : 0.15;
+      svg += `<rect x="${sx0}" y="${tunnelY}" width="${sx1-sx0}" height="${tunnelH}" fill="url(#hatch)" opacity="${hatchOpacity}"/>`;
+    }
+    // fault marker, inside the bore
+    if(layerState.faults && s.fault > 60){
+      const fx = (sx0+sx1)/2;
+      svg += `<line x1="${fx}" y1="${tunnelY+4}" x2="${fx}" y2="${tunnelY+tunnelH-4}" stroke="#D6543F" stroke-width="2.5" opacity="${isAhead?0.55:0.95}"/>`;
+    }
+    // water marker, inside the bore
+    if(layerState.hydrology && s.water > 55){
+      for(let i=0;i<3;i++){
+        const wx = sx0 + (i+1)*(sx1-sx0)/4;
+        svg += `<circle cx="${wx}" cy="${tunnelY+tunnelH-10}" r="2.2" fill="#4F8FA6" opacity="${isAhead?0.5:0.85}"/>`;
+      }
+    }
+  });
+  svg += `<rect x="${x0}" y="${tunnelY}" width="${x1-x0}" height="${tunnelH}" fill="none" stroke="#3A4452" stroke-width="1.5" rx="2"/>`;
+  svg += `<line x1="${x0}" y1="${tunnelY+tunnelH/2}" x2="${x1}" y2="${tunnelY+tunnelH/2}" stroke="#0B0D10" stroke-width="1" opacity="0.4"/>`;
+
+  // face marker
+  svg += `<line x1="${faceX}" y1="${tunnelY-14}" x2="${faceX}" y2="${tunnelY+tunnelH+14}" stroke="#E7EAEE" stroke-width="2"/>`;
+  svg += `<polygon points="${faceX},${tunnelY-14} ${faceX-7},${tunnelY-26} ${faceX+7},${tunnelY-26}" fill="#E7EAEE"/>`;
+  svg += `<text x="${faceX}" y="${tunnelY-32}" text-anchor="middle" fill="#E7EAEE" font-family="IBM Plex Mono" font-size="11" font-weight="600">FACE — CH ${formatCh(FACE_CH)}</text>`;
+
+  // chainage ticks
+  for(let ch=0; ch<=TOTAL; ch+=1000){
+    const cx = x0 + (ch/TOTAL)*(x1-x0);
+    svg += `<line x1="${cx}" y1="${h-46}" x2="${cx}" y2="${h-40}" stroke="#5C6573" stroke-width="1"/>`;
+    svg += `<text x="${cx}" y="${h-26}" text-anchor="middle" fill="#5C6573" font-family="IBM Plex Mono" font-size="10">${formatCh(ch)}</text>`;
+  }
+
+  // selection highlight on current segment
+  if (currentSegIdx !== null) {
+    const s = segments[currentSegIdx];
+    const sx0 = x0 + (s.start/TOTAL)*(x1-x0);
+    const sx1 = x0 + (s.end/TOTAL)*(x1-x0);
+    svg += `<rect x="${sx0}" y="50" width="${sx1-sx0}" height="${h-100}" fill="none" stroke="#E7EAEE" stroke-width="1.5" stroke-dasharray="2,3" opacity="0.85"/>`;
+    svg += `<rect id="selFill" x="${sx0}" y="50" width="${sx1-sx0}" height="${h-100}" fill="#E7EAEE" opacity="0.04"/>`;
+  }
+
+  svg += `</svg>`;
+  document.getElementById('viewportSvgHolder').innerHTML = svg;
+
+  // ---- click-on-mountain chainage selection ----
+  const svgEl = document.getElementById('viewportSvgHolder').querySelector('svg');
+  svgEl.style.cursor = 'pointer';
+  svgEl.addEventListener('click', (e)=>{
+    const pt = svgEl.createSVGPoint();
+    pt.x = e.clientX; pt.y = e.clientY;
+    const loc = pt.matrixTransform(svgEl.getScreenCTM().inverse());
+    if(loc.x < x0 || loc.x > x1) return;
+    const ch = ((loc.x - x0)/(x1-x0)) * TOTAL;
+    const idx = segAt(ch);
+    if(idx>=0){ goToSegment(idx); }
+  });
+}
+
+/* ============== RIGHT PANEL ============== */
+function plainSummary(s, isAhead){
+  let icon, verdict, extra;
+  if(s.hazard === 'low'){
+    icon = '🟢'; verdict = 'This section is <b>low risk</b>.';
+    extra = isAhead
+      ? "The model expects stable ground here - standard support should be enough when the face reaches this point."
+      : "The rock encountered here has been stable, standard support is sufficient.";
+  } else if(s.hazard === 'moderate'){
+    icon = '🟡'; verdict = 'This section needs <b>extra caution</b>.';
+    extra = isAhead
+      ? "The model expects moderately weak or fractured ground here - heavier support and closer monitoring are recommended as excavation approaches."
+      : "The rock here is moderately weak or fractured - heavier support has been used and monitoring is ongoing.";
+  } else {
+    icon = '🔴'; verdict = 'This section is <b>high risk</b>.';
+    extra = isAhead
+      ? "The model flags a real chance of unstable ground, a fault, or water problems here - advance investigation (probe drilling) and heavy support are recommended well before the face arrives."
+      : "Unstable ground, a fault, and/or heavy water was encountered here - heavy reinforcement is in use and this zone needs close monitoring.";
+  }
+  return `<div class="plain-summary"><span class="plain-icon">${icon}</span>${verdict} ${extra}</div>`;
+}
+
+function tip(text){
+  return `<span class="info-ic">?<span class="tip">${text}</span></span>`;
+}
+
+function buildRecommendationAccordion(s){
+  const classData = supportMatrix[s.supportClass] || {};
+  let accordionsHTML = '';
+  recommendationCategories.forEach((cat) => {
+    const fieldsHTML = Object.keys(cat.fields)
+      .filter((fieldKey) => classData[fieldKey] !== undefined && classData[fieldKey] !== null)
+      .map((fieldKey) => `<li><span>${cat.fields[fieldKey]}</span><b>${classData[fieldKey]}</b></li>`)
+      .join('');
+    if(!fieldsHTML) return;
+    const fosVal = cat.fosKey ? s.supportFactorOfSafety[cat.fosKey] : null;
+    accordionsHTML += `
+      <div class="rec-accordion-item">
+        <div class="rec-accordion-header">
+          <div class="rec-accordion-title">
+            <span class="rec-accordion-toggle-icon">▶</span>
+            <span>${cat.title}</span>
+          </div>
+          ${fosVal ? `<span class="rec-accordion-fos">FoS ${fosVal.toFixed(2)}</span>` : ''}
+        </div>
+        <div class="rec-accordion-body">
+          <div class="rec-accordion-content">
+            <ul class="rec-accordion-list">${fieldsHTML}</ul>
+          </div>
+        </div>
+      </div>`;
+  });
+  return accordionsHTML;
+}
+
+function goToOverview() {
+  currentSegIdx = null;
+  stopPlaying();
+  renderAll();
+}
+
+function getProjectSummaryText() {
+  let lowLength = 0;
+  let moderateLength = 0;
+  let highLength = 0;
+  const groundLengths = {};
+  let totalConfidenceLength = 0;
+  const highHazardZones = [];
+
+  segments.forEach(s => {
+    const len = s.end - s.start;
+    if (s.hazard === 'low') lowLength += len;
+    else if (s.hazard === 'moderate') moderateLength += len;
+    else if (s.hazard === 'high') highLength += len;
+
+    groundLengths[s.ground] = (groundLengths[s.ground] || 0) + len;
+    totalConfidenceLength += s.confidence * len;
+
+    if (s.hazard === 'high') {
+      const lastZone = highHazardZones[highHazardZones.length - 1];
+      if (lastZone && lastZone.end === s.start) {
+        lastZone.end = s.end;
+        if (!lastZone.grounds.includes(s.ground)) lastZone.grounds.push(s.ground);
+      } else {
+        highHazardZones.push({ start: s.start, end: s.end, grounds: [s.ground] });
+      }
+    }
+  });
+
+  const avgConfidence = Math.round(totalConfidenceLength / TOTAL);
+  const lowPct = Math.round((lowLength / TOTAL) * 100);
+  const modPct = Math.round((moderateLength / TOTAL) * 100);
+  const highPct = Math.round((highLength / TOTAL) * 100);
+
+  let dominantGround = '';
+  let maxLen = 0;
+  for (const [g, len] of Object.entries(groundLengths)) {
+    if (len > maxLen) {
+      maxLen = len;
+      dominantGround = g;
+    }
+  }
+  const dominantGroundPct = Math.round((maxLen / TOTAL) * 100);
+
+  const zoneStrings = highHazardZones.map(z => `CH ${formatCh(z.start)}–${formatCh(z.end)} (${z.grounds.join('/')})`);
+  const hazardZonesText = zoneStrings.length > 0
+    ? `High-hazard intervals are predicted at ${zoneStrings.join(', ')}.`
+    : `No high-hazard zones are predicted along the alignment.`;
+
+  const projectSelectVal = document.getElementById('projectSelect')?.value || "NH-44 Tunnel T-3 — Pkg 7";
+
+  return `The <b>${projectSelectVal}</b> spans a total length of <b>${TOTAL.toLocaleString()}m</b>, with <b>${FACE_CH.toLocaleString()}m</b> currently excavated. The tunnel alignment traverses variable geology, dominated by <b>${dominantGround}</b> (${dominantGroundPct}% of total length).
+  Overall, <b>${lowPct}%</b> of the alignment is classified as low-hazard (stable ground), <b>${modPct}%</b> as moderate-hazard, and <b>${highPct}%</b> as high-hazard.
+  ${hazardZonesText}
+  The model forecasts squeezing ground behavior and potential water ingress in these faulted and sheared zones. The average prediction confidence across the entire tunnel is <b>${avgConfidence}%</b>, with higher certainty in the excavated sections.`;
+}
+
+function renderRightPanel(){
+  document.getElementById('rightPanel').className = 'rightpanel rp-fade';
+  
+  if (currentSegIdx === null) {
+    // Project Overview Mode
+    const projectSelectVal = document.getElementById('projectSelect')?.value || "NH-44 Tunnel T-3 — Pkg 7";
+    const projectSummaryText = getProjectSummaryText();
+    
+    // calculate average RMR/GSI
+    let totalRmrLen = 0;
+    let totalGsiLen = 0;
+    let totalConfidenceLength = 0;
+    let lowLength = 0;
+    let moderateLength = 0;
+    let highLength = 0;
+    const groundLengths = {};
+
+    segments.forEach(s => {
+      const len = s.end - s.start;
+      totalRmrLen += s.rmr * len;
+      totalGsiLen += s.gsi * len;
+      totalConfidenceLength += s.confidence * len;
+      if (s.hazard === 'low') lowLength += len;
+      else if (s.hazard === 'moderate') moderateLength += len;
+      else if (s.hazard === 'high') highLength += len;
+      groundLengths[s.ground] = (groundLengths[s.ground] || 0) + len;
+    });
+
+    const avgRmr = Math.round(totalRmrLen / TOTAL);
+    const avgGsi = Math.round(totalGsiLen / TOTAL);
+    const avgConfidence = Math.round(totalConfidenceLength / TOTAL);
+    
+    const lowPct = Math.round((lowLength / TOTAL) * 100);
+    const modPct = Math.round((moderateLength / TOTAL) * 100);
+    const highPct = Math.round((highLength / TOTAL) * 100);
+
+    const sortedGrounds = Object.entries(groundLengths).sort((a,b) => b[1] - a[1]);
+    const groundsHTML = sortedGrounds.map(([g, len]) => {
+      const pct = Math.round((len/TOTAL)*100);
+      return `
+        <div class="prob-row" style="margin-bottom:8px;">
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text);"><span class="sw" style="background:${groundColors[g] || '#888'};width:8px;height:8px;border-radius:2px;display:inline-block;"></span><b>${g}</b></span>
+          <span style="flex:1;text-align:right;font-family:var(--mono);font-size:11px;color:var(--text-dim);">${len}m (${pct}%)</span>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('rightPanel').innerHTML = `
+      <div class="rp-header">
+        <div class="rp-chainage">PROJECT OVERVIEW</div>
+        <div class="rp-meta">
+          <span class="hazard-badge low" style="background:var(--teal-dim);color:var(--teal);border:1px solid rgba(79,166,160,.2)">Active Project</span>
+          <span class="conf-inline" style="font-weight:500;">${projectSelectVal}</span>
+        </div>
+      </div>
+      
+      <div class="plain-summary" style="margin-top:14px;">
+        ${projectSummaryText}
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Dominant Ground Types</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          ${groundsHTML}
+        </div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Project Metrics</div>
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="metric-label">Average RMR ${tip('Average Rock Mass Rating calculated across the entire tunnel alignment.')}</div>
+            <div class="metric-value amber">${avgRmr}</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Average GSI ${tip('Average Geological Strength Index calculated across the entire tunnel alignment.')}</div>
+            <div class="metric-value teal">${avgGsi}</div>
+          </div>
+          <div class="metric" style="grid-column: span 2;">
+            <div class="metric-label">Excavation Progress ${tip('Length of the tunnel excavated so far compared to the total design length.')}</div>
+            <div class="metric-value" style="font-size:15px;display:flex;justify-content:space-between;align-items:baseline;">
+              <span>${FACE_CH.toLocaleString()}m / ${TOTAL.toLocaleString()}m</span>
+              <span style="font-size:12px;color:var(--text-dim); font-family:var(--mono);">${Math.round((FACE_CH/TOTAL)*100)}% Complete</span>
+            </div>
+            <div class="metric-bar"><div style="width:${(FACE_CH/TOTAL)*100}%;background:var(--green)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Overall Hazard Distribution</div>
+        <div class="prob-row">
+          <span class="prob-label">Low Hazard ${tip('Percentage of alignment with stable ground conditions needing minimal reinforcement.')}</span>
+          <div class="prob-track"><div class="prob-fill" style="width:${lowPct}%;background:var(--green)"></div></div>
+          <span class="prob-val">${lowPct}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">Mod Hazard ${tip('Percentage of alignment with fair rock mass requiring active monitoring and joint support.')}</span>
+          <div class="prob-track"><div class="prob-fill" style="width:${modPct}%;background:var(--yellow)"></div></div>
+          <span class="prob-val">${modPct}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">High Hazard ${tip('Percentage of alignment in highly weathered or shear fault zones requiring immediate heavy reinforcement.')}</span>
+          <div class="prob-track"><div class="prob-fill" style="width:${highPct}%;background:var(--red)"></div></div>
+          <span class="prob-val">${highPct}%</span>
+        </div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Key Project Recommendations</div>
+        <div class="rec-card" style="border-color:var(--amber-dim);background:linear-gradient(180deg,rgba(224,145,63,.07),rgba(224,145,63,.02));">
+          <div class="rec-card-head">
+            <span class="rec-card-title">Fault &amp; Shear Zone Action Plan</span>
+          </div>
+          <ul class="rec-list">
+            <li>Advance probe drilling <b style="color:var(--text);">required</b> from CH 4+650 to 5+100</li>
+            <li>Heavier lining support (Class S4/S5) <b style="color:var(--text);">critical</b> for 13% of alignment</li>
+            <li>Systematic drainage &amp; pre-grouting <b style="color:var(--text);">recommended</b> in fault zones</li>
+            <li>Infill borehole density <b style="color:var(--text);">low</b> beyond CH 6+800</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Project Geological Insights</div>
+        <div class="comment-box">
+          "The alignment crosses multiple lithological boundaries and two major active fault shear zones (Phyllite and Fault Gouge cores) which represent the geotechnical risks. Extreme care must be taken in squeezing ground zones between CH 1+080 – 1+620 and CH 4+650 – 5+100."
+        </div>
+      </div>
+
+      <div class="rp-section" style="border-bottom:none;">
+        <div class="rp-section-title">Overall Model Confidence</div>
+        <div class="confidence-ring-row">
+          ${buildConfidenceRing(avgConfidence, 'var(--teal)')}
+          <div class="conf-detail">
+            <div class="conf-detail-row"><span>Excavated Zone</span><b>88%</b></div>
+            <div class="conf-detail-row"><span>Forecast Zone</span><b>64%</b></div>
+            <div class="conf-detail-row"><span>Model Version</span><b>v3.4.1</b></div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    // Chainage Inspection Mode
+    const s = segments[currentSegIdx];
+    const isAhead = s.start >= FACE_CH;
+    const hazardLabel = s.hazard.charAt(0).toUpperCase()+s.hazard.slice(1);
+    const col = hazardColors[s.hazard];
+    let watchHTML = '';
+
+    if(s.hazardTypes && s.hazardTypes.length){
+      watchHTML += `
+        <div class="rec-card" style="border-color:var(--red-dim);background:linear-gradient(180deg,rgba(214,84,63,.08),rgba(214,84,63,.02)); margin-top:10px;">
+          <div class="rec-card-head">
+            <span class="rec-card-title" style="color:var(--red);">Hazard Watch</span>
+          </div>
+          <ul class="rec-list">
+            ${s.hazardTypes.map(h=>`<li>${h} <b style="color:var(--red);">flagged</b></li>`).join('')}
+          </ul>
+        </div>`;
+    }
+    if(isAhead && s.confidence < 65){
+      watchHTML += `
+        <div class="rec-card" style="border-color:var(--line);background:var(--panel-2); margin-top:10px;">
+          <div class="rec-card-head">
+            <span class="rec-card-title" style="color:var(--text-dim);">Data Recommendation</span>
+          </div>
+          <ul class="rec-list">
+            <li>Advance probe drilling <b style="color:var(--text);">suggested</b></li>
+            <li>Infill borehole density <b style="color:var(--text);">low</b></li>
+          </ul>
+        </div>`;
+    }
+
+    document.getElementById('rightPanel').innerHTML = `
+      <div class="rp-header">
+        <div class="rp-head-row">
+          <div class="rp-chainage">${formatCh(s.start)}<span class="sep">-</span>${formatCh(s.end)}</div>
+          <button class="header-btn" id="backToOverviewBtn">← Overview</button>
+        </div>
+        <div class="rp-meta">
+          <span class="hazard-badge ${s.hazard}">${hazardLabel} Hazard</span>
+          <span class="conf-inline">${isAhead ? 'Forecast' : 'Observed'} ${tip('The tunnel face - the point currently being dug - has not reached this section yet if it says Forecast. That means this is a prediction, not a direct observation.')} · Confidence ${s.confidence}% ${tip('How sure the model is about this prediction. Higher is more reliable. Sections far ahead of the tunnel face naturally have lower confidence.')}</span>
+        </div>
+      </div>
+
+      ${plainSummary(s, isAhead)}
+
+      <div class="rp-section">
+        <div class="rp-section-title">Ground Type</div>
+        <div class="ground-tag"><span class="sw" style="background:${groundColors[s.ground]}"></span>${s.ground}</div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Prediction Metrics</div>
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="metric-label">RMR ${tip('Rock Mass Rating, 0-100. Higher means stronger, more stable rock that needs less support.')}</div>
+            <div class="metric-value">${s.rmr}</div>
+            <div class="metric-bar"><div style="width:${s.rmr}%;background:${col}"></div></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Q-System ${tip('Another rock-quality score, from about 0.001 to 1000. Used together with RMR to plan support.')}</div>
+            <div class="metric-value">${s.q.toFixed(1)}</div>
+            <div class="metric-bar"><div style="width:${Math.min(s.q*9,100)}%;background:${col}"></div></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">GSI ${tip('Geological Strength Index, 0-100. Lower means more fractured and weaker rock mass.')}</div>
+            <div class="metric-value">${s.gsi}</div>
+            <div class="metric-bar"><div style="width:${s.gsi}%;background:${col}"></div></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Support Class ${tip('Engineering support envelope from the richer recommendation model. A classes are lighter support; C classes are heavy support.')}</div>
+            <div class="metric-value ${s.supportClass.startsWith('C')?'red':s.supportClass.startsWith('A')?'teal':'amber'}">${s.supportClass}</div>
+            <div class="metric-bar"><div style="width:${s.recommendationConfidence.overall}%;background:var(--teal)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Probability Estimates</div>
+        <div class="prob-row">
+          <span class="prob-label">Fault zone ${tip('Estimated chance a geological fault crosses this section. Faults are weak, unpredictable ground.')}</span>
+          <div class="prob-track"><div class="prob-fill" style="width:${s.probability.fault}%;background:${s.probability.fault>50?'var(--red)':'var(--teal)'}"></div></div>
+          <span class="prob-val">${s.probability.fault}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">Water ingress ${tip('Estimated chance of groundwater entering the tunnel here. Higher means more drainage or grouting risk.')}</span>
+          <div class="prob-track"><div class="prob-fill" style="width:${s.probability.water}%;background:${s.probability.water>50?'#4F8FA6':'var(--teal)'}"></div></div>
+          <span class="prob-val">${s.probability.water}%</span>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">Behaviour ${tip('Predicted engineering ground response expected during excavation.')}</span>
+          <div style="flex:1;text-align:right;font-size:11.5px;color:var(--text);font-weight:500;">${s.probability.groundBehaviour}</div>
+        </div>
+        <div class="prob-row">
+          <span class="prob-label">Deformation ${tip('Predicted tunnel convergence or deformation expected in this section.')}</span>
+          <div style="flex:1;text-align:right;font-family:var(--mono);font-size:11.5px;color:var(--text);font-weight:500;">${s.probability.tunnelDeformation}</div>
+        </div>
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Support Recommendations</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;background:var(--panel-2);border:1px solid var(--line-soft);padding:8px 10px;border-radius:6px;">
+          <span style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;font-weight:500;">Recommendation Confidence</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-left:auto;">
+            <div class="prob-track" style="width:70px;height:5px;margin:0;"><div class="prob-fill" style="width:${s.recommendationConfidence.overall}%;background:var(--teal);"></div></div>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text);font-weight:600;">${s.recommendationConfidence.overall}%</span>
+          </div>
+        </div>
+        <div class="rec-accordion">${buildRecommendationAccordion(s)}</div>
+        ${watchHTML}
+      </div>
+
+      <div class="rp-section">
+        <div class="rp-section-title">Engineer Notes</div>
+        <div class="comment-box">"${s.comment}"</div>
+      </div>
+
+      <div class="rp-section" style="border-bottom:none;">
+        <div class="rp-section-title">Confidence</div>
+        <div class="confidence-ring-row">
+          ${buildConfidenceRing(s.confidence, col)}
+          <div class="conf-detail">
+            <div class="conf-detail-row"><span>Ground type</span><b>${Math.min(s.confidence+4,99)}%</b></div>
+            <div class="conf-detail-row"><span>Fault prediction</span><b>${Math.max(s.confidence-3,0)}%</b></div>
+            <div class="conf-detail-row"><span>Support recommendation</span><b>${Math.min(s.confidence+2,99)}%</b></div>
+            <div class="conf-detail-row"><span>Engineering package</span><b>${s.recommendationConfidence.overall}%</b></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+function buildConfidenceRing(pct,col){
+  const r = 30, c = 2*Math.PI*r;
+  const offset = c - (pct/100)*c;
+  return `
+  <svg width="74" height="74" viewBox="0 0 74 74" style="flex-shrink:0;">
+    <circle cx="37" cy="37" r="${r}" fill="none" stroke="#262D36" stroke-width="7"/>
+    <circle cx="37" cy="37" r="${r}" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" transform="rotate(-90 37 37)"/>
+    <text x="37" y="41" text-anchor="middle" fill="#E7EAEE" font-family="IBM Plex Mono" font-size="15" font-weight="600">${pct}%</text>
+  </svg>`;
+}
+
+/* ============== LAYER TOGGLES ============== */
+document.querySelectorAll('.chip[data-layer]').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    chip.classList.toggle('active');
+    const key = chip.dataset.layer;
+    if(key in layerState){
+      layerState[key] = chip.classList.contains('active');
+      renderAll();
+    }
+  });
+});
+
+/* ============== VIEW TABS ============== */
+document.querySelectorAll('.view-tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+  });
+});
+
+/* ============== CHAINAGE NAV (simple prev/next/play control) ============== */
+let isPlaying = false;
+let playTimer = null;
+
+function renderChNav(){
+  const dotsEl = document.getElementById('chnavDots');
+  if (currentSegIdx !== null) {
+    document.getElementById('chnavSeg').textContent = `SECTION ${currentSegIdx+1} OF ${segments.length}`;
+    const s = segments[currentSegIdx];
+    document.getElementById('chnavCh').textContent = `CH ${formatCh(s.start)} – ${formatCh(s.end)}`;
+
+    document.getElementById('chPrev').classList.remove('disabled');
+    document.getElementById('chNext').classList.remove('disabled');
+    document.getElementById('chPrev').classList.toggle('disabled', currentSegIdx===0 && !isPlaying);
+    document.getElementById('chNext').classList.toggle('disabled', currentSegIdx===segments.length-1 && !isPlaying);
+
+    dotsEl.innerHTML = segments.map((_,i)=>
+      `<div class="chnav-dot ${i===currentSegIdx?'current':(i<currentSegIdx?'done':'')}"></div>`
+    ).join('');
+  } else {
+    document.getElementById('chnavSeg').textContent = `PROJECT OVERVIEW`;
+    document.getElementById('chnavCh').textContent = `CH 0+000 – 9+800`;
+    
+    document.getElementById('chPrev').classList.add('disabled');
+    document.getElementById('chNext').classList.add('disabled');
+    
+    dotsEl.innerHTML = segments.map((_,i)=>
+      `<div class="chnav-dot"></div>`
+    ).join('');
+  }
+}
+
+function goToSegment(idx){
+  if(idx<0 || idx>=segments.length) return;
+  currentSegIdx = idx;
+  renderAll();
+}
+
+document.getElementById('chPrev').addEventListener('click', ()=>{
+  stopPlaying();
+  if (currentSegIdx === null) {
+    goToSegment(12);
+  } else {
+    goToSegment(currentSegIdx-1);
+  }
+});
+document.getElementById('chNext').addEventListener('click', ()=>{
+  stopPlaying();
+  if (currentSegIdx === null) {
+    goToSegment(12);
+  } else {
+    goToSegment(currentSegIdx+1);
+  }
+});
+
+function stopPlaying(){
+  isPlaying = false;
+  clearInterval(playTimer);
+  document.getElementById('chPlay').classList.remove('playing');
+  document.getElementById('chPlay').textContent = '▶';
+  document.getElementById('chPlay').title = 'Walk through the tunnel automatically';
+}
+function startPlaying(){
+  isPlaying = true;
+  document.getElementById('chPlay').classList.add('playing');
+  document.getElementById('chPlay').textContent = '❚❚';
+  document.getElementById('chPlay').title = 'Pause';
+  if (currentSegIdx === null) {
+    goToSegment(0);
+  }
+  playTimer = setInterval(()=>{
+    if(currentSegIdx === null) {
+      goToSegment(0);
+    } else if(currentSegIdx >= segments.length-1){
+      stopPlaying();
+      return;
+    } else {
+      goToSegment(currentSegIdx+1);
+    }
+  }, 2800);
+}
+document.getElementById('chPlay').addEventListener('click', ()=>{
+  if(isPlaying) stopPlaying(); else startPlaying();
+});
+
+/* ============== RENDER ALL ============== */
+function renderAll(){
+  buildProfileSVG();
+  renderRightPanel();
+  if (currentSegIdx !== null) {
+    document.getElementById('ribbonCursor').style.display = 'block';
+    setCursor((segments[currentSegIdx].start+segments[currentSegIdx].end)/2);
+  } else {
+    document.getElementById('ribbonCursor').style.display = 'none';
+    document.getElementById('ribbonRange').textContent = 'No section selected';
+  }
+  renderChNav();
+}
+
+buildRibbon();
+renderAll();
+
+/* ============== WELCOME MODAL + GLOSSARY (beginner-friendly onboarding) ============== */
+(function(){
+  const welcomeModal = document.getElementById('welcomeModal');
+  const closeWelcome = document.getElementById('closeWelcome');
+  const dontShow = document.getElementById('dontShowAgain');
+  const helpBtn = document.getElementById('helpBtn');
+  const glossaryPanel = document.getElementById('glossaryPanel');
+  const glossaryClose = document.getElementById('glossaryClose');
+
+  let skip = false;
+  try { skip = sessionStorage.getItem('strata_skip_welcome') === '1'; } catch(e){ skip = false; }
+  if(skip){ welcomeModal.style.display = 'none'; }
+
+  closeWelcome.addEventListener('click', ()=>{
+    welcomeModal.style.display = 'none';
+    if(dontShow.checked){
+      try { sessionStorage.setItem('strata_skip_welcome','1'); } catch(e){}
+    }
+  });
+
+  helpBtn.addEventListener('click', ()=>{
+    glossaryPanel.classList.add('open');
+  });
+  glossaryClose.addEventListener('click', ()=> glossaryPanel.classList.remove('open'));
+})();
+
+
+document.getElementById('rightPanel').addEventListener('click', (e) => {
+  const backBtn = e.target.closest('#backToOverviewBtn');
+  if (backBtn) {
+    goToOverview();
+    return;
+  }
+  const header = e.target.closest('.rec-accordion-header');
+  if (!header) return;
+  const item = header.closest('.rec-accordion-item');
+  if (item) item.classList.toggle('active');
+});
+
+document.getElementById('projectSelect').addEventListener('change', () => {
+  if (currentSegIdx === null) {
+    renderAll();
+  }
+});
+
+/* ============== GLOBAL TOOLTIP LOGIC ============== */
+function showTooltip(infoIc, text) {
+  const tooltip = document.getElementById('appTooltip');
+  if (!tooltip) return;
+  tooltip.innerHTML = text;
+  
+  tooltip.classList.remove('above', 'below', 'visible');
+  
+  const icRect = infoIc.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+  
+  let left = icRect.left + icRect.width / 2 - tooltipRect.width / 2;
+  const padding = 12;
+  const maxLeft = window.innerWidth - tooltipRect.width - padding;
+  if (left < padding) left = padding;
+  if (left > maxLeft) left = maxLeft;
+  
+  let top = icRect.top - tooltipRect.height - 10;
+  let isBelow = false;
+  
+  if (top < padding) {
+    top = icRect.bottom + 10;
+    isBelow = true;
+  }
+  
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+  
+  const iconCenter = icRect.left + icRect.width / 2;
+  let arrowLeft = iconCenter - left;
+  const arrowPadding = 12;
+  if (arrowLeft < arrowPadding) arrowLeft = arrowPadding;
+  if (arrowLeft > tooltipRect.width - arrowPadding) arrowLeft = tooltipRect.width - arrowPadding;
+  tooltip.style.setProperty('--arrow-left', arrowLeft + 'px');
+  
+  if (isBelow) {
+    tooltip.classList.add('below');
+  } else {
+    tooltip.classList.add('above');
+  }
+  
+  requestAnimationFrame(() => {
+    tooltip.classList.add('visible');
+  });
+}
+
+function hideTooltip() {
+  const tooltip = document.getElementById('appTooltip');
+  if (tooltip) {
+    tooltip.classList.remove('visible');
+  }
+}
+
+document.addEventListener('mouseover', (e) => {
+  const infoIc = e.target.closest('.info-ic');
+  if (!infoIc) return;
+  if (e.relatedTarget && e.relatedTarget.closest('.info-ic') === infoIc) return;
+  
+  const tipSpan = infoIc.querySelector('.tip');
+  if (tipSpan) {
+    showTooltip(infoIc, tipSpan.innerHTML);
+  }
+});
+
+document.addEventListener('mouseout', (e) => {
+  const infoIc = e.target.closest('.info-ic');
+  if (!infoIc) return;
+  if (e.relatedTarget && e.relatedTarget.closest('.info-ic') === infoIc) return;
+  
+  hideTooltip();
+});
+
+document.getElementById('rightPanel')?.addEventListener('scroll', hideTooltip);
+window.addEventListener('resize', hideTooltip);
+window.addEventListener('scroll', hideTooltip);
+
+</script>
+<div id="appTooltip" class="app-tooltip"></div>
+</body>
+</html>
+
