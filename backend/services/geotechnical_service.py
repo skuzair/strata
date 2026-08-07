@@ -286,7 +286,10 @@ def get_segments():
         val = r.get(key)
         if val and val != "" and val != "-":
             try:
-                return float(val)
+                fval = float(val)
+                if key == 'GSI_Value' and (fval > 100.0 or fval < 0.0):
+                    return None
+                return fval
             except ValueError:
                 pass
         return None

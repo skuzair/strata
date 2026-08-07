@@ -218,10 +218,28 @@ export default function MapViewport({
               }}
               onEachFeature={(feature, leafletLayer) => {
                 if (feature.properties && feature.properties.name) {
+                  const excludeKeys = new Set([
+                    'name', 'description', 'stroke', 'stroke-opacity', 'stroke-width',
+                    'fill', 'fill-opacity', 'fill-enabled', 'stroke-enabled'
+                  ]);
+                  const metadataItems = [];
+                  Object.entries(feature.properties).forEach(([key, val]) => {
+                    if (!excludeKeys.has(key) && val !== null && val !== undefined && val !== '') {
+                      metadataItems.push(`
+                        <div style="margin-top: 3px; font-size: 11px;">
+                          <span style="color: #666; font-weight: 500;">${key}:</span> 
+                          <span style="color: #11151A; font-weight: 600;">${val}</span>
+                        </div>
+                      `);
+                    }
+                  });
                   leafletLayer.bindPopup(`
-                    <div style="color: #11151A; font-family: sans-serif; font-size: 12px; line-height: 1.4; max-width: 200px;">
-                      <strong style="font-size: 13px;">${feature.properties.name}</strong>
-                      ${feature.properties.description ? `<div style="margin-top: 5px; font-size: 11.5px; color: #555;">${feature.properties.description}</div>` : ''}
+                    <div style="color: #11151A; font-family: sans-serif; font-size: 12px; line-height: 1.4; min-width: 140px; max-width: 250px;">
+                      <strong style="font-size: 13px; display: block; border-bottom: 1.5px solid #E2E8F0; padding-bottom: 3px; margin-bottom: 5px;">
+                        ${feature.properties.name}
+                      </strong>
+                      ${feature.properties.description ? `<div style="margin-top: 5px; font-size: 11.5px; color: #555; font-style: italic;">${feature.properties.description}</div>` : ''}
+                      ${metadataItems.length > 0 ? `<div style="margin-top: 5px; border-top: 1px dashed #CBD5E0; padding-top: 5px;">${metadataItems.join('')}</div>` : ''}
                     </div>
                   `);
                 }

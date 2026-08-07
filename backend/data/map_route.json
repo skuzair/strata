@@ -5,7 +5,6 @@
       "type": "Feature",
       "properties": {
         "name": "Chenani-Nashri Tunnel",
-        "description": "",
         "stroke": "#0000ff",
         "stroke-opacity": 1.0,
         "stroke-width": 4.0
@@ -27,8 +26,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "South Portal (Chenani)",
-        "description": ""
+        "name": "South Portal (Chenani) \u2014 Portal-1"
       },
       "geometry": {
         "type": "Point",
@@ -41,8 +39,7 @@
     {
       "type": "Feature",
       "properties": {
-        "name": "North Portal (Nashri)",
-        "description": ""
+        "name": "North Portal (Nashri) \u2014 Portal-2"
       },
       "geometry": {
         "type": "Point",

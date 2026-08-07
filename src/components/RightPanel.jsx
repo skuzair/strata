@@ -50,24 +50,24 @@ const QualityBar = ({ label, stats, maxVal = 100, col }) => {
   const pctMin = (sMin / maxVal) * 100;
   const pctMax = (sMax / maxVal) * 100;
   return (
-    <div className="metric" style={{ marginBottom: '12px' }}>
-      <div className="metric-label" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-        <span>{label}</span>
-        <span style={{ fontSize: '10.2px', color: 'var(--text-dim)' }}>
-          min: {sMin} | max: {sMax}
-        </span>
+    <div className="metric" style={{ marginBottom: '10px', padding: '10px 12px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+        <span style={{ fontSize: '11.5px', color: 'var(--text-dim)', fontWeight: 500 }}>{label}</span>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: '16px', fontWeight: 600, color: col }}>{sMean}</span>
       </div>
-      <div className="metric-value" style={{ color: col, margin: '2px 0', fontSize: '18px' }}>{sMean}</div>
-      <div className="metric-bar" style={{ position: 'relative', overflow: 'visible', height: '6px' }}>
+      <div className="metric-bar" style={{ position: 'relative', overflow: 'visible', height: '6px', backgroundColor: 'var(--bg)', borderRadius: '3px', marginBottom: '4px' }}>
         <div style={{ 
           position: 'absolute', 
           left: `${pctMin}%`, 
           width: `${pctMax - pctMin}%`, 
           height: '100%', 
-          backgroundColor: 'rgba(231,234,238,0.15)',
-          borderRadius: '2px' 
+          backgroundColor: 'rgba(231,234,238,0.12)',
+          borderRadius: '3px' 
         }}></div>
-        <div style={{ width: `${pctMean}%`, backgroundColor: col, height: '100%', borderRadius: '2px' }}></div>
+        <div style={{ width: `${pctMean}%`, backgroundColor: col, height: '100%', borderRadius: '3px' }}></div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9.5px', color: 'var(--text-faint)', fontFamily: 'var(--mono)' }}>
+        min: {sMin} | max: {sMax}
       </div>
     </div>
   );
@@ -78,22 +78,39 @@ const QQualityBar = ({ label, stats }) => {
   const sMean = stats.mean;
   const sMin = stats.min !== null && stats.min !== undefined ? stats.min : sMean;
   const sMax = stats.max !== null && stats.max !== undefined ? stats.max : sMean;
+  
+  const logPct = (val) => {
+    const minQ = 0.001;
+    const maxQ = 1000.0;
+    const logMin = Math.log10(minQ);
+    const logMax = Math.log10(maxQ);
+    const lVal = Math.log10(Math.max(val, minQ));
+    return Math.min(Math.max(((lVal - logMin) / (logMax - logMin)) * 100, 0), 100);
+  };
+  
+  const pctMean = logPct(sMean);
+  const pctMin = logPct(sMin);
+  const pctMax = logPct(sMax);
+  
   return (
-    <div className="metric" style={{ marginBottom: '12px' }}>
-      <div className="metric-label" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
-        <span>{label}</span>
-        <span style={{ fontSize: '10.2px', color: 'var(--text-dim)' }}>
-          min: {sMin.toFixed(2)} | max: {sMax.toFixed(2)}
-        </span>
+    <div className="metric" style={{ marginBottom: '10px', padding: '10px 12px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px' }}>
+        <span style={{ fontSize: '11.5px', color: 'var(--text-dim)', fontWeight: 500 }}>{label}</span>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: '16px', fontWeight: 600, color: 'var(--teal)' }}>{sMean.toFixed(2)}</span>
       </div>
-      <div className="metric-value" style={{ color: 'var(--teal)', margin: '2px 0', fontSize: '18px' }}>{sMean.toFixed(2)}</div>
-      <div className="metric-bar" style={{ height: '6px' }}>
+      <div className="metric-bar" style={{ position: 'relative', overflow: 'visible', height: '6px', backgroundColor: 'var(--bg)', borderRadius: '3px', marginBottom: '4px' }}>
         <div style={{ 
-          width: `${Math.min(Math.log10(sMean + 1) * 33, 100)}%`, 
-          backgroundColor: 'var(--teal)', 
-          height: '100%',
-          borderRadius: '2px'
+          position: 'absolute', 
+          left: `${pctMin}%`, 
+          width: `${pctMax - pctMin}%`, 
+          height: '100%', 
+          backgroundColor: 'rgba(231,234,238,0.12)',
+          borderRadius: '3px' 
         }}></div>
+        <div style={{ width: `${pctMean}%`, backgroundColor: 'var(--teal)', height: '100%', borderRadius: '3px' }}></div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9.5px', color: 'var(--text-faint)', fontFamily: 'var(--mono)' }}>
+        min: {sMin.toFixed(2)} | max: {sMax.toFixed(2)}
       </div>
     </div>
   );
@@ -103,12 +120,12 @@ const RmrBreakdownBar = ({ label, val, maxVal }) => {
   const pct = (val / maxVal) * 100;
   return (
     <div style={{ marginBottom: '10px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-dim)', marginBottom: '3px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px', color: 'var(--text-dim)', marginBottom: '4px' }}>
         <span>{label}</span>
-        <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)' }}>{val} / {maxVal}</span>
+        <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)', fontWeight: 500 }}>{val} / {maxVal}</span>
       </div>
-      <div style={{ height: '5px', backgroundColor: '#1A202C', borderRadius: '3px', overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', backgroundColor: 'var(--amber)' }}></div>
+      <div style={{ height: '5px', backgroundColor: 'var(--bg)', borderRadius: '3px', overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', backgroundColor: 'var(--amber)', borderRadius: '3px' }}></div>
       </div>
     </div>
   );
@@ -121,7 +138,7 @@ const JointCard = ({ name, joint }) => {
       background: 'var(--panel-2)', 
       border: '1px solid var(--line-soft)', 
       borderRadius: '6px', 
-      padding: '10px',
+      padding: '12px',
       marginBottom: '10px'
     }}>
       <div style={{ 
@@ -129,30 +146,45 @@ const JointCard = ({ name, joint }) => {
         fontWeight: '600', 
         color: 'var(--text)', 
         borderBottom: '1px solid var(--line-soft)',
-        paddingBottom: '4px',
-        marginBottom: '6px',
+        paddingBottom: '6px',
+        marginBottom: '8px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between'
       }}>
         <span>{name} Set</span>
-        <span style={{ fontSize: '10px', color: 'var(--text-dim)', fontWeight: 'normal' }}>
+        <span style={{ fontSize: '10px', color: 'var(--text-dim)', fontWeight: 'normal', fontFamily: 'var(--mono)' }}>
           {joint.dip}° / {joint.dipDir}°
         </span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '10.5px' }}>
-        <div><span style={{ color: 'var(--text-dim)' }}>Strike:</span> <b style={{ color: 'var(--text)' }}>{joint.strike}°</b></div>
-        <div><span style={{ color: 'var(--text-dim)' }}>Spacing:</span> <b style={{ color: 'var(--text)' }}>{joint.spacing} cm</b></div>
-        <div><span style={{ color: 'var(--text-dim)' }}>Persistence:</span> <b style={{ color: 'var(--text)' }}>{joint.persistence} m</b></div>
-        <div><span style={{ color: 'var(--text-dim)' }}>Aperture:</span> <b style={{ color: 'var(--text)' }}>{joint.aperture} mm</b></div>
-        <div style={{ gridColumn: 'span 2' }}>
-          <span style={{ color: 'var(--text-dim)' }}>Roughness:</span> <b style={{ color: 'var(--text)', fontSize: '10px' }}>{joint.roughness}</b>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 12px', fontSize: '11px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '3px' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Strike:</span>
+          <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{joint.strike}°</b>
         </div>
-        <div style={{ gridColumn: 'span 2' }}>
-          <span style={{ color: 'var(--text-dim)' }}>Infill:</span> <b style={{ color: 'var(--text)', fontSize: '10px' }}>{joint.infill}</b>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '3px' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Spacing:</span>
+          <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{joint.spacing} cm</b>
         </div>
-        <div style={{ gridColumn: 'span 2' }}>
-          <span style={{ color: 'var(--text-dim)' }}>Weathering:</span> <b style={{ color: 'var(--text)', fontSize: '10px' }}>{joint.weathering}</b>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '3px' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Persistence:</span>
+          <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{joint.persistence} m</b>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '3px' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Aperture:</span>
+          <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{joint.aperture} mm</b>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gridColumn: 'span 2', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '3px' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Roughness:</span>
+          <b style={{ color: 'var(--text)', fontSize: '10.5px' }}>{joint.roughness}</b>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gridColumn: 'span 2', borderBottom: '1px solid rgba(255,255,255,0.02)', paddingBottom: '3px' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Infill:</span>
+          <b style={{ color: 'var(--text)', fontSize: '10.5px' }}>{joint.infill}</b>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gridColumn: 'span 2' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Weathering:</span>
+          <b style={{ color: 'var(--text)', fontSize: '10.5px' }}>{joint.weathering}</b>
         </div>
       </div>
     </div>
@@ -400,11 +432,43 @@ export default function RightPanel({
         <div className="rp-section">
           <div className="rp-section-title">Key Project Recommendations</div>
           <div className="rec-card" style={{ borderColor: 'var(--amber-dim)', background: 'linear-gradient(180deg,rgba(224,145,63,.07),rgba(224,145,63,.02))' }}>
-            <ul className="rec-list">
-              <li>Advance probe drilling <b style={{ color: 'var(--text)' }}>required</b> from CH 4+650 to 5+100</li>
-              <li>Heavier lining support (Class B3/C2) <b style={{ color: 'var(--text)' }}>critical</b> for 24% of alignment</li>
-              <li>Systematic drainage &amp; pre-grouting <b style={{ color: 'var(--text)' }}>recommended</b> in fault zones</li>
-              <li>Infill borehole density <b style={{ color: 'var(--text)' }}>low</b> beyond CH 6+800</li>
+            <ul className="rec-list" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <li style={{ display: 'flex', flexDirection: 'column', gap: '3px', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text)' }}>Advance Probe Drilling</span>
+                  <span style={{ fontSize: '9.5px', fontFamily: 'var(--mono)', background: 'var(--amber-dim)', color: 'var(--amber)', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>REQUIRED</span>
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-dim)', lineHeight: '1.4' }}>
+                  Mandatory forward probe drilling from <span style={{ fontFamily: 'var(--mono)' }}>CH 4+650</span> to <span style={{ fontFamily: 'var(--mono)' }}>5+100</span>.
+                </div>
+              </li>
+              <li style={{ display: 'flex', flexDirection: 'column', gap: '3px', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text)' }}>Lining Support Upgrade</span>
+                  <span style={{ fontSize: '9.5px', fontFamily: 'var(--mono)', background: 'rgba(214,84,63,.15)', color: 'var(--red)', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>CRITICAL</span>
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-dim)', lineHeight: '1.4' }}>
+                  Heavier lining support (Class B3/C2) is critical for 24% of the alignment length.
+                </div>
+              </li>
+              <li style={{ display: 'flex', flexDirection: 'column', gap: '3px', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text)' }}>Drainage &amp; Pre-Grouting</span>
+                  <span style={{ fontSize: '9.5px', fontFamily: 'var(--mono)', background: 'rgba(79,166,160,.15)', color: 'var(--teal)', padding: '1px 6px', borderRadius: '3px', fontWeight: 600 }}>RECOMMENDED</span>
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-dim)', lineHeight: '1.4' }}>
+                  Systematic water control measures recommended through all mapped fault shear zones.
+                </div>
+              </li>
+              <li style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text)' }}>Infill Borehole Density</span>
+                  <span style={{ fontSize: '9.5px', fontFamily: 'var(--mono)', background: 'var(--panel)', color: 'var(--text-dim)', padding: '1px 6px', borderRadius: '3px', border: '1px solid var(--line-soft)', fontWeight: 600 }}>LOW</span>
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-dim)', lineHeight: '1.4' }}>
+                  Geotechnical confidence is limited beyond <span style={{ fontFamily: 'var(--mono)' }}>CH 6+800</span> due to sparse borehole logs.
+                </div>
+              </li>
             </ul>
           </div>
         </div>
@@ -478,7 +542,15 @@ export default function RightPanel({
         <div className="plain-summary" style={{ marginTop: '12px' }}>
           <span className="plain-icon">{plainIcon}</span>
           {plainVerdict}
-          <span>{s.summary}</span>
+          <span dangerouslySetInnerHTML={{
+            __html: s.summary
+              .replace(/(RMR\s*\d+)/gi, '<strong style="color: var(--amber); font-weight: 600;">$1</strong>')
+              .replace(/(GSI\s*\d+)/gi, '<strong style="color: var(--teal); font-weight: 600;">$1</strong>')
+              .replace(/(Class\s+[A-Za-z0-9\-\/]+)/g, '<strong style="color: var(--amber); font-weight: 600;">$1</strong>')
+              .replace(/(Gneiss|Schist|Quartzite|Granite|Silicified|Lithology|Wet|Damp|Dry|Portal)/gi, '<strong style="color: var(--text); font-weight: 600;">$1</strong>')
+              .replace(/(Support Class)/gi, '<strong style="color: var(--text); font-weight: 600;">$1</strong>')
+              .replace(/(Hazard)/gi, '<strong style="color: var(--text); font-weight: 600;">$1</strong>')
+          }} />
         </div>
 
         {/* 2. Hazard & Confidence */}
@@ -492,35 +564,29 @@ export default function RightPanel({
         {/* 3. Geological Conditions */}
         <div className="rp-section">
           <div className="rp-section-title">Geological Conditions</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Lithology</div>
-              <div style={{ fontSize: '12px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div className="geo-cond-card">
+              <div className="geo-cond-label">Lithology</div>
+              <div className="geo-cond-value">
                 <span className="sw" style={{ backgroundColor: groundColors[s.lithology] || '#888', width: '6px', height: '6px', borderRadius: '50%' }}></span>
                 {s.lithology}
               </div>
             </div>
-            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Rock Strength</div>
-              <div style={{ fontSize: '12px', fontWeight: 600, marginTop: '2px', color: 'var(--text)' }}>
-                {geologicalConditions.rockStrength || 'N/A'}
-              </div>
+            <div className="geo-cond-card">
+              <div className="geo-cond-label">Rock Strength</div>
+              <div className="geo-cond-value">{geologicalConditions.rockStrength || 'N/A'}</div>
             </div>
-            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)', gridColumn: 'span 2' }}>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Geological Formation</div>
-              <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '2px', color: 'var(--text)' }}>
-                {geologicalConditions.formation || 'N/A'}
-              </div>
+            <div className="geo-cond-card" style={{ gridColumn: 'span 2' }}>
+              <div className="geo-cond-label">Geological Formation</div>
+              <div className="geo-cond-value">{geologicalConditions.formation || 'N/A'}</div>
             </div>
-            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Weathering Grade</div>
-              <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '2px', color: 'var(--text-dim)' }}>
-                {geologicalConditions.weatheringGrade || 'N/A'}
-              </div>
+            <div className="geo-cond-card">
+              <div className="geo-cond-label">Weathering Grade</div>
+              <div className="geo-cond-value">{geologicalConditions.weatheringGrade || 'N/A'}</div>
             </div>
-            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
-              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Groundwater / Seepage</div>
-              <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '2px', color: s.groundwater === 'Wet' ? 'var(--blue)' : 'var(--text)' }}>
+            <div className="geo-cond-card">
+              <div className="geo-cond-label">Groundwater &amp; Seepage</div>
+              <div className="geo-cond-value" style={{ color: s.groundwater === 'Wet' ? 'var(--red)' : 'var(--text)' }}>
                 {geologicalConditions.groundwaterClass || 'N/A'} ({geologicalConditions.seepage || 'N/A'})
               </div>
             </div>
@@ -530,7 +596,7 @@ export default function RightPanel({
         {/* 4. Rock Quality */}
         <div className="rp-section">
           <div className="rp-section-title">Rock Quality Indices</div>
-          <div className="metric-grid" style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
             <QualityBar label="RMR (Rock Mass Rating)" stats={s.rmr} col="var(--amber)" />
             <QualityBar label="GSI (Geological Strength Index)" stats={s.gsi} col="var(--teal)" />
             <QualityBar label="RQD (Rock Quality Designation)" stats={s.rqd} col="var(--green)" />
@@ -541,31 +607,33 @@ export default function RightPanel({
         {/* 5. Rock Behaviour */}
         <div className="rp-section">
           <div className="rp-section-title">Rock Mass Behaviour</div>
-          <div style={{ background: 'var(--panel-2)', border: '1px solid var(--line-soft)', padding: '10px', borderRadius: '6px' }}>
-            <div className="prob-row" style={{ marginBottom: '6px' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Failure Modes:</span>
-              <span style={{ fontWeight: 600, fontSize: '11.5px', color: 'var(--text)' }}>{rockBehaviour.failureModes || 'N/A'}</span>
-            </div>
-            <div className="prob-row" style={{ marginBottom: '6px' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Face Stability:</span>
-              <span style={{ fontWeight: 600, fontSize: '11.5px', color: (rockBehaviour.faceStability && rockBehaviour.faceStability.toLowerCase().includes('unstable')) ? 'var(--red)' : 'var(--green)' }}>
-                {rockBehaviour.faceStability || 'Stable'}
-              </span>
-            </div>
-            <div className="prob-row" style={{ marginBottom: '6px' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Deformation Limit:</span>
-              <span style={{ fontWeight: 600, fontSize: '11.5px', fontFamily: 'var(--mono)' }}>{rockBehaviour.deformationTolerance || '50'} mm</span>
-            </div>
-            <div className="prob-row" style={{ marginBottom: '6px' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Discontinuity Sets:</span>
-              <span style={{ fontWeight: 600, fontSize: '11.5px' }}>{rockBehaviour.numberJointSets || '3'} Prominent Sets</span>
+          <div style={{ background: 'var(--panel-2)', border: '1px solid var(--line-soft)', padding: '12px', borderRadius: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11px' }}>
+              <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Failure Modes:</span>
+                <b style={{ color: 'var(--text)' }}>{rockBehaviour.failureModes || 'N/A'}</b>
+              </div>
+              <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Face Stability:</span>
+                <b style={{ color: (rockBehaviour.faceStability && rockBehaviour.faceStability.toLowerCase().includes('unstable')) ? 'var(--red)' : 'var(--green)' }}>
+                  {rockBehaviour.faceStability || 'Stable'}
+                </b>
+              </div>
+              <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Deformation Limit:</span>
+                <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{rockBehaviour.deformationTolerance || '50'} mm</b>
+              </div>
+              <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Discontinuity Sets:</span>
+                <b style={{ color: 'var(--text)' }}>{rockBehaviour.numberJointSets || '3'} Prominent Sets</b>
+              </div>
             </div>
             {rockBehaviour.behaviourFlags && rockBehaviour.behaviourFlags.length > 0 && (
-              <div style={{ marginTop: '10px', borderTop: '1px solid var(--line-soft)', paddingTop: '8px' }}>
-                <div style={{ fontSize: '10px', color: 'var(--text-dim)', marginBottom: '4px' }}>Active Geotechnical Flags:</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              <div style={{ marginTop: '12px', borderTop: '1px dashed var(--line-soft)', paddingTop: '10px' }}>
+                <div style={{ fontSize: '9.5px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '6px', fontFamily: 'var(--mono)' }}>Active Geotechnical Flags</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                   {rockBehaviour.behaviourFlags.map(f => (
-                    <span key={f} style={{ background: 'rgba(214,84,63,.15)', color: 'var(--red)', fontSize: '9.5px', padding: '2px 6px', borderRadius: '3px', fontWeight: 600 }}>
+                    <span key={f} className="warning-chip">
                       ⚠ {f}
                     </span>
                   ))}
@@ -579,47 +647,64 @@ export default function RightPanel({
         <div className="rp-section">
           <div className="rp-section-title">Support System Specification</div>
           <div style={{ background: 'var(--panel-2)', border: '1px solid var(--line-soft)', padding: '12px', borderRadius: '6px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px solid var(--line-soft)' }}>
-              <div>
-                <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Design Support Class</div>
-                <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--amber)' }}>Class {supportSystem.supportClass || 'N/A'}</div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>ML Forecast Class</div>
-                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--teal)' }}>
-                  Class {supportSystem.predictedSupportClass || 'N/A'}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '11.5px' }}>
+              {/* Core Design Class */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', borderBottom: '1px solid var(--line-soft)', paddingBottom: '10px' }}>
+                <div>
+                  <div style={{ fontSize: '9.5px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.05em' }}>Design Support Class</div>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--amber)', marginTop: '2px' }}>Class {supportSystem.supportClass || 'N/A'}</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '9.5px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.05em' }}>ML Forecast Class</div>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--teal)', marginTop: '2px' }}>Class {supportSystem.predictedSupportClass || 'N/A'}</div>
                 </div>
               </div>
-            </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
-              <div className="prob-row">
-                <span style={{ color: 'var(--text-dim)' }}>Shotcrete Lining:</span>
-                <b style={{ color: 'var(--text)' }}>{supportSystem.shotcreteThickness || 'N/A'}</b>
+
+              {/* Structural Reinforcement */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '2px', fontFamily: 'var(--mono)' }}>Structural Reinforcement</div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Shotcrete Lining:</span>
+                  <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{supportSystem.shotcreteThickness || 'N/A'}</b>
+                </div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Rockbolts Type/Len:</span>
+                  <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)', fontSize: '11px' }}>{supportSystem.rockboltType || 'N/A'} ({supportSystem.rockboltLength || 'N/A'})</b>
+                </div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Rockbolt Spacing:</span>
+                  <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{supportSystem.rockboltSpacing || 'N/A'}</b>
+                </div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Lattice Girders:</span>
+                  <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)', fontSize: '11px', maxWidth: '170px', textAlign: 'right' }}>{supportSystem.latticeGirder || 'N/A'}</b>
+                </div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Steel Ribs Type:</span>
+                  <b style={{ color: 'var(--text)', fontFamily: 'var(--mono)' }}>{supportSystem.steelRibs || 'N/A'}</b>
+                </div>
               </div>
-              <div className="prob-row">
-                <span style={{ color: 'var(--text-dim)' }}>Rockbolts:</span>
-                <b style={{ color: 'var(--text)' }}>{supportSystem.rockboltType || 'N/A'} ({supportSystem.rockboltLength || 'N/A'}) @ {supportSystem.rockboltSpacing || 'N/A'}</b>
+
+              {/* Execution / Spiling */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px dashed var(--line-soft)', paddingTop: '8px' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '2px', fontFamily: 'var(--mono)' }}>Execution / Excavation Support</div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Face Support:</span>
+                  <b style={{ color: 'var(--text)' }}>{supportSystem.faceSupport || 'N/A'}</b>
+                </div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Crown Spiles / Forepoling:</span>
+                  <b style={{ color: 'var(--text)', fontSize: '11px', maxWidth: '170px', textAlign: 'right' }}>{supportSystem.crownSupport || 'N/A'}</b>
+                </div>
               </div>
-              <div className="prob-row">
-                <span style={{ color: 'var(--text-dim)' }}>Lattice Girders:</span>
-                <b style={{ color: 'var(--text)' }}>{supportSystem.latticeGirder || 'N/A'}</b>
-              </div>
-              <div className="prob-row">
-                <span style={{ color: 'var(--text-dim)' }}>Steel Ribs Type:</span>
-                <b style={{ color: 'var(--text)' }}>{supportSystem.steelRibs || 'N/A'}</b>
-              </div>
-              <div className="prob-row">
-                <span style={{ color: 'var(--text-dim)' }}>Face Support:</span>
-                <b style={{ color: 'var(--text)' }}>{supportSystem.faceSupport || 'N/A'}</b>
-              </div>
-              <div className="prob-row">
-                <span style={{ color: 'var(--text-dim)' }}>Crown Spiles / Forepoling:</span>
-                <b style={{ color: 'var(--text)', fontSize: '10px', maxWidth: '200px', textAlign: 'right' }}>{supportSystem.crownSupport || 'N/A'}</b>
-              </div>
-              <div className="prob-row" style={{ borderTop: '1px dashed var(--line-soft)', paddingTop: '6px', marginTop: '2px' }}>
-                <span style={{ color: 'var(--text-dim)' }}>Permanent Lining:</span>
-                <b style={{ color: 'var(--text)' }}>{supportSystem.finalLining || 'N/A'}</b>
+
+              {/* Final Lining */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', borderTop: '1px dashed var(--line-soft)', paddingTop: '8px' }}>
+                <div style={{ fontSize: '9px', color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: '2px', fontFamily: 'var(--mono)' }}>Final Support</div>
+                <div className="prob-row" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                  <span style={{ color: 'var(--text-dim)' }}>Permanent Lining:</span>
+                  <b style={{ color: 'var(--text)' }}>{supportSystem.finalLining || 'N/A'}</b>
+                </div>
               </div>
             </div>
           </div>
