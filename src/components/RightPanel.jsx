@@ -2,13 +2,11 @@ import React, { useState, useMemo } from 'react';
 
 const groundColors = {
   'Hard Quartzite':'#C98B4A','Jointed Quartzite':'#B98C5C','Weathered Gneiss':'#A87A56',
-  'Fractured Gneiss':'#9A7560','Sheared Phyllite':'#8B6F8F','Fault Gouge':'#6E5A4A','Mixed Ground':'#9B8A6E'
+  'Fractured Gneiss':'#9A7560','Sheared Phyllite':'#8B6F8F','Fault Gouge':'#6E5A4A','Mixed Ground':'#9B8A6E',
+  'Sandstone':'#C98B4A','Siltstone':'#B98C5C','Claystone':'#8B6F8F','Silty Clay':'#9A7560','Unclassified':'#4A5568'
 };
 const hazardColors = {low:'#5FA864', moderate:'#D9B23C', high:'#D6543F'};
-const TOTAL = 9800;
-const FACE_CH = 4260;
 
-// Inline Tooltip icon component helper
 const Tip = ({ text }) => (
   <span className="info-ic">
     ?
@@ -16,11 +14,11 @@ const Tip = ({ text }) => (
   </span>
 );
 
-// Inline Gauge Ring component
 const ConfidenceRing = ({ pct, col }) => {
   const r = 30;
   const c = 2 * Math.PI * r;
-  const offset = c - (pct / 100) * c;
+  const pctVal = pct !== null && pct !== undefined ? pct : 0;
+  const offset = c - (pctVal / 100) * c;
   return (
     <svg width="74" height="74" viewBox="0 0 74 74" style={{ flexShrink: 0 }}>
       <circle cx="37" cy="37" r={r} fill="none" stroke="#262D36" strokeWidth="7" />
@@ -29,17 +27,135 @@ const ConfidenceRing = ({ pct, col }) => {
         cy="37" 
         r={r} 
         fill="none" 
-        stroke={col} 
+        stroke={pct !== null ? col : '#262D36'} 
         strokeWidth="7" 
         strokeLinecap="round"
         strokeDasharray={c} 
         strokeDashoffset={offset} 
         transform="rotate(-90 37 37)"
       />
-      <text x="37" y="41" textAnchor="middle" fill="#E7EAEE" fontFamily="IBM Plex Mono" fontSize="15" fontWeight="600">
-        {pct}%
+      <text x="37" y="41" textAnchor="middle" fill="#E7EAEE" fontFamily="IBM Plex Mono" fontSize="13" fontWeight="600">
+        {pct !== null ? `${pct}%` : 'N/A'}
       </text>
     </svg>
+  );
+};
+
+const QualityBar = ({ label, stats, maxVal = 100, col }) => {
+  if (!stats || stats.mean === null || stats.mean === undefined) return null;
+  const sMean = stats.mean;
+  const sMin = stats.min !== null && stats.min !== undefined ? stats.min : sMean;
+  const sMax = stats.max !== null && stats.max !== undefined ? stats.max : sMean;
+  const pctMean = (sMean / maxVal) * 100;
+  const pctMin = (sMin / maxVal) * 100;
+  const pctMax = (sMax / maxVal) * 100;
+  return (
+    <div className="metric" style={{ marginBottom: '12px' }}>
+      <div className="metric-label" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+        <span>{label}</span>
+        <span style={{ fontSize: '10.2px', color: 'var(--text-dim)' }}>
+          min: {sMin} | max: {sMax}
+        </span>
+      </div>
+      <div className="metric-value" style={{ color: col, margin: '2px 0', fontSize: '18px' }}>{sMean}</div>
+      <div className="metric-bar" style={{ position: 'relative', overflow: 'visible', height: '6px' }}>
+        <div style={{ 
+          position: 'absolute', 
+          left: `${pctMin}%`, 
+          width: `${pctMax - pctMin}%`, 
+          height: '100%', 
+          backgroundColor: 'rgba(231,234,238,0.15)',
+          borderRadius: '2px' 
+        }}></div>
+        <div style={{ width: `${pctMean}%`, backgroundColor: col, height: '100%', borderRadius: '2px' }}></div>
+      </div>
+    </div>
+  );
+};
+
+const QQualityBar = ({ label, stats }) => {
+  if (!stats || stats.mean === null || stats.mean === undefined) return null;
+  const sMean = stats.mean;
+  const sMin = stats.min !== null && stats.min !== undefined ? stats.min : sMean;
+  const sMax = stats.max !== null && stats.max !== undefined ? stats.max : sMean;
+  return (
+    <div className="metric" style={{ marginBottom: '12px' }}>
+      <div className="metric-label" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px' }}>
+        <span>{label}</span>
+        <span style={{ fontSize: '10.2px', color: 'var(--text-dim)' }}>
+          min: {sMin.toFixed(2)} | max: {sMax.toFixed(2)}
+        </span>
+      </div>
+      <div className="metric-value" style={{ color: 'var(--teal)', margin: '2px 0', fontSize: '18px' }}>{sMean.toFixed(2)}</div>
+      <div className="metric-bar" style={{ height: '6px' }}>
+        <div style={{ 
+          width: `${Math.min(Math.log10(sMean + 1) * 33, 100)}%`, 
+          backgroundColor: 'var(--teal)', 
+          height: '100%',
+          borderRadius: '2px'
+        }}></div>
+      </div>
+    </div>
+  );
+};
+
+const RmrBreakdownBar = ({ label, val, maxVal }) => {
+  const pct = (val / maxVal) * 100;
+  return (
+    <div style={{ marginBottom: '10px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-dim)', marginBottom: '3px' }}>
+        <span>{label}</span>
+        <span style={{ fontFamily: 'var(--mono)', color: 'var(--text)' }}>{val} / {maxVal}</span>
+      </div>
+      <div style={{ height: '5px', backgroundColor: '#1A202C', borderRadius: '3px', overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', backgroundColor: 'var(--amber)' }}></div>
+      </div>
+    </div>
+  );
+};
+
+const JointCard = ({ name, joint }) => {
+  if (!joint || joint.dip === null) return null;
+  return (
+    <div style={{ 
+      background: 'var(--panel-2)', 
+      border: '1px solid var(--line-soft)', 
+      borderRadius: '6px', 
+      padding: '10px',
+      marginBottom: '10px'
+    }}>
+      <div style={{ 
+        fontSize: '11px', 
+        fontWeight: '600', 
+        color: 'var(--text)', 
+        borderBottom: '1px solid var(--line-soft)',
+        paddingBottom: '4px',
+        marginBottom: '6px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <span>{name} Set</span>
+        <span style={{ fontSize: '10px', color: 'var(--text-dim)', fontWeight: 'normal' }}>
+          {joint.dip}° / {joint.dipDir}°
+        </span>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '10.5px' }}>
+        <div><span style={{ color: 'var(--text-dim)' }}>Strike:</span> <b style={{ color: 'var(--text)' }}>{joint.strike}°</b></div>
+        <div><span style={{ color: 'var(--text-dim)' }}>Spacing:</span> <b style={{ color: 'var(--text)' }}>{joint.spacing} cm</b></div>
+        <div><span style={{ color: 'var(--text-dim)' }}>Persistence:</span> <b style={{ color: 'var(--text)' }}>{joint.persistence} m</b></div>
+        <div><span style={{ color: 'var(--text-dim)' }}>Aperture:</span> <b style={{ color: 'var(--text)' }}>{joint.aperture} mm</b></div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Roughness:</span> <b style={{ color: 'var(--text)', fontSize: '10px' }}>{joint.roughness}</b>
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Infill:</span> <b style={{ color: 'var(--text)', fontSize: '10px' }}>{joint.infill}</b>
+        </div>
+        <div style={{ gridColumn: 'span 2' }}>
+          <span style={{ color: 'var(--text-dim)' }}>Weathering:</span> <b style={{ color: 'var(--text)', fontSize: '10px' }}>{joint.weathering}</b>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -49,8 +165,12 @@ export default function RightPanel({
   activeProject,
   supportMatrix,
   recommendationCategories,
-  onBackToOverview
+  onBackToOverview,
+  totalMeters,
+  excavatedMeters
 }) {
+  const TOTAL = totalMeters;
+  const FACE_CH = excavatedMeters;
   const [expandedAccordions, setExpandedAccordions] = useState({});
 
   const toggleAccordion = (id) => {
@@ -76,34 +196,50 @@ export default function RightPanel({
     const groundLengths = {};
     let totalConfidenceLength = 0;
     let totalRmrLength = 0;
+    let totalRmrWeight = 0;
     let totalGsiLength = 0;
+    let totalGsiWeight = 0;
+    let totalRqdLength = 0;
+    let totalRqdWeight = 0;
     const highHazardZones = [];
 
     segments.forEach(s => {
-      const len = s.end - s.start;
+      const len = s.endChainage - s.startChainage;
       if (s.hazard === 'low') lowLength += len;
       else if (s.hazard === 'moderate') moderateLength += len;
       else if (s.hazard === 'high') highLength += len;
 
-      groundLengths[s.ground] = (groundLengths[s.ground] || 0) + len;
+      groundLengths[s.lithology] = (groundLengths[s.lithology] || 0) + len;
       totalConfidenceLength += s.confidence * len;
-      totalRmrLength += s.rmr * len;
-      totalGsiLength += s.gsi * len;
+      
+      if (s.rmr.mean !== null) {
+        totalRmrLength += s.rmr.mean * len;
+        totalRmrWeight += len;
+      }
+      if (s.gsi.mean !== null) {
+        totalGsiLength += s.gsi.mean * len;
+        totalGsiWeight += len;
+      }
+      if (s.rqd && s.rqd.mean !== null) {
+        totalRqdLength += s.rqd.mean * len;
+        totalRqdWeight += len;
+      }
 
       if (s.hazard === 'high') {
         const lastZone = highHazardZones[highHazardZones.length - 1];
-        if (lastZone && lastZone.end === s.start) {
-          lastZone.end = s.end;
-          if (!lastZone.grounds.includes(s.ground)) lastZone.grounds.push(s.ground);
+        if (lastZone && lastZone.end === s.startChainage) {
+          lastZone.end = s.endChainage;
+          if (!lastZone.grounds.includes(s.lithology)) lastZone.grounds.push(s.lithology);
         } else {
-          highHazardZones.push({ start: s.start, end: s.end, grounds: [s.ground] });
+          highHazardZones.push({ start: s.startChainage, end: s.endChainage, grounds: [s.lithology] });
         }
       }
     });
 
     const avgConfidence = Math.round(totalConfidenceLength / TOTAL);
-    const avgRmr = Math.round(totalRmrLength / TOTAL);
-    const avgGsi = Math.round(totalGsiLength / TOTAL);
+    const avgRmr = totalRmrWeight > 0 ? Math.round(totalRmrLength / totalRmrWeight) : "N/A";
+    const avgGsi = totalGsiWeight > 0 ? Math.round(totalGsiLength / totalGsiWeight) : "N/A";
+    const avgRqd = totalRqdWeight > 0 ? Math.round(totalRqdLength / totalRqdWeight) : "N/A";
     const lowPct = Math.round((lowLength / TOTAL) * 100);
     const modPct = Math.round((moderateLength / TOTAL) * 100);
     const highPct = Math.round((highLength / TOTAL) * 100);
@@ -133,19 +269,19 @@ export default function RightPanel({
       avgConfidence,
       avgRmr,
       avgGsi,
+      avgRqd,
       lowPct,
       modPct,
       highPct,
       groundLengths
     };
-  }, [segments, activeProject]);
+  }, [segments, activeProject, TOTAL, FACE_CH]);
 
-  // If data is loading
   if (!segments || segments.length === 0) {
     return (
       <div className="rightpanel">
         <div style={{ padding: '20px', color: 'var(--text-dim)', textAlign: 'center' }}>
-          Loading dashboard data...
+          Loading Strata dashboard datasets...
         </div>
       </div>
     );
@@ -194,31 +330,37 @@ export default function RightPanel({
 
         <div className="rp-section">
           <div className="rp-section-title">Project Metrics</div>
-          <div className="metric-grid">
+          <div className="metric-grid" style={{ gridTemplateColumns: '1fr 1fr 1fr' }}>
             <div className="metric">
               <div className="metric-label">
-                Average RMR <Tip text="Average Rock Mass Rating calculated across the entire tunnel alignment." />
+                Avg RMR <Tip text="Average Rock Mass Rating calculated across the alignment." />
               </div>
               <div className="metric-value amber">{s.avgRmr}</div>
             </div>
             <div className="metric">
               <div className="metric-label">
-                Average GSI <Tip text="Average Geological Strength Index calculated across the entire tunnel alignment." />
+                Avg GSI <Tip text="Average Geological Strength Index calculated across the alignment." />
               </div>
               <div className="metric-value teal">{s.avgGsi}</div>
             </div>
-            <div className="metric" style={{ gridColumn: 'span 2' }}>
+            <div className="metric">
+              <div className="metric-label">
+                Avg RQD <Tip text="Average Rock Quality Designation (RQD) percentage." />
+              </div>
+              <div className="metric-value green" style={{ color: 'var(--green)' }}>{s.avgRqd}%</div>
+            </div>
+            <div className="metric" style={{ gridColumn: 'span 3' }}>
               <div className="metric-label">
                 Excavation Progress <Tip text="Length of the tunnel excavated so far compared to the total design length." />
               </div>
-              <div className="metric-value" style={{ fontSize: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <div className="metric-value" style={{ fontSize: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', margin: '4px 0' }}>
                 <span>{FACE_CH.toLocaleString()}m / {TOTAL.toLocaleString()}m</span>
-                <span style={{ fontSize: '12px', color: 'var(--text-dim)', fontFamily: 'var(--mono)' }}>
+                <span style={{ fontSize: '11.5px', color: 'var(--text-dim)', fontFamily: 'var(--mono)' }}>
                   {Math.round((FACE_CH / TOTAL) * 100)}% Complete
                 </span>
               </div>
               <div className="metric-bar">
-                <div style={{ width: `${(FACE_CH / TOTAL) * 100}%`, backgroundColor: 'var(--green)', height: '100%' }}></div>
+                <div style={{ width: `${(FACE_CH / TOTAL) * 100}%`, backgroundColor: 'var(--green)', height: '100%', borderRadius: '2px' }}></div>
               </div>
             </div>
           </div>
@@ -228,7 +370,7 @@ export default function RightPanel({
           <div className="rp-section-title">Overall Hazard Distribution</div>
           <div className="prob-row">
             <span className="prob-label">
-              Low Hazard <Tip text="Percentage of alignment with stable ground conditions needing minimal reinforcement." />
+              Low Hazard <Tip text="Stable ground conditions needing minimal reinforcement." />
             </span>
             <div className="prob-track">
               <div className="prob-fill" style={{ width: `${s.lowPct}%`, backgroundColor: 'var(--green)' }}></div>
@@ -237,7 +379,7 @@ export default function RightPanel({
           </div>
           <div className="prob-row">
             <span className="prob-label">
-              Mod Hazard <Tip text="Percentage of alignment with fair rock mass requiring active monitoring and joint support." />
+              Mod Hazard <Tip text="Fair rock mass requiring active monitoring and joint support." />
             </span>
             <div className="prob-track">
               <div className="prob-fill" style={{ width: `${s.modPct}%`, backgroundColor: 'var(--yellow)' }}></div>
@@ -246,7 +388,7 @@ export default function RightPanel({
           </div>
           <div className="prob-row">
             <span className="prob-label">
-              High Hazard <Tip text="Percentage of alignment in highly weathered or shear fault zones requiring immediate heavy reinforcement." />
+              High Hazard <Tip text="Fault shear zones requiring immediate heavy reinforcement." />
             </span>
             <div className="prob-track">
               <div className="prob-fill" style={{ width: `${s.highPct}%`, backgroundColor: 'var(--red)' }}></div>
@@ -258,12 +400,9 @@ export default function RightPanel({
         <div className="rp-section">
           <div className="rp-section-title">Key Project Recommendations</div>
           <div className="rec-card" style={{ borderColor: 'var(--amber-dim)', background: 'linear-gradient(180deg,rgba(224,145,63,.07),rgba(224,145,63,.02))' }}>
-            <div className="rec-card-head">
-              <span className="rec-card-title">Fault &amp; Shear Zone Action Plan</span>
-            </div>
             <ul className="rec-list">
               <li>Advance probe drilling <b style={{ color: 'var(--text)' }}>required</b> from CH 4+650 to 5+100</li>
-              <li>Heavier lining support (Class S4/S5) <b style={{ color: 'var(--text)' }}>critical</b> for 13% of alignment</li>
+              <li>Heavier lining support (Class B3/C2) <b style={{ color: 'var(--text)' }}>critical</b> for 24% of alignment</li>
               <li>Systematic drainage &amp; pre-grouting <b style={{ color: 'var(--text)' }}>recommended</b> in fault zones</li>
               <li>Infill borehole density <b style={{ color: 'var(--text)' }}>low</b> beyond CH 6+800</li>
             </ul>
@@ -284,7 +423,7 @@ export default function RightPanel({
             <div className="conf-detail">
               <div className="conf-detail-row"><span>Excavated Zone</span><b>88%</b></div>
               <div className="conf-detail-row"><span>Forecast Zone</span><b>64%</b></div>
-              <div className="conf-detail-row"><span>Model Version</span><b>v3.4.1</b></div>
+              <div className="conf-detail-row"><span>Model Version</span><b>v4.1.2-aligned</b></div>
             </div>
           </div>
         </div>
@@ -295,264 +434,283 @@ export default function RightPanel({
     // RENDER SEGMENT INSPECTION
     // ==========================================
     const s = segments[currentSegIdx];
-    const isAhead = s.start >= FACE_CH;
-    const hazardLabel = s.hazard.charAt(0).toUpperCase() + s.hazard.slice(1);
-    const col = hazardColors[s.hazard];
+    const isAhead = s.startChainage >= FACE_CH;
+    const hazardLabel = s.hazard ? (s.hazard.charAt(0).toUpperCase() + s.hazard.slice(1)) : 'Unknown';
+    const col = hazardColors[s.hazard] || '#888';
 
-    // Compute watch cards dynamically
-    let watchHTML = null;
-    if (s.hazardTypes && s.hazardTypes.length > 0) {
-      watchHTML = (
-        <div className="rec-card" style={{ borderColor: 'var(--red-dim)', background: 'linear-gradient(180deg,rgba(214,84,63,.08),rgba(214,84,63,.02))', marginTop: '10px' }}>
-          <div className="rec-card-head">
-            <span className="rec-card-title" style={{ color: 'var(--red)' }}>Hazard Watch</span>
-          </div>
-          <ul className="rec-list">
-            {s.hazardTypes.map((h, i) => (
-              <li key={i}>{h} <b style={{ color: 'var(--red)' }}>flagged</b></li>
-            ))}
-          </ul>
-        </div>
-      );
-    }
-    
-    let recommendationHTML = null;
-    if (isAhead && s.confidence < 65) {
-      recommendationHTML = (
-        <div className="rec-card" style={{ borderColor: 'var(--line)', background: 'var(--panel-2)', marginTop: '10px' }}>
-          <div className="rec-card-head">
-            <span className="rec-card-title" style={{ color: 'var(--text-dim)' }}>Data Recommendation</span>
-          </div>
-          <ul className="rec-list">
-            <li>Advance probe drilling <b style={{ color: 'var(--text)' }}>suggested</b></li>
-            <li>Infill borehole density <b style={{ color: 'var(--text)' }}>low</b></li>
-          </ul>
-        </div>
-      );
-    }
+    // Safely extract nested structures with defaults
+    const geologicalConditions = s.geologicalConditions || {};
+    const rockBehaviour = s.rockBehaviour || {};
+    const supportSystem = s.supportSystem || {};
+    const rmrBreakdown = s.rmrBreakdown || {};
+    const jointSets = s.jointSets || {};
+    const aggregationMetadata = s.aggregationMetadata || { rowCount: 1, completeness: 1.0, missingFields: [] };
 
     // Build plainSummary card text
     let plainIcon = '🟢';
     let plainVerdict = <span>This section is <b>low risk</b>. </span>;
-    let plainExtra = isAhead 
-      ? "The model expects stable ground here - standard support should be enough when the face reaches this point."
-      : "The rock encountered here has been stable, standard support is sufficient.";
-
     if (s.hazard === 'moderate') {
       plainIcon = '🟡';
       plainVerdict = <span>This section needs <b>extra caution</b>. </span>;
-      plainExtra = isAhead
-        ? "The model expects moderately weak or fractured ground here - heavier support and closer monitoring are recommended as excavation approaches."
-        : "The rock here is moderately weak or fractured - heavier support has been used and monitoring is ongoing.";
     } else if (s.hazard === 'high') {
       plainIcon = '🔴';
       plainVerdict = <span>This section is <b>high risk</b>. </span>;
-      plainExtra = isAhead
-        ? "The model flags a real chance of unstable ground, a fault, or water problems here - advance investigation (probe drilling) and heavy support are recommended well before the face arrives."
-        : "Unstable ground, a fault, and/or heavy water was encountered here - heavy reinforcement is in use and this zone needs close monitoring.";
     }
 
-    // Accordion categories rendering
-    const classData = supportMatrix ? (supportMatrix[s.supportClass] || {}) : {};
-
     return (
-      <div className="rightpanel rp-fade" id="rightPanel">
-        {/* Header */}
+      <div className="rightpanel rp-fade" id="rightPanel" style={{ display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto' }}>
+        {/* Header & Spatial Context */}
         <div className="rp-header">
           <div className="rp-head-row">
-            <div className="rp-chainage">
-              {formatCh(s.start)}<span className="sep">-</span>{formatCh(s.end)}
+            <div className="rp-chainage" style={{ fontSize: '16px' }}>
+              CH {formatCh(s.startChainage)}<span className="sep">—</span>CH {formatCh(s.endChainage)}
             </div>
             <button className="header-btn" id="backToOverviewBtn" onClick={onBackToOverview}>
               ← Overview
             </button>
           </div>
-          <div className="rp-meta">
-            <span className={`hazard-badge ${s.hazard}`}>{hazardLabel} Hazard</span>
-            <span className="conf-inline">
-              {isAhead ? 'Forecast' : 'Observed'}{' '}
-              <Tip text="The tunnel face - the point currently being dug - has not reached this section yet if it says Forecast. That means this is a prediction, not a direct observation." />{' '}
-              · Confidence {s.confidence}%{' '}
-              <Tip text="How sure the model is about this prediction. Higher is more reliable. Sections far ahead of the tunnel face naturally have lower confidence." />
-            </span>
+          <div style={{ fontSize: '11px', color: 'var(--text-dim)', marginTop: '2px', fontWeight: 500, fontFamily: 'var(--mono)' }}>
+            Length: {Math.round(s.length)} m
           </div>
         </div>
 
-        {/* AI Summary */}
-        <div className="plain-summary">
+        {/* 1. Geological Summary */}
+        <div className="plain-summary" style={{ marginTop: '12px' }}>
           <span className="plain-icon">{plainIcon}</span>
           {plainVerdict}
-          {plainExtra}
+          <span>{s.summary}</span>
         </div>
 
-        {/* Ground type */}
-        <div className="rp-section">
-          <div className="rp-section-title">Ground Type</div>
-          <div className="ground-tag">
-            <span className="sw" style={{ backgroundColor: groundColors[s.ground] }}></span>
-            {s.ground}
-          </div>
+        {/* 2. Hazard & Confidence */}
+        <div className="rp-section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--panel-2)', borderRadius: '6px', margin: '12px 14px 4px 14px', border: '1px solid var(--line-soft)' }}>
+          <span className={`hazard-badge ${s.hazard}`} style={{ margin: 0 }}>{hazardLabel} Hazard</span>
+          <span className="conf-inline" style={{ fontSize: '11px', color: 'var(--text)', fontWeight: 500 }}>
+            {isAhead ? 'Forecast' : 'Observed'} · Confidence <b>{s.confidence}%</b>
+          </span>
         </div>
 
-        {/* Geotechnical Prediction Metrics */}
+        {/* 3. Geological Conditions */}
         <div className="rp-section">
-          <div className="rp-section-title">Prediction Metrics</div>
-          <div className="metric-grid">
-            <div className="metric">
-              <div className="metric-label">
-                RMR <Tip text="Rock Mass Rating, 0-100. Higher means stronger, more stable rock that needs less support." />
-              </div>
-              <div className="metric-value">{s.rmr}</div>
-              <div className="metric-bar">
-                <div style={{ width: `${s.rmr}%`, backgroundColor: col, height: '100%' }}></div>
+          <div className="rp-section-title">Geological Conditions</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
+              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Lithology</div>
+              <div style={{ fontSize: '12px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                <span className="sw" style={{ backgroundColor: groundColors[s.lithology] || '#888', width: '6px', height: '6px', borderRadius: '50%' }}></span>
+                {s.lithology}
               </div>
             </div>
-            <div className="metric">
-              <div className="metric-label">
-                Q-System <Tip text="Another rock-quality score, from about 0.001 to 1000. Used together with RMR to plan support." />
-              </div>
-              <div className="metric-value">{s.q.toFixed(1)}</div>
-              <div className="metric-bar">
-                <div style={{ width: `${Math.min(s.q * 9, 100)}%`, backgroundColor: col, height: '100%' }}></div>
+            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
+              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Rock Strength</div>
+              <div style={{ fontSize: '12px', fontWeight: 600, marginTop: '2px', color: 'var(--text)' }}>
+                {geologicalConditions.rockStrength || 'N/A'}
               </div>
             </div>
-            <div className="metric">
-              <div className="metric-label">
-                GSI <Tip text="Geological Strength Index, 0-100. Lower means more fractured and weaker rock mass." />
-              </div>
-              <div className="metric-value">{s.gsi}</div>
-              <div className="metric-bar">
-                <div style={{ width: `${s.gsi}%`, backgroundColor: col, height: '100%' }}></div>
+            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)', gridColumn: 'span 2' }}>
+              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Geological Formation</div>
+              <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '2px', color: 'var(--text)' }}>
+                {geologicalConditions.formation || 'N/A'}
               </div>
             </div>
-            <div className="metric">
-              <div className="metric-label">
-                Support Class <Tip text="Engineering support envelope from the richer recommendation model. A classes are lighter support; C classes are heavy support." />
+            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
+              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Weathering Grade</div>
+              <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '2px', color: 'var(--text-dim)' }}>
+                {geologicalConditions.weatheringGrade || 'N/A'}
               </div>
-              <div className={`metric-value ${s.supportClass.startsWith('C') ? 'red' : s.supportClass.startsWith('A') ? 'teal' : 'amber'}`}>
-                {s.supportClass}
-              </div>
-              <div className="metric-bar">
-                <div style={{ width: `${s.recommendationConfidence.overall}%`, backgroundColor: 'var(--teal)', height: '100%' }}></div>
+            </div>
+            <div style={{ background: 'var(--panel-2)', padding: '6px 8px', borderRadius: '4px', border: '1px solid var(--line-soft)' }}>
+              <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Groundwater / Seepage</div>
+              <div style={{ fontSize: '11.5px', fontWeight: 600, marginTop: '2px', color: s.groundwater === 'Wet' ? 'var(--blue)' : 'var(--text)' }}>
+                {geologicalConditions.groundwaterClass || 'N/A'} ({geologicalConditions.seepage || 'N/A'})
               </div>
             </div>
           </div>
         </div>
 
-        {/* Probability estimates */}
+        {/* 4. Rock Quality */}
         <div className="rp-section">
-          <div className="rp-section-title">Probability Estimates</div>
-          <div className="prob-row">
-            <span className="prob-label">
-              Fault zone <Tip text="Estimated chance a geological fault crosses this section. Faults are weak, unpredictable ground." />
-            </span>
-            <div className="prob-track">
-              <div className="prob-fill" style={{ width: `${s.probability.fault}%`, backgroundColor: s.probability.fault > 50 ? 'var(--red)' : 'var(--teal)' }}></div>
-            </div>
-            <span className="prob-val">{s.probability.fault}%</span>
-          </div>
-          <div className="prob-row">
-            <span className="prob-label">
-              Water ingress <Tip text="Estimated chance of groundwater entering the tunnel here. Higher means more drainage or grouting risk." />
-            </span>
-            <div className="prob-track">
-              <div className="prob-fill" style={{ width: `${s.probability.water}%`, backgroundColor: s.probability.water > 50 ? '#4F8FA6' : 'var(--teal)' }}></div>
-            </div>
-            <span className="prob-val">{s.probability.water}%</span>
-          </div>
-          <div className="prob-row">
-            <span className="prob-label">
-              Behaviour <Tip text="Predicted engineering ground response expected during excavation." />
-            </span>
-            <div style={{ flex: 1, textAlign: 'right', fontSize: '11.5px', color: 'var(--text)', fontWeight: 500 }}>
-              {s.probability.groundBehaviour}
-            </div>
-          </div>
-          <div className="prob-row">
-            <span className="prob-label">
-              Deformation <Tip text="Predicted tunnel convergence or deformation expected in this section." />
-            </span>
-            <div style={{ flex: 1, textAlign: 'right', fontFamily: 'var(--mono)', fontSize: '11.5px', color: 'var(--text)', fontWeight: 500 }}>
-              {s.probability.tunnelDeformation}
-            </div>
+          <div className="rp-section-title">Rock Quality Indices</div>
+          <div className="metric-grid" style={{ display: 'flex', flexDirection: 'column', gap: '0px' }}>
+            <QualityBar label="RMR (Rock Mass Rating)" stats={s.rmr} col="var(--amber)" />
+            <QualityBar label="GSI (Geological Strength Index)" stats={s.gsi} col="var(--teal)" />
+            <QualityBar label="RQD (Rock Quality Designation)" stats={s.rqd} col="var(--green)" />
+            <QQualityBar label="Q-System Rating" stats={s.qSystem} />
           </div>
         </div>
 
-        {/* Support recommendations accordion panel */}
+        {/* 5. Rock Behaviour */}
         <div className="rp-section">
-          <div className="rp-section-title">Support Recommendations</div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', background: 'var(--panel-2)', border: '1px solid var(--line-soft)', padding: '8px 10px', borderRadius: '6px' }}>
-            <span style={{ fontSize: '10px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '.05em', fontWeight: 500 }}>
-              Recommendation Confidence
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
-              <div className="prob-track" style={{ width: '70px', height: '5px', margin: 0 }}>
-                <div className="prob-fill" style={{ width: `${s.recommendationConfidence.overall}%`, backgroundColor: 'var(--teal)' }}></div>
-              </div>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: '11px', color: 'var(--text)', fontWeight: 600 }}>
-                {s.recommendationConfidence.overall}%
+          <div className="rp-section-title">Rock Mass Behaviour</div>
+          <div style={{ background: 'var(--panel-2)', border: '1px solid var(--line-soft)', padding: '10px', borderRadius: '6px' }}>
+            <div className="prob-row" style={{ marginBottom: '6px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Failure Modes:</span>
+              <span style={{ fontWeight: 600, fontSize: '11.5px', color: 'var(--text)' }}>{rockBehaviour.failureModes || 'N/A'}</span>
+            </div>
+            <div className="prob-row" style={{ marginBottom: '6px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Face Stability:</span>
+              <span style={{ fontWeight: 600, fontSize: '11.5px', color: (rockBehaviour.faceStability && rockBehaviour.faceStability.toLowerCase().includes('unstable')) ? 'var(--red)' : 'var(--green)' }}>
+                {rockBehaviour.faceStability || 'Stable'}
               </span>
             </div>
-          </div>
-
-          <div className="rec-accordion">
-            {recommendationCategories && recommendationCategories.map(cat => {
-              const fieldsHTML = Object.keys(cat.fields)
-                .filter(fieldKey => classData[fieldKey] !== undefined && classData[fieldKey] !== null)
-                .map(fieldKey => (
-                  <li key={fieldKey}>
-                    <span>{cat.fields[fieldKey]}</span>
-                    <b>{classData[fieldKey]}</b>
-                  </li>
-                ));
-
-              if (fieldsHTML.length === 0) return null;
-
-              const fosVal = cat.fosKey ? s.supportFactorOfSafety[cat.fosKey] : null;
-              const isExpanded = !!expandedAccordions[cat.id];
-
-              return (
-                <div key={cat.id} className={`rec-accordion-item ${isExpanded ? 'active' : ''}`}>
-                  <div className="rec-accordion-header" onClick={() => toggleAccordion(cat.id)}>
-                    <div className="rec-accordion-title">
-                      <span className="rec-accordion-toggle-icon">▶</span>
-                      <span>{cat.title}</span>
-                    </div>
-                    {fosVal ? (
-                      <span className="rec-accordion-fos">FoS {fosVal.toFixed(2)}</span>
-                    ) : ''}
-                  </div>
-                  <div className="rec-accordion-body">
-                    <div className="rec-accordion-content">
-                      <ul className="rec-accordion-list">{fieldsHTML}</ul>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {watchHTML}
-          {recommendationHTML}
-        </div>
-
-        {/* Engineer notes */}
-        <div className="rp-section">
-          <div className="rp-section-title">Engineer Notes</div>
-          <div className="comment-box">"{s.comment}"</div>
-        </div>
-
-        {/* Confidence Ring details */}
-        <div className="rp-section" style={{ borderBottom: 'none' }}>
-          <div className="rp-section-title">Confidence</div>
-          <div className="confidence-ring-row">
-            <ConfidenceRing pct={s.confidence} col={col} />
-            <div className="conf-detail">
-              <div className="conf-detail-row"><span>Ground type</span><b>{Math.min(s.confidence + 4, 99)}%</b></div>
-              <div className="conf-detail-row"><span>Fault prediction</span><b>{Math.max(s.confidence - 3, 0)}%</b></div>
-              <div className="conf-detail-row"><span>Support recommendation</span><b>{Math.min(s.confidence + 2, 99)}%</b></div>
-              <div className="conf-detail-row"><span>Engineering package</span><b>{s.recommendationConfidence.overall}%</b></div>
+            <div className="prob-row" style={{ marginBottom: '6px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Deformation Limit:</span>
+              <span style={{ fontWeight: 600, fontSize: '11.5px', fontFamily: 'var(--mono)' }}>{rockBehaviour.deformationTolerance || '50'} mm</span>
             </div>
+            <div className="prob-row" style={{ marginBottom: '6px' }}>
+              <span style={{ fontSize: '11px', color: 'var(--text-dim)' }}>Discontinuity Sets:</span>
+              <span style={{ fontWeight: 600, fontSize: '11.5px' }}>{rockBehaviour.numberJointSets || '3'} Prominent Sets</span>
+            </div>
+            {rockBehaviour.behaviourFlags && rockBehaviour.behaviourFlags.length > 0 && (
+              <div style={{ marginTop: '10px', borderTop: '1px solid var(--line-soft)', paddingTop: '8px' }}>
+                <div style={{ fontSize: '10px', color: 'var(--text-dim)', marginBottom: '4px' }}>Active Geotechnical Flags:</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {rockBehaviour.behaviourFlags.map(f => (
+                    <span key={f} style={{ background: 'rgba(214,84,63,.15)', color: 'var(--red)', fontSize: '9.5px', padding: '2px 6px', borderRadius: '3px', fontWeight: 600 }}>
+                      ⚠ {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 6. Support System */}
+        <div className="rp-section">
+          <div className="rp-section-title">Support System Specification</div>
+          <div style={{ background: 'var(--panel-2)', border: '1px solid var(--line-soft)', padding: '12px', borderRadius: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', paddingBottom: '8px', borderBottom: '1px solid var(--line-soft)' }}>
+              <div>
+                <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Design Support Class</div>
+                <div style={{ fontSize: '16px', fontWeight: 700, color: 'var(--amber)' }}>Class {supportSystem.supportClass || 'N/A'}</div>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>ML Forecast Class</div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--teal)' }}>
+                  Class {supportSystem.predictedSupportClass || 'N/A'}
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
+              <div className="prob-row">
+                <span style={{ color: 'var(--text-dim)' }}>Shotcrete Lining:</span>
+                <b style={{ color: 'var(--text)' }}>{supportSystem.shotcreteThickness || 'N/A'}</b>
+              </div>
+              <div className="prob-row">
+                <span style={{ color: 'var(--text-dim)' }}>Rockbolts:</span>
+                <b style={{ color: 'var(--text)' }}>{supportSystem.rockboltType || 'N/A'} ({supportSystem.rockboltLength || 'N/A'}) @ {supportSystem.rockboltSpacing || 'N/A'}</b>
+              </div>
+              <div className="prob-row">
+                <span style={{ color: 'var(--text-dim)' }}>Lattice Girders:</span>
+                <b style={{ color: 'var(--text)' }}>{supportSystem.latticeGirder || 'N/A'}</b>
+              </div>
+              <div className="prob-row">
+                <span style={{ color: 'var(--text-dim)' }}>Steel Ribs Type:</span>
+                <b style={{ color: 'var(--text)' }}>{supportSystem.steelRibs || 'N/A'}</b>
+              </div>
+              <div className="prob-row">
+                <span style={{ color: 'var(--text-dim)' }}>Face Support:</span>
+                <b style={{ color: 'var(--text)' }}>{supportSystem.faceSupport || 'N/A'}</b>
+              </div>
+              <div className="prob-row">
+                <span style={{ color: 'var(--text-dim)' }}>Crown Spiles / Forepoling:</span>
+                <b style={{ color: 'var(--text)', fontSize: '10px', maxWidth: '200px', textAlign: 'right' }}>{supportSystem.crownSupport || 'N/A'}</b>
+              </div>
+              <div className="prob-row" style={{ borderTop: '1px dashed var(--line-soft)', paddingTop: '6px', marginTop: '2px' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Permanent Lining:</span>
+                <b style={{ color: 'var(--text)' }}>{supportSystem.finalLining || 'N/A'}</b>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 7. RMR Rating Breakdown Accordion */}
+        <div className="rp-section">
+          <div className="rec-accordion">
+            <div className={`rec-accordion-item ${expandedAccordions['rmr-breakdown'] ? 'active' : ''}`}>
+              <div className="rec-accordion-header" onClick={() => toggleAccordion('rmr-breakdown')}>
+                <div className="rec-accordion-title">
+                  <span className="rec-accordion-toggle-icon">▶</span>
+                  <span>RMR Rating Breakdown</span>
+                </div>
+              </div>
+              <div className="rec-accordion-body">
+                <div className="rec-accordion-content" style={{ background: 'var(--panel-2)', padding: '10px', borderRadius: '4px' }}>
+                  <RmrBreakdownBar label="UCS / Intact Rock Strength" val={rmrBreakdown.strength || 0} maxVal={15} />
+                  <RmrBreakdownBar label="RQD Value rating" val={rmrBreakdown.rqd || 0} maxVal={20} />
+                  <RmrBreakdownBar label="Discontinuity Spacing rating" val={rmrBreakdown.spacing || 0} maxVal={20} />
+                  <RmrBreakdownBar label="Discontinuity Condition rating" val={rmrBreakdown.condition || 0} maxVal={30} />
+                  <RmrBreakdownBar label="Groundwater Inflow rating" val={rmrBreakdown.groundwater || 0} maxVal={15} />
+                  <RmrBreakdownBar label="Joint Orientation Adjustment" val={rmrBreakdown.adjustment || 0} maxVal={0} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 8. Structural Discontinuities Accordion */}
+        <div className="rp-section">
+          <div className="rec-accordion">
+            <div className={`rec-accordion-item ${expandedAccordions['structural-joints'] ? 'active' : ''}`}>
+              <div className="rec-accordion-header" onClick={() => toggleAccordion('structural-joints')}>
+                <div className="rec-accordion-title">
+                  <span className="rec-accordion-toggle-icon">▶</span>
+                  <span>Discontinuities &amp; Joint Sets</span>
+                </div>
+              </div>
+              <div className="rec-accordion-body">
+                <div className="rec-accordion-content" style={{ padding: '4px 0' }}>
+                  <JointCard name="J1" joint={jointSets.J1} />
+                  <JointCard name="J2" joint={jointSets.J2} />
+                  <JointCard name="J3" joint={jointSets.J3} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 9. Engineer Notes */}
+        <div className="rp-section">
+          <div className="rp-section-title">Geologist Logging Notes</div>
+          <div className="comment-box" style={{ fontSize: '11px', lineHeight: '1.45' }}>
+            "{s.engineerNotes ? s.engineerNotes : 'No special geological logging remarks recorded for this section.'}"
+          </div>
+        </div>
+
+        {/* 10. Engineering Interpretation (Explainable AI) */}
+        <div className="rp-section">
+          <div className="rp-section-title">Explainable AI Core</div>
+          <div className="rec-card" style={{ borderColor: 'var(--teal-dim)', background: 'linear-gradient(180deg,rgba(79,166,160,.06),rgba(79,166,160,.01))' }}>
+            <div style={{ fontSize: '11px', fontWeight: '600', color: 'var(--teal)', marginBottom: '4px' }}>Engineering Interpretation</div>
+            <div style={{ fontSize: '11px', color: 'var(--text-dim)', lineHeight: '1.4' }}>
+              "This section will provide AI-generated geological interpretation and engineering reasoning based on the observed data."
+            </div>
+          </div>
+        </div>
+
+        {/* 11. Aggregation Data Quality metadata */}
+        <div className="rp-section" style={{ borderBottom: 'none', background: 'var(--panel-2)', margin: '14px 14px 10px 14px', padding: '10px 12px', borderRadius: '6px', border: '1px solid var(--line-soft)' }}>
+          <div style={{ fontSize: '10.5px', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '.05em', fontWeight: 600, marginBottom: '6px' }}>
+            Aggregation Diagnostics
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '10.5px' }}>
+            <div className="prob-row">
+              <span>Observations Merged:</span>
+              <b>{aggregationMetadata.rowCount || 1} log sheets</b>
+            </div>
+            <div className="prob-row">
+              <span>Data Completeness:</span>
+              <b>{Math.round((aggregationMetadata.completeness || 1.0) * 100)}%</b>
+            </div>
+            {aggregationMetadata.missingFields && aggregationMetadata.missingFields.length > 0 && (
+              <div style={{ marginTop: '4px', color: 'var(--text-dim)' }}>
+                <span>Missing: </span>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: '9.5px', background: 'var(--panel-1)', padding: '1px 4px', borderRadius: '2px' }}>
+                  {aggregationMetadata.missingFields.join(', ')}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

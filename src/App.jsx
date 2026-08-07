@@ -14,6 +14,8 @@ import { DEFAULT_PROJECT } from './config';
 export default function App() {
   // Application Data States
   const [segments, setSegments] = useState([]);
+  const [hazardZones, setHazardZones] = useState([]);
+  const [rawFaults, setRawFaults] = useState([]);
   const [projects, setProjects] = useState([]);
   const [activeProject, setActiveProject] = useState('');
   const [layers, setLayers] = useState([]);
@@ -53,6 +55,7 @@ export default function App() {
       try {
         const [
           segs,
+          hazInfo,
           projs,
           lyrs,
           statusData,
@@ -66,6 +69,7 @@ export default function App() {
           mapPredictions
         ] = await Promise.all([
           api.getSegments(),
+          api.getHazardZones(),
           api.getProjects(),
           api.getLayers(),
           api.getStatus(),
@@ -80,6 +84,10 @@ export default function App() {
         ]);
 
         setSegments(segs);
+        if (hazInfo) {
+          setHazardZones(hazInfo.zones || []);
+          setRawFaults(hazInfo.faults || []);
+        }
         setProjects(projs);
         if (projs && projs.length > 0) {
           const defaultProj = projs.find(p => p.id === DEFAULT_PROJECT);
@@ -217,6 +225,10 @@ export default function App() {
           onPrevSegment={handlePrevSegment}
           onNextSegment={handleNextSegment}
           mapData={mapData}
+          totalMeters={systemStatus ? systemStatus.totalMeters : 9800}
+          excavatedMeters={systemStatus ? systemStatus.excavatedMeters : 4260}
+          hazardZones={hazardZones}
+          rawFaults={rawFaults}
         />
 
         <RightPanel 
@@ -226,6 +238,8 @@ export default function App() {
           supportMatrix={supportMatrix}
           recommendationCategories={recommendationCategories}
           onBackToOverview={handleBackToOverview}
+          totalMeters={systemStatus ? systemStatus.totalMeters : 9800}
+          excavatedMeters={systemStatus ? systemStatus.excavatedMeters : 4260}
         />
       </div>
 
@@ -234,6 +248,9 @@ export default function App() {
         segments={segments}
         currentSegIdx={currentSegIdx}
         onSelectSegment={handleSelectSegment}
+        totalMeters={systemStatus ? systemStatus.totalMeters : 9800}
+        excavatedMeters={systemStatus ? systemStatus.excavatedMeters : 4260}
+        hazardZones={hazardZones}
       />
 
       {/* Help glossary overlay */}

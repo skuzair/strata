@@ -10,6 +10,7 @@ async function fetchJson(endpoint, options = {}) {
 
 export const api = {
   getSegments: () => fetchJson('/api/segments'),
+  getHazardZones: () => fetchJson('/api/hazard-zones'),
   getProjects: () => fetchJson('/api/projects'),
   getLayers: () => fetchJson('/api/layers'),
   getStatus: () => fetchJson('/api/status'),

@@ -1,13 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import MapViewport from './MapViewport';
 
 const groundColors = {
   'Hard Quartzite':'#C98B4A','Jointed Quartzite':'#B98C5C','Weathered Gneiss':'#A87A56',
-  'Fractured Gneiss':'#9A7560','Sheared Phyllite':'#8B6F8F','Fault Gouge':'#6E5A4A','Mixed Ground':'#9B8A6E'
+  'Fractured Gneiss':'#9A7560','Sheared Phyllite':'#8B6F8F','Fault Gouge':'#6E5A4A','Mixed Ground':'#9B8A6E',
+  'Sandstone':'#C98B4A','Siltstone':'#B98C5C','Claystone':'#8B6F8F','Silty Clay':'#9A7560','Unclassified':'#4A5568'
 };
 const hazardColors = {low:'#5FA864', moderate:'#D9B23C', high:'#D6543F'};
-const TOTAL = 9800;
-const FACE_CH = 4260;
 
 export default function Viewport({
   segments,
@@ -18,8 +17,14 @@ export default function Viewport({
   onTogglePlay,
   onPrevSegment,
   onNextSegment,
-  mapData
+  mapData,
+  totalMeters,
+  excavatedMeters,
+  hazardZones,
+  rawFaults
 }) {
+  const TOTAL = totalMeters;
+  const FACE_CH = excavatedMeters;
   const w = 1400;
   const h = 560;
   const x0 = 60;
@@ -28,6 +33,32 @@ export default function Viewport({
   const tunnelH = 60;
   const mountainBottom = 460;
   const [activeTab, setActiveTab] = useState('profile');
+  const [zoom, setZoom] = useState(1);
+  const [panX, setPanX] = useState(0);
+  const [isPanning, setIsPanning] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startPanX, setStartPanX] = useState(0);
+  const [hasMovedDuringClick, setHasMovedDuringClick] = useState(false);
+  const [scaleBarWidth, setScaleBarWidth] = useState(60);
+  const scaleLengthMeters = TOTAL > 8000 ? 1000 : 500;
+
+  useEffect(() => {
+    const updateWidth = () => {
+      const container = document.getElementById('viewportSvgHolder');
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const ratio = rect.width / w;
+      const baseWidth = scaleLengthMeters * ((x1 - x0) / TOTAL) * ratio * zoom;
+      setScaleBarWidth(baseWidth);
+    };
+    updateWidth();
+    const t = setTimeout(updateWidth, 100);
+    window.addEventListener('resize', updateWidth);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, [zoom, scaleLengthMeters, TOTAL, x0, x1, activeTab]);
 
   // Utility to format chainage string
   const formatCh = (m) => {
@@ -38,7 +69,101 @@ export default function Viewport({
 
   // Helper to find segment index at chainage coordinate
   const segAt = (ch) => {
-    return segments.findIndex(s => ch >= s.start && ch < s.end);
+    return segments.findIndex(s => ch >= s.startChainage && ch < s.endChainage);
+  };
+
+  // Center zoom on current selected segment, or default center
+  const currentCenter = useMemo(() => {
+    if (currentSegIdx !== null && segments && segments[currentSegIdx]) {
+      const s = segments[currentSegIdx];
+      const ch = (s.startChainage + s.endChainage) / 2;
+      return x0 + (ch / TOTAL) * (x1 - x0);
+    }
+    return w / 2;
+  }, [currentSegIdx, segments, TOTAL, x0, x1]);
+
+  const viewW = w / zoom;
+  const maxPanX = w - viewW;
+  const viewBoxStr = `${panX} 0 ${viewW} ${h}`;
+
+  const handleZoomIn = () => {
+    setZoom(prev => {
+      const next = Math.min(prev + 0.25, 4.0);
+      const newViewW = w / next;
+      let newPan = currentCenter - newViewW / 2;
+      newPan = Math.max(0, Math.min(newPan, w - newViewW));
+      setPanX(newPan);
+      return next;
+    });
+  };
+
+  const handleZoomOut = () => {
+    setZoom(prev => {
+      const next = Math.max(prev - 0.25, 1.0);
+      const newViewW = w / next;
+      let newPan = currentCenter - newViewW / 2;
+      newPan = Math.max(0, Math.min(newPan, w - newViewW));
+      setPanX(newPan);
+      return next;
+    });
+  };
+
+  const handleZoomReset = () => {
+    setZoom(1);
+    setPanX(0);
+  };
+
+  const handleExportSvg = () => {
+    const svgEl = document.querySelector('#viewportSvgHolder svg');
+    if (!svgEl) return;
+    const serializer = new XMLSerializer();
+    let source = serializer.serializeToString(svgEl);
+    if (!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
+      source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+    const blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `strata_geological_profile.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // Drag to pan handlers
+  const handleMouseDown = (e) => {
+    setHasMovedDuringClick(false);
+    if (zoom > 1) {
+      setIsPanning(true);
+      setStartX(e.clientX);
+      setStartPanX(panX);
+      e.preventDefault();
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isPanning) {
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 4) {
+        setHasMovedDuringClick(true);
+      }
+      const container = document.getElementById('viewportSvgHolder');
+      const screenWidth = container ? container.getBoundingClientRect().width : w;
+      const svgDx = dx * (viewW / screenWidth);
+      let newPan = startPanX - svgDx;
+      newPan = Math.max(0, Math.min(newPan, maxPanX));
+      setPanX(newPan);
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsPanning(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPanning(false);
   };
 
   // Compute mountain cross-section points dynamically
@@ -81,6 +206,7 @@ export default function Viewport({
   }, [x0, x1, tunnelY]);
 
   const handleSvgClick = (e) => {
+    if (hasMovedDuringClick) return;
     const svgEl = e.currentTarget;
     const pt = svgEl.createSVGPoint();
     pt.x = e.clientX;
@@ -115,15 +241,50 @@ export default function Viewport({
     if (currentSegIdx === null || !segments || segments.length === 0) return null;
     const s = segments[currentSegIdx];
     if (!s) return null;
-    const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
-    const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
+    const sx0 = x0 + (s.startChainage / TOTAL) * (x1 - x0);
+    const sx1 = x0 + (s.endChainage / TOTAL) * (x1 - x0);
     return (
       <g key="selection">
         <rect x={sx0} y="50" width={sx1 - sx0} height={h - 100} fill="none" stroke="#E7EAEE" strokeWidth="1.5" strokeDasharray="2,3" opacity="0.85" />
         <rect id="selFill" x={sx0} y="50" width={sx1 - sx0} height={h - 100} fill="#E7EAEE" opacity="0.04" />
       </g>
     );
-  }, [currentSegIdx, segments, x0, x1, h]);
+  }, [currentSegIdx, segments, x0, x1, h, TOTAL]);
+
+  const renderedHazardRects = useMemo(() => {
+    const zones = hazardZones && hazardZones.length > 0 ? hazardZones : [];
+
+    const rects = [];
+    zones.forEach((z, idx) => {
+      const fillCol = layerState.hazard ? hazardColors[z.hazard] : "#20262E";
+      if (z.start < FACE_CH && z.end > FACE_CH) {
+        // Split at face
+        const xStart1 = x0 + (z.start / TOTAL) * (x1 - x0);
+        const xEnd1 = x0 + (FACE_CH / TOTAL) * (x1 - x0);
+        const op1 = layerState.hazard ? 0.65 : 1.0;
+        rects.push(
+          <rect key={`haz-zone-${idx}-b`} x={xStart1} y={tunnelY} width={xEnd1 - xStart1} height={tunnelH} fill={fillCol} opacity={op1} />
+        );
+        const xStart2 = xEnd1;
+        const xEnd2 = x0 + (z.end / TOTAL) * (x1 - x0);
+        const op2 = layerState.hazard ? 0.28 : 0.5;
+        rects.push(
+          <rect key={`haz-zone-${idx}-a`} x={xStart2} y={tunnelY} width={xEnd2 - xStart2} height={tunnelH} fill={fillCol} opacity={op2} />
+        );
+      } else {
+        const isAhead = z.start >= FACE_CH;
+        const xStart = x0 + (z.start / TOTAL) * (x1 - x0);
+        const xEnd = x0 + (z.end / TOTAL) * (x1 - x0);
+        const op = layerState.hazard ? (isAhead ? 0.28 : 0.65) : (isAhead ? 0.5 : 1.0);
+        rects.push(
+          <rect key={`haz-zone-${idx}`} x={xStart} y={tunnelY} width={xEnd - xStart} height={tunnelH} fill={fillCol} opacity={op} />
+        );
+      }
+    });
+    return rects;
+  }, [layerState.hazard, FACE_CH, TOTAL, x0, x1, tunnelY, tunnelH, hazardZones]);
+
+
 
   return (
     <div className="viewport">
@@ -149,12 +310,12 @@ export default function Viewport({
         </div>
       </div>
       
-      {/* View Toolset */}
+      {/* View Toolset with active click functions */}
       <div className="view-toolset">
-        <div className="tool-btn" title="Zoom in">+</div>
-        <div className="tool-btn" title="Zoom out">–</div>
-        <div className="tool-btn" title="Reset view">⤢</div>
-        <div className="tool-btn" title="Export view">⇩</div>
+        <div className="tool-btn" title="Zoom in" onClick={handleZoomIn}>+</div>
+        <div className="tool-btn" title="Zoom out" onClick={handleZoomOut}>–</div>
+        <div className="tool-btn" title="Reset view" onClick={handleZoomReset}>⤢</div>
+        <div className="tool-btn" title="Export profile to vector SVG file" onClick={handleExportSvg}>⇩</div>
       </div>
 
       {/* SVG geological profile container (kept mounted to preserve selection states) */}
@@ -167,9 +328,13 @@ export default function Viewport({
           <svg 
             width="100%" 
             height="100%" 
-            viewBox={`0 0 ${w} ${h}`} 
-            style={{ cursor: 'pointer', display: 'block' }}
+            viewBox={viewBoxStr} 
+            style={{ cursor: zoom > 1 ? (isPanning ? 'grabbing' : 'grab') : 'pointer', display: 'block' }}
             onClick={handleSvgClick}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
           >
             <defs>
               <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
@@ -195,21 +360,38 @@ export default function Viewport({
               MOUNTAIN CROSS-SECTION — click ridge to inspect chainage
             </text>
 
-            {/* Borehole Toggles */}
-            {layerState.boreholes && [300, 900, 1600, 2700, 3400, 4100].map(bh => {
-              const bx = x0 + (bh / TOTAL) * (x1 - x0);
+            {/* Borehole Toggles with actual coordinates and metadata */}
+            {layerState.boreholes && [
+              { id: "BH-1", chainage: 360, depth: 75, offset: "0 m" },
+              { id: "BH-2", chainage: 1820, depth: 130, offset: "43 m E" },
+              { id: "BH-3", chainage: 3760, depth: 135, offset: "±161 m E" },
+              { id: "BH-4", chainage: 5417, depth: 100, offset: "±70 m W" },
+              { id: "BH-5", chainage: 9153, depth: 75, offset: "±3 m SW" }
+            ].map(bh => {
+              const bx = x0 + (bh.chainage / TOTAL) * (x1 - x0);
+              const tooltipHtml = `
+                <div class="tip-content" style="padding: 1px 0;">
+                  <div style="font-weight: 600; color: #E7EAEE; margin-bottom: 4px;">${bh.id}</div>
+                  <div style="color: var(--text-dim);">Chainage: CH ${formatCh(bh.chainage)}</div>
+                  <div style="color: var(--text-dim);">Offset: ${bh.offset}</div>
+                  <div style="color: var(--text-dim);">Depth: ${bh.depth} m</div>
+                </div>
+              `;
               return (
-                <g key={bh}>
+                <g key={bh.id} className="info-ic" style={{ cursor: 'pointer' }}>
                   <line x1={bx} y1={60} x2={bx} y2={tunnelY - 8} stroke="#D9B23C" strokeWidth="1.5" strokeDasharray="4,3" opacity="0.55" />
                   <circle cx={bx} cy={60} r="3.5" fill="#D9B23C" />
+                  <foreignObject width="0" height="0">
+                    <div className="tip" dangerouslySetInnerHTML={{ __html: tooltipHtml }}></div>
+                  </foreignObject>
                 </g>
               );
             })}
 
             {/* Geology Thin strip */}
             {layerState.geology && segments && segments.map((s, idx) => {
-              const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
-              const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
+              const sx0 = x0 + (s.startChainage / TOTAL) * (x1 - x0);
+              const sx1 = x0 + (s.endChainage / TOTAL) * (x1 - x0);
               return (
                 <rect 
                   key={`geo-${idx}`} 
@@ -217,7 +399,7 @@ export default function Viewport({
                   y={tunnelY - 9} 
                   width={sx1 - sx0} 
                   height="6" 
-                  fill={groundColors[s.ground]} 
+                  fill={groundColors[s.lithology]} 
                   opacity="0.85" 
                 />
               );
@@ -226,19 +408,17 @@ export default function Viewport({
             {/* Tunnel Alignment Bore Base */}
             <rect x={x0} y={tunnelY} width={x1 - x0} height={tunnelH} fill="#05070A" stroke="#3A4452" strokeWidth="1.5" rx="2" />
 
+            {/* Continuous Hazard Ribbon Background */}
+            {renderedHazardRects}
+
             {/* Segment parameters overlay rendering */}
             {segments && segments.map((s, idx) => {
-              const sx0 = x0 + (s.start / TOTAL) * (x1 - x0);
-              const sx1 = x0 + (s.end / TOTAL) * (x1 - x0);
-              const isAhead = s.start >= FACE_CH;
-
-              const fillCol = layerState.hazard ? hazardColors[s.hazard] : "#20262E";
-              const fillOp = layerState.hazard ? (isAhead ? 0.28 : 0.65) : (isAhead ? 0.5 : 1);
+              const sx0 = x0 + (s.startChainage / TOTAL) * (x1 - x0);
+              const sx1 = x0 + (s.endChainage / TOTAL) * (x1 - x0);
+              const isAhead = s.startChainage >= FACE_CH;
 
               return (
                 <g key={`tunnel-seg-${idx}`}>
-                  {/* Hazard Color / Default Color */}
-                  <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill={fillCol} opacity={fillOp} />
                   
                   {/* Ahead Border Dash */}
                   {isAhead && (
@@ -250,21 +430,8 @@ export default function Viewport({
                     <rect x={sx0} y={tunnelY} width={sx1 - sx0} height={tunnelH} fill="url(#hatch)" opacity={s.confidence < 70 ? 0.5 : 0.15} />
                   )}
 
-                  {/* Fault overlay inside bore */}
-                  {layerState.faults && s.fault > 60 && (
-                    <line 
-                      x1={(sx0 + sx1) / 2} 
-                      y1={tunnelY + 4} 
-                      x2={(sx0 + sx1) / 2} 
-                      y2={tunnelY + tunnelH - 4} 
-                      stroke="#D6543F" 
-                      strokeWidth="2.5" 
-                      opacity={isAhead ? 0.55 : 0.95} 
-                    />
-                  )}
-
                   {/* Water overlay inside bore */}
-                  {layerState.hydrology && s.water > 55 && [0, 1, 2].map(i => {
+                  {layerState.hydrology && (s.groundwater === 'Wet' || s.groundwater === 'Damp') && [0, 1, 2].map(i => {
                     const wx = sx0 + (i + 1) * (sx1 - sx0) / 4;
                     return (
                       <circle 
@@ -278,6 +445,24 @@ export default function Viewport({
                     );
                   })}
                 </g>
+              );
+            })}
+
+            {/* Exact CSV Fault Lines Rendering */}
+            {layerState.faults && rawFaults && rawFaults.map((fCh, idx) => {
+              const fx = x0 + (fCh / TOTAL) * (x1 - x0);
+              const isAhead = fCh >= FACE_CH;
+              return (
+                <line 
+                  key={`raw-fault-${idx}`}
+                  x1={fx} 
+                  y1={tunnelY + 1} 
+                  x2={fx} 
+                  y2={tunnelY + tunnelH - 1} 
+                  stroke="#D6543F" 
+                  strokeWidth="2.0" 
+                  opacity={isAhead ? 0.45 : 0.85} 
+                />
               );
             })}
 
@@ -300,20 +485,98 @@ export default function Viewport({
           </svg>
         </div>
 
-        {/* Geotechnical Legend Panel */}
+        {/* Dynamic Context-Aware Geotechnical Legend Panel */}
         <div className="legend">
-          <div className="legend-title">Ground Type</div>
-          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#C98B4A' }}></div>Hard / Jointed Rock</div>
-          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#A87A56' }}></div>Weathered Rock</div>
-          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#8B6F8F' }}></div>Sheared Phyllite</div>
-          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#6E5A4A' }}></div>Fault Gouge</div>
-          <div className="legend-row"><div className="legend-swatch" style={{ backgroundColor: '#D6543F', height: '3px', borderRadius: '0', alignSelf: 'center' }}></div>Inferred Fault</div>
+          <div className="legend-title" style={{ fontSize: '9px', marginBottom: '3px' }}>
+            Profile Legend
+          </div>
+          
+          {/* Tunnel Alignment */}
+          <div className="legend-row">
+            <div style={{ 
+              width: '11px', 
+              height: '6px', 
+              background: '#05070A', 
+              border: '1px solid #3A4452', 
+              borderRadius: '1px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0 1px'
+            }}>
+              <div style={{ width: '100%', height: '1.5px', background: 'rgba(58,68,82,0.4)' }}></div>
+            </div>
+            <span>Tunnel Alignment</span>
+          </div>
+
+          {/* Boreholes */}
+          {layerState.boreholes && (
+            <div className="legend-row">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '3px', width: '11px', height: '11px', justifyContent: 'center', position: 'relative' }}>
+                <div style={{ borderLeft: '1px dashed #D9B23C', height: '100%', opacity: 0.65 }}></div>
+                <div style={{ width: '3.5px', height: '3.5px', borderRadius: '50%', background: '#D9B23C', position: 'absolute' }}></div>
+              </div>
+              <span>Borehole</span>
+            </div>
+          )}
+
+          {/* Fault / Shear Zones */}
+          {layerState.faults && (
+            <div className="legend-row">
+              <div style={{ width: '11px', height: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '2px', height: '100%', background: '#D6543F' }}></div>
+              </div>
+              <span>Fault / Shear Zone</span>
+            </div>
+          )}
+
+          {/* Groundwater / Water Ingress */}
+          {layerState.hydrology && (
+            <div className="legend-row">
+              <div style={{ width: '11px', height: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '4.5px', height: '4.5px', borderRadius: '50%', background: '#4F8FA6' }}></div>
+              </div>
+              <span>Water Seepage</span>
+            </div>
+          )}
+
+          {/* Lithology types currently present */}
+          {layerState.geology && Array.from(new Set(segments.map(s => s.lithology))).map(lith => (
+            <div className="legend-row" key={lith}>
+              <div className="legend-swatch" style={{ backgroundColor: groundColors[lith] || '#4A5568' }}></div>
+              <span>{lith}</span>
+            </div>
+          ))}
+
+          {/* Hazard colors (Low / Moderate / High) */}
+          {layerState.hazard && (
+            <>
+              <div className="legend-title" style={{ fontSize: '8.5px', marginTop: '6px', marginBottom: '2px' }}>
+                Hazard Level
+              </div>
+              <div className="legend-row">
+                <div className="legend-swatch" style={{ backgroundColor: '#5FA864' }}></div>
+                <span>Low Hazard</span>
+              </div>
+              <div className="legend-row">
+                <div className="legend-swatch" style={{ backgroundColor: '#D9B23C' }}></div>
+                <span>Moderate Hazard</span>
+              </div>
+              <div className="legend-row">
+                <div className="legend-swatch" style={{ backgroundColor: '#D6543F' }}></div>
+                <span>High Hazard</span>
+              </div>
+            </>
+          )}
         </div>
 
-        {/* Scalebar */}
-        <div className="scalebar">
-          <div className="bar"></div>
-          200 m
+        {/* Dynamic scale bar in bottom-right corner */}
+        <div 
+          className="scalebar" 
+          style={{ display: activeTab === 'profile' ? 'flex' : 'none' }}
+        >
+          <div className="bar" style={{ width: `${scaleBarWidth}px` }}></div>
+          <span>{scaleLengthMeters} m</span>
         </div>
       </div>
 
@@ -375,13 +638,13 @@ export default function Viewport({
             <>
               <div className="seg" id="chnavSeg">SECTION {currentSegIdx + 1} OF {segments.length}</div>
               <div className="ch" id="chnavCh">
-                CH {formatCh(segments[currentSegIdx].start)} – {formatCh(segments[currentSegIdx].end)}
+                CH {formatCh(segments[currentSegIdx].startChainage)} – {formatCh(segments[currentSegIdx].endChainage)}
               </div>
             </>
           ) : (
             <>
               <div className="seg" id="chnavSeg">PROJECT OVERVIEW</div>
-              <div className="ch" id="chnavCh">CH 0+000 – 9+800</div>
+              <div className="ch" id="chnavCh">CH 0+000 – {formatCh(totalMeters)}</div>
             </>
           )}
           <div className="chnav-dots" id="chnavDots">

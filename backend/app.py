@@ -25,6 +25,10 @@ def get_segments():
         return jsonify({"error": "Segments data not found"}), 404
     return jsonify(segments)
 
+@app.route('/api/hazard-zones', methods=['GET'])
+def get_hazard_zones():
+    return jsonify(geotechnical_service.get_hazard_zones())
+
 @app.route('/api/projects', methods=['GET'])
 def get_projects():
     return jsonify(geotechnical_service.get_projects())

@@ -11,16 +11,13 @@ export default function LayerToolbar({
     { id: "hydrology", name: "Hydrology", category: "layer", color: "#4F8FA6" },
     { id: "faults", name: "Faults & Shear", category: "layer", color: "#D6543F" },
     { id: "boreholes", name: "Boreholes", category: "layer", color: "#D9B23C" },
-    { id: "terrain", name: "DEM / Terrain", category: "layer", color: "#7C8B6E" },
-    { id: "pointcloud", name: "Point Cloud", category: "layer", color: "#9B8AC4" },
     { id: "hazard", name: "Hazard Heat", category: "overlay", color: "#E0913F" },
-    { id: "confidence", name: "Confidence Map", category: "overlay", color: "#4FA6A0" },
-    { id: "rmrtrack", name: "RMR Track", category: "lsection", color: "#5FA864" },
-    { id: "supporttrack", name: "Support Track", category: "lsection", color: "#D9B23C" }
+    { id: "confidence", name: "Confidence Map", category: "overlay", color: "#4FA6A0" }
   ];
 
   const renderGroup = (categoryKey, labelText) => {
     const groupItems = defaultLayers.filter(l => l.category === categoryKey);
+    if (groupItems.length === 0) return null;
     return (
       <>
         <span className="layerbar-label">{labelText}</span>
@@ -44,9 +41,9 @@ export default function LayerToolbar({
   return (
     <div className="layerbar" id="layerbar">
       {renderGroup('layer', 'LAYERS')}
-      <div className="chip-sep"></div>
+      {defaultLayers.filter(l => l.category === 'layer').length > 0 && defaultLayers.filter(l => l.category === 'overlay').length > 0 && <div className="chip-sep"></div>}
       {renderGroup('overlay', 'OVERLAY')}
-      <div className="chip-sep"></div>
+      {defaultLayers.filter(l => l.category === 'overlay').length > 0 && defaultLayers.filter(l => l.category === 'lsection').length > 0 && <div className="chip-sep"></div>}
       {renderGroup('lsection', 'L-SECTION')}
     </div>
   );

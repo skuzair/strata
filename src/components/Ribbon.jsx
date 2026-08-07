@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
 const hazardColors = {low:'#5FA864', moderate:'#D9B23C', high:'#D6543F'};
-const TOTAL = 9800;
-const FACE_CH = 4260;
 
 export default function Ribbon({
   segments,
   currentSegIdx,
-  onSelectSegment
+  onSelectSegment,
+  totalMeters,
+  excavatedMeters,
+  hazardZones
 }) {
+  const TOTAL = totalMeters;
+  const FACE_CH = excavatedMeters;
   const [isDragging, setIsDragging] = useState(false);
 
   const formatCh = (m) => {
@@ -24,13 +27,13 @@ export default function Ribbon({
     }
     const s = segments[currentSegIdx];
     if (!s) return { cursorLeft: 0, rangeText: 'No section selected' };
-    const ch = (s.start + s.end) / 2;
+    const ch = (s.startChainage + s.endChainage) / 2;
     const pct = (ch / TOTAL) * 100;
     return {
       cursorLeft: pct,
       rangeText: `CH ${formatCh(ch)} selected`
     };
-  }, [currentSegIdx, segments]);
+  }, [currentSegIdx, segments, TOTAL]);
 
   const handleRibbonInteraction = (clientX) => {
     const ribbonEl = document.getElementById('ribbon');
@@ -38,7 +41,7 @@ export default function Ribbon({
     const rect = ribbonEl.getBoundingClientRect();
     const pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
     const ch = pct * TOTAL;
-    const idx = segments.findIndex(s => ch >= s.start && ch < s.end);
+    const idx = segments.findIndex(s => ch >= s.startChainage && ch < s.endChainage);
     if (idx >= 0) {
       onSelectSegment(idx);
     }
@@ -69,44 +72,59 @@ export default function Ribbon({
 
   // Compute ribbon SVG contents statically
   const svgContents = useMemo(() => {
-    if (!segments || segments.length === 0) return null;
+    const zones = hazardZones && hazardZones.length > 0 ? hazardZones : [];
 
     const rects = [];
-    // Hazard heat segments
-    segments.forEach((s, idx) => {
-      const x1 = (s.start / TOTAL) * 1000;
-      const x2 = (s.end / TOTAL) * 1000;
-      const w = x2 - x1;
-      const isAhead = s.start >= FACE_CH;
-      rects.push(
-        <rect 
-          key={`hazard-${idx}`}
-          x={x1} 
-          y="18" 
-          width={w} 
-          height="28" 
-          fill={hazardColors[s.hazard]} 
-          opacity={isAhead ? 0.55 : 0.92} 
-        />
-      );
-    });
-
-    // Confidence columns
-    segments.forEach((s, idx) => {
-      const x1 = (s.start / TOTAL) * 1000;
-      const x2 = (s.end / TOTAL) * 1000;
-      const h = (s.confidence / 100) * 16;
-      rects.push(
-        <rect 
-          key={`conf-${idx}`}
-          x={x1} 
-          y={50 - h} 
-          width={x2 - x1} 
-          height={h} 
-          fill="#4FA6A0" 
-          opacity="0.7" 
-        />
-      );
+    
+    // Draw continuous hazard zones (independent of geological sections)
+    zones.forEach((z, idx) => {
+      const fillCol = hazardColors[z.hazard];
+      if (z.start < FACE_CH && z.end > FACE_CH) {
+        // Split at face CH
+        // Part 1: Behind face (observed)
+        const x1 = (z.start / TOTAL) * 1000;
+        const x2 = (FACE_CH / TOTAL) * 1000;
+        rects.push(
+          <rect 
+            key={`hazard-${idx}-b`}
+            x={x1} 
+            y="18" 
+            width={x2 - x1} 
+            height="28" 
+            fill={fillCol} 
+            opacity={0.92} 
+          />
+        );
+        // Part 2: Ahead of face (forecast)
+        const xStart2 = x2;
+        const xEnd2 = (z.end / TOTAL) * 1000;
+        rects.push(
+          <rect 
+            key={`hazard-${idx}-a`}
+            x={xStart2} 
+            y="18" 
+            width={xEnd2 - xStart2} 
+            height="28" 
+            fill={fillCol} 
+            opacity={0.55} 
+          />
+        );
+      } else {
+        const isAhead = z.start >= FACE_CH;
+        const x1 = (z.start / TOTAL) * 1000;
+        const x2 = (z.end / TOTAL) * 1000;
+        rects.push(
+          <rect 
+            key={`hazard-${idx}`}
+            x={x1} 
+            y="18" 
+            width={x2 - x1} 
+            height="28" 
+            fill={fillCol} 
+            opacity={isAhead ? 0.55 : 0.92} 
+          />
+        );
+      }
     });
 
     // Face marker vertical line
@@ -119,7 +137,18 @@ export default function Ribbon({
     );
 
     return rects;
-  }, [segments]);
+  }, [segments, TOTAL, FACE_CH, hazardZones]);
+
+  // Render ticks dynamically
+  const ticksList = useMemo(() => {
+    const t = [];
+    const step = Math.floor(TOTAL / 5);
+    for (let i = 0; i <= 5; i++) {
+      const m = Math.min(i * step, TOTAL);
+      t.push(<span key={i}>{formatCh(m)}</span>);
+    }
+    return t;
+  }, [TOTAL]);
 
   return (
     <div className="ribbon-wrap">
@@ -145,12 +174,7 @@ export default function Ribbon({
         ></div>
       </div>
       <div className="ribbon-ticks">
-        <span>0+000</span>
-        <span>2+000</span>
-        <span>4+000</span>
-        <span>6+000</span>
-        <span>8+000</span>
-        <span>9+800</span>
+        {ticksList}
       </div>
     </div>
   );

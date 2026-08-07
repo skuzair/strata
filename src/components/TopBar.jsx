@@ -74,7 +74,6 @@ export default function TopBar({
         >
           ?
         </div>
-        <div className="avatar">DK</div>
       </div>
     </div>
   );
